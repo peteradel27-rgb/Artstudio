@@ -7,6 +7,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
   :root {
     --bg: #0d1117;
     --card: #161b22;
@@ -82,8 +84,7 @@
 
   /* Main */
   .main { padding: 24px 32px; max-width: 1600px; margin: 0 auto; }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+
 
   /* KPI Grid */
   .kpi-grid {
@@ -256,10 +257,10 @@
 <!-- TABS -->
 <div class="tabs">
   <button class="tab-btn active" onclick="showTab('overview',this)">📊 Overview</button>
-  <button class="tab-btn" onclick="showTab('revenue')">💰 Revenue</button>
-  <button class="tab-btn" onclick="showTab('expenses')">📉 Expenses</button>
-  <button class="tab-btn" onclick="showTab('departments')">🎪 Departments</button>
-  <button class="tab-btn" onclick="showTab('hotels')">🏨 Hotels</button>
+  <button class="tab-btn" onclick="showTab('revenue',this)">💰 Revenue</button>
+  <button class="tab-btn" onclick="showTab('expenses',this)">📉 Expenses</button>
+  <button class="tab-btn" onclick="showTab('departments',this)">🎪 Departments</button>
+  <button class="tab-btn" onclick="showTab('hotels',this)">🏨 Hotels</button>
 </div>
 
 <!-- MAIN CONTENT -->
@@ -439,22 +440,23 @@
     <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
       <div class="kpi-card" style="--accent-color:#f78166">
         <div class="kpi-label">Selected Expenses</div>
+        <div class="kpi-badge" id="exp-top-badge">Top: -</div>
         <div class="kpi-value" id="exp-kpi-total" style="font-size:22px">$463,684</div>
         <div class="kpi-sub" id="exp-kpi-total-sub">EGP 6,589,189</div>
       </div>
       <div class="kpi-card" style="--accent-color:#ffa657">
         <div class="kpi-label">Salaries (USD)</div>
-        <div class="kpi-value" style="font-size:22px">$204,870</div>
+        <div class="kpi-value" id="exp-kpi-salary" style="font-size:22px">$204,870</div>
         <div class="kpi-sub">44.2% of expenses</div>
       </div>
       <div class="kpi-card" style="--accent-color:#d2a8ff">
         <div class="kpi-label">Operating Costs</div>
-        <div class="kpi-value" style="font-size:22px">EGP 3.19M</div>
+        <div class="kpi-value" id="exp-kpi-operating" style="font-size:22px">EGP 3.19M</div>
         <div class="kpi-sub">Travel + labor combined</div>
       </div>
       <div class="kpi-card" style="--accent-color:#58a6ff">
         <div class="kpi-label">Visa Expenses</div>
-        <div class="kpi-value" style="font-size:22px">$9,812</div>
+        <div class="kpi-value" id="exp-kpi-visa" style="font-size:22px">$9,812</div>
         <div class="kpi-sub">EGP 52,770</div>
       </div>
     </div>
@@ -508,53 +510,58 @@
     </div>
   </div>
 
-  <!-- ===== DEPARTMENTS TAB ===== -->
-  <div id="tab-departments" class="tab-panel">
-    <div class="section-header">
-      <div>
-        <div class="section-title">🎪 Department Performance</div>
-        <div class="section-subtitle" id="dept-subtitle">Revenue, cost and transaction volume per department</div>
-      </div>
+<!-- ===== DEPARTMENTS TAB ===== -->
+<div id="tab-departments" class="tab-panel">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🎪 Department Performance</div>
+      <div class="section-subtitle" id="dept-subtitle">Revenue, cost and transaction volume per department</div>
+    </div>
+  </div>
+
+  <!-- Dept KPI cards -->
+  <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
+
+    <div class="kpi-card" style="--accent-color:#58a6ff">
+      <div class="kpi-icon">🎭</div>
+      <div class="kpi-label">Shows</div>
+      <div class="kpi-value" id="dept-kpi-shows" style="font-size:22px">0</div>
+      <div class="kpi-sub" id="dept-kpi-shows-sub">0 bookings</div>
+      <div class="kpi-badge" id="dept-kpi-shows-badge">Cost: 0</div>
     </div>
 
-    <!-- Dept KPI cards -->
-    <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
-      <div class="kpi-card" style="--accent-color:#58a6ff">
-        <div class="kpi-icon">🎭</div>
-        <div class="kpi-label">Shows</div>
-        <div class="kpi-value" style="font-size:22px">$158,214</div>
-        <div class="kpi-sub">1,286 bookings</div>
-        <div class="kpi-badge badge-down">Cost: $154,665</div>
-      </div>
-      <div class="kpi-card" style="--accent-color:#3fb950">
-        <div class="kpi-icon">🎤</div>
-        <div class="kpi-label">Singers</div>
-        <div class="kpi-value" style="font-size:22px">$49,314</div>
-        <div class="kpi-sub">1,191 bookings</div>
-        <div class="kpi-badge badge-down">Cost: $50,400</div>
-      </div>
-      <div class="kpi-card" style="--accent-color:#d2a8ff">
-        <div class="kpi-icon">🎸</div>
-        <div class="kpi-label">Instrumental</div>
-        <div class="kpi-value" style="font-size:22px">$20,977</div>
-        <div class="kpi-sub">727 bookings</div>
-        <div class="kpi-badge badge-up">Cost: $18,059</div>
-      </div>
-      <div class="kpi-card" style="--accent-color:#ffa657">
-        <div class="kpi-icon">💃</div>
-        <div class="kpi-label">Belly Dancer</div>
-        <div class="kpi-value" style="font-size:22px">$10,894</div>
-        <div class="kpi-sub">407 bookings</div>
-        <div class="kpi-badge badge-up">Cost: $8,498</div>
-      </div>
-      <div class="kpi-card" style="--accent-color:#f78166">
-        <div class="kpi-icon">🥁</div>
-        <div class="kpi-label">Oriental</div>
-        <div class="kpi-value" style="font-size:22px">$2,028</div>
-        <div class="kpi-sub">133 bookings</div>
-        <div class="kpi-badge badge-up">Cost: $0</div>
-      </div>
+    <div class="kpi-card" style="--accent-color:#3fb950">
+      <div class="kpi-icon">🎤</div>
+      <div class="kpi-label">Singers</div>
+      <div class="kpi-value" id="dept-kpi-singers" style="font-size:22px">0</div>
+      <div class="kpi-sub" id="dept-kpi-singers-sub">0 bookings</div>
+      <div class="kpi-badge" id="dept-kpi-singers-badge">Cost: 0</div>
     </div>
+
+    <div class="kpi-card" style="--accent-color:#d2a8ff">
+      <div class="kpi-icon">🎸</div>
+      <div class="kpi-label">Instrumental</div>
+      <div class="kpi-value" id="dept-kpi-instrumental" style="font-size:22px">0</div>
+      <div class="kpi-sub" id="dept-kpi-instrumental-sub">0 bookings</div>
+      <div class="kpi-badge" id="dept-kpi-instrumental-badge">Cost: 0</div>
+    </div>
+
+    <div class="kpi-card" style="--accent-color:#ffa657">
+      <div class="kpi-icon">💃</div>
+      <div class="kpi-label">Belly_Dancer</div>
+      <div class="kpi-value" id="dept-kpi-belly_dancer" style="font-size:22px">0</div>
+      <div class="kpi-sub" id="dept-kpi-belly_dancer-sub">0 bookings</div>
+      <div class="kpi-badge" id="dept-kpi-belly_dancer-badge">Cost: 0</div>
+    </div>
+
+    <div class="kpi-card" style="--accent-color:#f78166">
+      <div class="kpi-icon">🥁</div>
+      <div class="kpi-label">Oriental</div>
+      <div class="kpi-value" id="dept-kpi-oriental" style="font-size:22px">0</div>
+      <div class="kpi-sub" id="dept-kpi-oriental-sub">0 bookings</div>
+      <div class="kpi-badge" id="dept-kpi-oriental-badge">Cost: 0</div>
+    </div>
+  </div>
 
     <div class="chart-grid-2">
       <div class="chart-card">
@@ -680,136 +687,353 @@ function applyFilter(month) {
   } else if (month === "feb") {
     filtered = RAW_DATA.filter(r => new Date(r.Date).getMonth() === 1);
   }
-
   buildData(filtered);
-  rebuildDashboard();
+  buildCharts();
+  updateKPIs();
+  updateDeptKPIs();
+  updateExpenseKPIs();
 }
-
 function buildData(rows) {
 
   const byDate = {};
   const byMonth = {};
   const deptMap = {};
   const hotelMap = {};
+  const expCatMap = {};
 
   rows.forEach(r => {
+
     const d = new Date(r.Date);
     const day = d.toLocaleDateString('en-US',{month:'short',day:'2-digit'});
     const month = d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+
     const incUSD = num(r["Income USD"]);
     const expUSD = num(r["Exp.USD"]);
 
     const incEGP = num(r["Income EGP"]);
     const expEGP = num(r["Exp.EGP"]);
 
+    const category = r["Accounting Guidance"] || "Other";
     const dept = r["Deparment"] || "Other";
     const hotel = r["Hotel"] || "Unknown";
 
-if(!byDate[day]) byDate[day]={i:0,e:0};
-if(!byMonth[month]) byMonth[month]={i:0,e:0,iEGP:0,eEGP:0};
-if(!deptMap[dept]) deptMap[dept]={i:0,e:0,c:0,iEGP:0,eEGP:0};
-if(!hotelMap[hotel]) hotelMap[hotel]={iUSD:0,iEGP:0,c:0};
+    // ===== Init =====
+    if(!byDate[day]) byDate[day]={i:0,e:0};
+    if(!byMonth[month]) byMonth[month]={i:0,e:0,iEGP:0,eEGP:0};
+    if(!deptMap[dept]) deptMap[dept]={i:0,e:0,c:0,iEGP:0,eEGP:0};
+    if(!hotelMap[hotel]) hotelMap[hotel]={iUSD:0,iEGP:0,c:0};
+    if(!expCatMap[category]) expCatMap[category]={usd:0, egp:0};
 
-// charts + KPI (حسب العملة)
-// USD (ثابت)
-byMonth[month].i += incUSD;
-byMonth[month].e += expUSD;
+    // ===== Expense Category =====
+    expCatMap[category].usd += expUSD;
+    expCatMap[category].egp += expEGP;
 
-// EGP (ثابت)
-byMonth[month].iEGP += incEGP;
-byMonth[month].eEGP += expEGP;
+    // ===== Date =====
+    byDate[day].i += incUSD;
+    byDate[day].e += expUSD;
 
-// الجدول (ثابت)
-deptMap[dept].i += incUSD;
-deptMap[dept].e += expUSD;
+    // ===== Month =====
+    byMonth[month].i += incUSD;
+    byMonth[month].e += expUSD;
 
-deptMap[dept].iEGP += incEGP;
-deptMap[dept].eEGP += expEGP;
+    byMonth[month].iEGP += incEGP;
+    byMonth[month].eEGP += expEGP;
 
-deptMap[dept].c++;
-hotelMap[hotel].iUSD += incUSD;
-hotelMap[hotel].iEGP += incEGP;
-hotelMap[hotel].c++;
-// ===== Top Performances =====
-const perfArr = Object.entries(deptMap).map(([name, d]) => ({
-  name: name,
-  usd: (d.i || 0) - (d.e || 0),
-  egp: (d.iEGP || 0) - (d.eEGP || 0)
-}));
+    // ===== Dept =====
+    deptMap[dept].i += incUSD;
+    deptMap[dept].e += expUSD;
 
-// ترتيب حسب العملة
-const sortedPerf = perfArr
-  .sort((a,b) => currency === "USD"
-    ? b.usd - a.usd
-    : b.egp - a.egp
-  )
-  .slice(0,5);
+    deptMap[dept].iEGP += incEGP;
+    deptMap[dept].eEGP += expEGP;
 
-// تخزين في DATA
-DATA.perf_labels = sortedPerf.map(d => d.name);
-DATA.perf_income = sortedPerf.map(d =>
-  currency === "USD" ? d.usd : d.egp
-);
+    deptMap[dept].c++;
+
+    // ===== Hotel =====
+    hotelMap[hotel].iUSD += incUSD;
+    hotelMap[hotel].iEGP += incEGP;
+    hotelMap[hotel].c++;
+
+  });
+// ===== EXPENSE KPI BUILD =====
+const expMap = {};
+
+rows.forEach(r => {
+
+  const category = r["Accounting Guidance"] || "Other";
+
+  const value = currency === "USD"
+    ? num(r["Exp.USD"])
+    : num(r["Exp.EGP"]);
+
+  if (!expMap[category]) expMap[category] = 0;
+
+  expMap[category] += value;
 
 });
+
+// تحويلها لفورم مناسب
+// ===== EXPENSE KPI BUILD (SMART) =====
+DATA.exp_kpi = {
+  total: 0,
+  salary: 0,
+  operating: 0,
+  visa: 0
+};
+
+Object.entries(expMap).forEach(([k, v]) => {
+
+  const name = k.toLowerCase();
+
+  DATA.exp_kpi.total += v;
+
+
+  // ===== SALARY =====
+  if (
+    name.includes("salary") ||
+    name.includes("salaries") ||
+    name.includes("staff")
+  ) {
+    DATA.exp_kpi.salary += v;
+  }
+
+  // ===== VISA =====
+  if (
+    name.includes("visa")
+  ) {
+    DATA.exp_kpi.visa += v;
+  }
+
+  // ===== OPERATING =====
+  if (
+    name.includes("transport") ||
+    name.includes("travel") ||
+    name.includes("ticket") ||
+    name.includes("fuel") ||
+    name.includes("rent") ||
+    name.includes("order") ||
+    name.includes("service") ||
+    name.includes("operation")
+  ) {
+    DATA.exp_kpi.operating += v;
+  }
+
+});
+// ================= هنا تحطه =================
+
+// ===== TOP EXPENSE =====
+let topCategory = "";
+let topValue = 0;
+
+Object.entries(expMap).forEach(([k, v]) => {
+  if (v > topValue) {
+    topValue = v;
+    topCategory = k;
+  }
+});
+
+DATA.exp_top = {
+  name: topCategory,
+  value: topValue
+};
+// ===== KPI FROM DEPT (🔥 هنا بالظبط) =====
+let deptIncome = 0;
+let deptExpense = 0;
+
+Object.values(deptMap).forEach(d => {
+  deptIncome += currency === "USD" ? d.i : d.iEGP;
+  deptExpense += currency === "USD" ? d.e : d.eEGP;
+});
+
+DATA.kpi_income = deptIncome;
+DATA.kpi_expense = deptExpense;
+DATA.kpi_net = deptIncome - deptExpense;
+DATA.dept_kpi = deptMap;
+
+  // ================= SAFE =================
   const safe = arr => Array.isArray(arr) ? arr : [];
 
+  // ================= DAILY =================
   DATA.daily_labels = safe(Object.keys(byDate));
   DATA.daily_income = safe(Object.values(byDate).map(d=>d.i));
   DATA.daily_exp = safe(Object.values(byDate).map(d=>d.e));
   DATA.daily_balance = DATA.daily_income.map((v,i)=>v-DATA.daily_exp[i]);
 
+  // ================= MONTHLY =================
   DATA.monthly_labels = safe(Object.keys(byMonth));
+
   DATA.monthly_income_usd = safe(Object.values(byMonth).map(m=>m.i));
   DATA.monthly_exp_usd = safe(Object.values(byMonth).map(m=>m.e));
   DATA.monthly_net_usd = DATA.monthly_income_usd.map((v,i)=>v-DATA.monthly_exp_usd[i]);
 
-  DATA.monthly_income_egp = Object.values(byMonth).map(m => m.iEGP || 0);
-  DATA.monthly_exp_egp = Object.values(byMonth).map(m => m.eEGP || 0);
-  DATA.monthly_net_egp = DATA.monthly_income_egp.map((v,i)=>v - DATA.monthly_exp_egp[i]);
+  DATA.monthly_income_egp = safe(Object.values(byMonth).map(m=>m.iEGP));
+  DATA.monthly_exp_egp = safe(Object.values(byMonth).map(m=>m.eEGP));
+  DATA.monthly_net_egp = DATA.monthly_income_egp.map((v,i)=>v-DATA.monthly_exp_egp[i]);
 
+  // ================= DEPT =================
   DATA.dept_labels = safe(Object.keys(deptMap));
   DATA.dept_income = safe(DATA.dept_labels.map(k=>deptMap[k].i));
   DATA.dept_exp = safe(DATA.dept_labels.map(k=>deptMap[k].e));
   DATA.dept_transactions = safe(DATA.dept_labels.map(k=>deptMap[k].c));
+
   DATA.dept_income_egp = DATA.dept_labels.map(k=>deptMap[k].iEGP);
   DATA.dept_exp_egp = DATA.dept_labels.map(k=>deptMap[k].eEGP);
 
-  const hotels = Object.entries(hotelMap).sort((a,b)=>b[1].i-a[1].i).slice(0,10);
+  // ================= HOTEL =================
+  const hotels = Object.entries(hotelMap)
+    .sort((a,b)=>b[1].iUSD - a[1].iUSD)
+    .slice(0,10);
 
   DATA.hotel_labels = safe(hotels.map(h=>h[0]));
   DATA.hotel_income_usd = hotels.map(h => h[1].iUSD || 0);
   DATA.hotel_income_egp = hotels.map(h => h[1].iEGP || 0);
   DATA.hotel_transactions = safe(hotels.map(h=>h[1].c));
 
-  // optional charts
-  DATA.perf_labels = safe(DATA.perf_labels);
-  DATA.perf_income = safe(DATA.perf_income);
-  DATA.exp_cat_labels = safe(DATA.exp_cat_labels);
-  DATA.exp_cat_values = safe(DATA.exp_cat_values);
-let totalIncome = 0;
-let totalExp = 0;
 
-rows.forEach(r => {
-  totalIncome += getIncome(r);
-  totalExp += getExpense(r);
+  // ================= TOP PERFORMANCE =================
+  const perfArr = Object.entries(deptMap).map(([name, d]) => ({
+    name,
+    usd: (d.i || 0) - (d.e || 0),
+    egp: (d.iEGP || 0) - (d.eEGP || 0)
+  }));
+
+  const sortedPerf = perfArr
+    .sort((a,b)=> currency === "USD" ? b.usd - a.usd : b.egp - a.egp)
+    .slice(0,5);
+
+  DATA.perf_labels = sortedPerf.map(d => d.name);
+  DATA.perf_income = sortedPerf.map(d =>
+    currency === "USD" ? d.usd : d.egp
+  );
+
+  // ================= EXPENSE CATEGORY =================
+  const sortedExpCat = Object.entries(expCatMap)
+    .map(([k,v]) => ({
+      name: k,
+      usd: v.usd,
+      egp: v.egp
+    }))
+    .sort((a,b)=> currency === "USD" ? b.usd - a.usd : b.egp - a.egp);
+
+  const top = sortedExpCat.slice(0,5);
+
+  const others = sortedExpCat
+    .slice(5)
+    .reduce((sum,c)=> sum + (currency === "USD" ? c.usd : c.egp), 0);
+
+  if(others > 0){
+    top.push({ name: "Others", usd: others, egp: others });
+  }
+
+  DATA.exp_cat_labels = top.map(e => e.name);
+  DATA.exp_cat_values = top.map(e =>
+    currency === "USD" ? e.usd : e.egp
+  );
+
+}
+function updateKPIs() {
+
+  const prefix = currency === "USD" ? "$" : "EGP ";
+
+  const income = DATA.kpi_income || 0;
+  const expense = DATA.kpi_expense || 0;
+  const net = DATA.kpi_net || 0;
+
+  // ===== كل KPI values =====
+  document.querySelectorAll('[id*="kpi-income"]').forEach(el => {
+    el.innerText = prefix + income.toLocaleString();
+  });
+
+
+
+  document.querySelectorAll('[id*="kpi-net"]').forEach(el => {
+    el.innerText = prefix + net.toLocaleString();
+    el.style.color = net >= 0 ? "#3fb950" : "#f78166";
+  });
+
+  // ===== Revenue =====
+  document.querySelectorAll('[id*="rev-kpi"]').forEach(el => {
+    el.innerText = prefix + income.toLocaleString();
+  });
+
+// Expense page
+document.querySelectorAll('[id^="exp-kpi"]').forEach(el => {
+  if (!el.id.includes("sub")) {
+    el.innerText = prefix + expense.toLocaleString();
+  }
 });
 
-let net = totalIncome - totalExp;
+// Departments page (مبدئي)
 
-const prefix = currency === "USD" ? "$" : "EGP ";
 
-document.getElementById("kpi-income").innerText =
-  prefix + totalIncome.toLocaleString();
-
-document.getElementById("kpi-exp").innerText =
-  prefix + totalExp.toLocaleString();
-
-const netEl = document.getElementById("kpi-net");
-netEl.innerText = prefix + net.toLocaleString();
-netEl.style.color = net >= 0 ? "#3fb950" : "#f78166";
 }
+function updateDeptKPIs() {
 
+  const prefix = currency === "USD" ? "$" : "EGP ";
+  const map = DATA.dept_kpi || {};
+
+  Object.entries(map).forEach(([name, d]) => {
+
+    const id = name.toLowerCase().replace(/\s+/g, '_');
+
+    const income = currency === "USD" ? (d.i || 0) : (d.iEGP || 0);
+    const cost   = currency === "USD" ? (d.e || 0) : (d.eEGP || 0);
+    const count  = d.c || 0;
+
+    // 🔥 كل كارت بياخد قيمته
+    const el = document.getElementById(`dept-kpi-${id}`);
+    const sub = document.getElementById(`dept-kpi-${id}-sub`);
+    const badge = document.getElementById(`dept-kpi-${id}-badge`);
+
+    if (el) el.innerText = prefix + income.toLocaleString();
+    if (sub) sub.innerText = count + " bookings";
+    if (badge) badge.innerText = "Cost: " + prefix + cost.toLocaleString();
+
+  });
+
+}
+function updateExpenseKPIs() {
+
+  const prefix = currency === "USD" ? "$" : "EGP ";
+  const data = DATA.exp_kpi || {};
+
+  const set = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = prefix + (value || 0).toLocaleString();
+  };
+
+  set("exp-kpi-total", data.total);
+  set("exp-kpi-salary", data.salary);
+  set("exp-kpi-operating", data.operating);
+  set("exp-kpi-visa", data.visa);
+
+  const total = data.total || 1;
+
+  const setPercent = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const p = ((value / total) * 100).toFixed(1);
+      el.innerText = p + "% of total";
+    }
+  };
+
+  setPercent("exp-kpi-salary-sub", data.salary);
+  setPercent("exp-kpi-operating-sub", data.operating);
+  setPercent("exp-kpi-visa-sub", data.visa);
+
+  // ===== TOP BADGE =====
+  const topBadge = document.getElementById("exp-top-badge");
+
+  if (topBadge && DATA.exp_top) {
+    topBadge.innerText =
+      "Top: " +
+      DATA.exp_top.name +
+      " (" +
+      prefix +
+      DATA.exp_top.value.toLocaleString() +
+      ")";
+  }
+
+} // ✅ مهم جدًا
 function rebuildDashboard() {
   Object.values(charts).forEach(c => {
     try { c.destroy(); } catch(e){}
@@ -873,11 +1097,50 @@ function baseOptions(extra = {}) {
   };
 }
 
-// ============================================================
+
 // BUILD ALL CHARTS
 // ============================================================
+const centerTextPlugin = {
+  id: 'centerText',
+
+  afterDraw(chart) {
+    const { ctx, width, height } = chart;
+
+    const data = chart.data.datasets[0].data || [];
+    const total = data.reduce((a,b)=>a+b,0);
+
+    // Animation progress
+    const progress = chart.animator?.currentStep / chart.animator?.numSteps || 1;
+    const animatedValue = total * progress;
+
+    ctx.save();
+
+    // Title
+    ctx.font = "12px Arial";
+    ctx.fillStyle = "#8b949e";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Total", width / 2, height / 2 - 12);
+
+    // Value
+    ctx.font = "bold 18px Arial";
+    ctx.fillStyle = "#e6edf3";
+
+    const text = (currency === "USD" ? "$" : "EGP ") +
+      Math.floor(animatedValue).toLocaleString();
+
+    ctx.fillText(text, width / 2, height / 2 + 10);
+
+    ctx.restore();
+  }
+};
 function buildCharts() {
+
+  Object.values(charts).forEach(c => {
+    try { c.destroy(); } catch(e){}
+  });
   // ----- Monthly Bar -----
+
   const mCtx = document.getElementById('chartMonthly').getContext('2d');
   charts.monthly = new Chart(mCtx, {
     type: 'bar',
@@ -973,12 +1236,12 @@ function buildCharts() {
 // ----- Performance Bar -----
 if (charts.perf) charts.perf.destroy();
 
-if (!DATA.perf_labels || DATA.perf_labels.length === 0) return;
+if (DATA.perf_labels && DATA.perf_labels.length > 0) {
 
-const canvas = document.getElementById('chartPerfBar');
-if (!canvas) return;
+  const canvas = document.getElementById('chartPerfBar');
+  if (!canvas) return;
 
-const pCtx = canvas.getContext('2d');
+  const pCtx = canvas.getContext('2d');
 
 charts.perf = new Chart(pCtx, {
   type: 'bar',
@@ -1013,6 +1276,23 @@ charts.perf = new Chart(pCtx, {
     }
   }
 });
+}
+function bindHover(id, keyword) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.onmouseenter = () => {
+    const index = DATA.exp_cat_labels.findIndex(l =>
+      l.toLowerCase().includes(keyword)
+    );
+    if (index >= 0) highlightExpense(index);
+  };
+
+  el.onmouseleave = () => {
+    charts.expCat.setActiveElements([]);
+    charts.expCat.update();
+  };
+}
   // ----- Revenue Share -----
 
 // 🔴 حط الكود ده هنا 👇👇👇
@@ -1081,17 +1361,80 @@ const values = top5.map(d => d.value);
     }
   });
 
-  // ----- Expense Category -----
-  const ecCtx = document.getElementById('chartExpCat').getContext('2d');
-  charts.expCat = new Chart(ecCtx, {
-    type: 'doughnut',
-    data: {
-      labels: DATA.exp_cat_labels,
-      datasets: [{ data: DATA.exp_cat_values, backgroundColor: [COLORS.red, COLORS.purple, COLORS.orange, COLORS.yellow, COLORS.teal, COLORS.blue, COLORS.pink, COLORS.cyan], borderWidth: 2, borderColor: '#161b22', hoverOffset: 8 }]
-    },
-    options: { ...baseOptions(), cutout: '55%' }
-  });
 
+// ----- Expense Category -----
+if (DATA.exp_cat_labels && DATA.exp_cat_labels.length > 0) {
+
+  const ecCanvas = document.getElementById('chartExpCat');
+  if (!ecCanvas) return;
+
+const ecCtx = ecCanvas.getContext('2d');
+
+if (charts.expCat) charts.expCat.destroy();
+
+charts.expCat = new Chart(ecCtx, {
+  type: 'doughnut',
+
+  data: {
+    labels: DATA.exp_cat_labels,
+    datasets: [{
+      data: DATA.exp_cat_values,
+      backgroundColor: [
+        '#f78166',
+        '#a371f7',
+        '#ffb86b',
+        '#f2cc60',
+        '#3fb950',
+        '#6cb6ff'
+      ],
+      borderWidth: 2,
+      borderColor: '#161b22',
+      hoverOffset: 12
+    }]
+  },
+
+  plugins: [centerTextPlugin],
+
+  options: {
+    ...baseOptions(),
+    cutout: '65%',
+
+    animation: {
+      duration: 1200,
+      easing: 'easeOutQuart'
+    },
+
+    plugins: {
+      ...baseOptions().plugins,
+
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const total = DATA.exp_cat_values.reduce((a,b)=>a+b,0);
+            const value = ctx.raw;
+            const percent = total ? ((value/total)*100).toFixed(1) : 0;
+
+            return ` ${ctx.label}: ${currency === "USD" ? "$" : "EGP "}${value.toLocaleString()} (${percent}%)`;
+          }
+        }
+      },
+
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#e6edf3',
+          padding: 12
+        }
+      }
+    }
+  }
+});
+setTimeout(() => {
+  bindHover("exp-kpi-salary", "salary");
+  bindHover("exp-kpi-operating", "transport");
+  bindHover("exp-kpi-visa", "visa");
+}, 300);
+}
   // ----- Monthly Expense -----
   const meCtx = document.getElementById('chartMonthlyExp').getContext('2d');
   charts.monthlyExp = new Chart(meCtx, {
@@ -1297,20 +1640,27 @@ function buildHotelTable() {
   }).join('');
 }
 
+
 // ============================================================
 // TABS
 // ============================================================
-function showTab(name, el) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+function showTab(tabName, btn) {
 
-  document.getElementById('tab-' + name).classList.add('active');
+  // hide tabs
+  document.querySelectorAll('.tab-panel').forEach(tab => {
+    tab.classList.remove('active');
+  });
 
-  if (el) el.classList.add('active');
+  // show selected
+  const target = document.getElementById('tab-' + tabName);
+  if (target) target.classList.add('active');
 
-  setTimeout(() => {
-    Object.values(charts).forEach(c => { try { c.resize(); } catch(e){} });
-  }, 50);
+  // active button
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  if (btn) btn.classList.add('active');
 }
 
 // ============================================================
