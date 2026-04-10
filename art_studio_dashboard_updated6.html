@@ -7,6 +7,95 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
+.row-best {
+  background: rgba(63,185,80,0.08);
+  border-left: 4px solid #3fb950;
+}
+
+.row-worst {
+  background: rgba(247,129,102,0.08);
+  border-left: 4px solid #f78166;
+}
+.header-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.currency-switch {
+  display: flex;
+  gap: 6px;
+}
+
+.currency-btn {
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: #e6edf3;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.currency-btn.active {
+  background: #238636;
+  color: white;
+}
+.filter-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 20px;
+}
+
+.filter-label {
+  font-size: 12px;
+  color: #8b949e;
+}
+
+.custom-select {
+  position: relative;
+  width: 180px;
+}
+
+.select-selected {
+  background: #161b22;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+}
+
+.select-dropdown {
+  display: none;
+  position: absolute;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  width: 100%;
+  margin-top: 5px;
+  z-index: 999;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.select-dropdown input {
+  width: 100%;
+  padding: 8px;
+  background: #0d1117;
+  color: white;
+  border: none;
+}
+
+.option-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.option-item:hover {
+  background: #21262d;
+}
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
   :root {
@@ -233,25 +322,52 @@
 
 <!-- HEADER -->
 <div class="header">
+
+  <!-- LEFT -->
   <div class="header-left">
     <div class="logo">🎭</div>
     <div>
       <h1>Art Studio P&amp;L Dashboard</h1>
-      <p>Financial Performance Analytics · Jan – Feb 2026</p>
+      <p>Financial Performance Analytics · Dynamic View</p>
     </div>
   </div>
-  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-    <div class="month-toggle">
-      <button class="month-btn active" id="btnAll" onclick="setMonth('all')">📅 All</button>
-      <button class="month-btn" id="btnJan" onclick="setMonth('jan')">January</button>
-      <button class="month-btn" id="btnFeb" onclick="setMonth('feb')">February</button>
+
+  <!-- RIGHT CONTROLS -->
+  <div class="header-controls">
+
+    <!-- MONTH FILTER -->
+    <div class="filter-box">
+      <div class="filter-label">📅 Select Month</div>
+
+      <div class="custom-select">
+
+        <div class="select-selected" onclick="toggleDropdown()">
+          All Months
+        </div>
+
+        <div class="select-dropdown" id="dropdownList">
+          <input type="text" id="searchMonth" placeholder="Search..." onkeyup="filterMonths()" />
+          <div id="optionsContainer"></div>
+        </div>
+
+      </div>
     </div>
-    <div class="currency-toggle">
-      <button class="curr-btn active" id="btnUSD" onclick="setCurrency('USD')">USD $</button>
-      <button class="curr-btn" id="btnEGP" onclick="setCurrency('EGP')">EGP ج.م</button>
+
+    <!-- CURRENCY -->
+    <div class="currency-switch">
+
+      <button onclick="setCurrency('USD')" class="currency-btn active">USD $</button>
+      <button onclick="setCurrency('EGP')" class="currency-btn">EGP ج.م</button>
+
     </div>
-    <span class="header-badge" id="period-badge">📅 Jan 1 – Feb 28, 2026</span>
+
+    <!-- PERIOD BADGE -->
+    <span class="header-badge" id="period-badge">
+      📅 Dynamic Period
+    </span>
+
   </div>
+
 </div>
 
 <!-- TABS -->
@@ -594,7 +710,7 @@
       <div class="chart-title">📋 Department Detailed Breakdown</div>
       <table class="data-table">
         <thead>
-          <tr><th>Department</th><th>Income (USD)</th><th>Income (EGP)</th><th>Expenses (USD)</th><th>Total Cost (EGP)</th><th>Transactions</th><th>Profit (USD)</th><th>Status</th></tr>
+          <tr><th>Department</th><th>Income (USD)</th><th>Income (EGP)</th><th>Expenses (USD)</th><th>Total Cost (EGP)</th><th>Transactions</th><th>Profit (USD)</th><th>PROFIT (EGP)</th><th>Status(USD / EGP)</th></tr>
         </thead>
         <tbody id="dept-table-body">
           <!-- Dynamic rows -->
@@ -675,24 +791,13 @@ async function loadDashboardData() {
   const res = await fetch("dashboard.json");
   RAW_DATA = await res.json();
 
-  applyFilter("all");
+  
+  populateCustomMonths();
+  populateCompareMonths();
+  selectMonth("ALL");
 }
 
-function applyFilter(month) {
 
-  let filtered = RAW_DATA;
-
-  if (month === "jan") {
-    filtered = RAW_DATA.filter(r => new Date(r.Date).getMonth() === 0);
-  } else if (month === "feb") {
-    filtered = RAW_DATA.filter(r => new Date(r.Date).getMonth() === 1);
-  }
-  buildData(filtered);
-  buildCharts();
-  updateKPIs();
-  updateDeptKPIs();
-  updateExpenseKPIs();
-}
 function buildData(rows) {
 
   const byDate = {};
@@ -930,6 +1035,8 @@ DATA.dept_kpi = deptMap;
   );
 
 }
+
+
 function updateKPIs() {
 
   const prefix = currency === "USD" ? "$" : "EGP ";
@@ -1042,16 +1149,7 @@ function rebuildDashboard() {
   buildCharts();
 }
 
-function setMonth(m) {
-  activeMonth = m;
 
-  ['All','Jan','Feb'].forEach(k => {
-    const btn = document.getElementById('btn' + k);
-    if (btn) btn.classList.toggle('active', k.toLowerCase() === m);
-  });
-
-  applyFilter(m);
-}
 
 const COLORS = {
   blue: '#58a6ff',
@@ -1668,10 +1766,18 @@ function showTab(tabName, btn) {
 // ============================================================
 function setCurrency(cur) {
   currency = cur;
-  document.getElementById('btnUSD').classList.toggle('active', cur === 'USD');
-  document.getElementById('btnEGP').classList.toggle('active', cur === 'EGP');
-  // Re-apply current month filter with new currency
-  setMonth(activeMonth);
+
+  document.querySelectorAll('.currency-btn').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  event.target.classList.add('active');
+
+  applyCustomFilter(
+    document.querySelector(".select-selected").innerText === "All Months"
+      ? "ALL"
+      : document.querySelector(".select-selected").innerText
+  );
 }
 
 
@@ -1719,34 +1825,287 @@ function buildSummaryTable(md) {
 function buildDeptTable(md) {
   const tbody = document.getElementById('dept-table-body');
   if (!tbody) return;
+
   const labels = DATA.dept_labels;
   const pills = ['pill-blue', 'pill-green', 'pill-purple', 'pill-orange', 'pill-red'];
-  
+
+  // ===== احسب كل Profit EGP =====
+  const profitsEGP = labels.map((_, i) => {
+    const inc = DATA.dept_income_egp?.[i] || 0;
+    const exp = DATA.dept_exp_egp?.[i] || 0;
+    return inc - exp;
+  });
+
+  const maxProfit = Math.max(...profitsEGP);
+  const minProfit = Math.min(...profitsEGP);
+
+  // ===== بناء الجدول =====
   tbody.innerHTML = labels.map((name, i) => {
+
+    // ===== USD =====
     const inc_u = md.dept_income?.[i] || 0;
     const exp_u = md.dept_exp?.[i] || 0;
     const prof = inc_u - exp_u;
-    const status = prof >= 0 ? 'Profitable' : 'Deficit';
-    const statusPill = prof >= 0 ? 'pill-green' : 'pill-red';
-    
-    // Estimates for EGP based on studio average
+
+    // ===== EGP =====
     const inc_e = DATA.dept_income_egp?.[i] || 0;
     const exp_e = DATA.dept_exp_egp?.[i] || 0;
+    const prof_e = inc_e - exp_e;
 
-    return `<tr>
+    // ===== STATUS =====
+    const statusUSD = prof >= 0 ? 'Profitable' : 'Deficit';
+    const pillUSD = prof >= 0 ? 'pill-green' : 'pill-red';
+
+    const statusEGP = prof_e >= 0 ? 'Profitable' : 'Deficit';
+    const pillEGP = prof_e >= 0 ? 'pill-green' : 'pill-red';
+
+    // ===== HIGHLIGHT =====
+    let rowClass = '';
+
+    if (prof_e === maxProfit) {
+      rowClass = 'row-best';
+    } else if (prof_e === minProfit) {
+      rowClass = 'row-worst';
+    }
+
+    return `<tr class="${rowClass}">
+
       <td><span class="pill ${pills[i]}">${name}</span></td>
-      <td style="color:#58a6ff">$${inc_u.toLocaleString('en', {minimumFractionDigits:2})}</td>
-      <td>EGP ${inc_e.toLocaleString('en')}</td>
-      <td style="color:#f78166">$${exp_u.toLocaleString('en', {minimumFractionDigits:2})}</td>
-      <td>EGP ${exp_e.toLocaleString('en')}</td>
-      <td>${md.dept_transactions?.[i] || 0}</td>
-      <td style="color:${prof >= 0 ? '#3fb950' : '#f78166'}"><strong>${prof >= 0 ? '+' : '-'}$${Math.abs(prof).toLocaleString('en', {minimumFractionDigits:2})}</strong></td>
-      <td><span class="pill ${statusPill}">${status}</span></td>
+
+      <td style="color:#58a6ff">
+        $${inc_u.toLocaleString('en', {minimumFractionDigits:2})}
+      </td>
+
+      <td>
+        EGP ${inc_e.toLocaleString('en')}
+      </td>
+
+      <td style="color:#f78166">
+        $${exp_u.toLocaleString('en', {minimumFractionDigits:2})}
+      </td>
+
+      <td>
+        EGP ${exp_e.toLocaleString('en')}
+      </td>
+
+      <td>
+        ${md.dept_transactions?.[i] || 0}
+      </td>
+
+      <!-- PROFIT USD -->
+      <td style="color:${prof >= 0 ? '#3fb950' : '#f78166'}">
+        <strong>
+          ${prof >= 0 ? '+' : '-'}$${Math.abs(prof).toLocaleString('en', {minimumFractionDigits:2})}
+        </strong>
+      </td>
+
+      <!-- PROFIT EGP -->
+      <td style="color:${prof_e >= 0 ? '#3fb950' : '#f78166'}">
+        <strong>
+          ${prof_e >= 0 ? '+' : '-'}EGP ${Math.abs(prof_e).toLocaleString('en')}
+        </strong>
+      </td>
+
+      <!-- STATUS USD + EGP -->
+      <td>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          
+          <span class="pill ${pillUSD}">
+            USD: ${statusUSD}
+          </span>
+
+          <span class="pill ${pillEGP}">
+            EGP: ${statusEGP}
+          </span>
+
+        </div>
+      </td>
+
     </tr>`;
+    
   }).join('');
 }
 
-// ============================================================
+function toggleDropdown() {
+  const d = document.getElementById("dropdownList");
+  d.style.display = d.style.display === "block" ? "none" : "block";
+}
+function populateCustomMonths() {
+
+  const container = document.getElementById("optionsContainer");
+
+  if (!container) {
+    console.error("optionsContainer not found ❌");
+    return;
+  }
+
+  container.innerHTML = "";
+
+  const monthsSet = new Set();
+
+  RAW_DATA.forEach(r => {
+    const d = new Date(r.Date);
+
+    const key = d.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric'
+    });
+
+    monthsSet.add(key);
+  });
+
+  const months = ["ALL", ...Array.from(monthsSet).sort((a,b)=>new Date(a)-new Date(b))];
+
+  months.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "option-item";
+    div.innerText = m === "ALL" ? "All Months" : m;
+
+    div.onclick = () => selectMonth(m);
+
+    container.appendChild(div);
+  });
+
+}
+function populateCompareMonths() {
+
+  const selectA = document.getElementById("monthA");
+  const selectB = document.getElementById("monthB");
+
+  if (!selectA || !selectB) return;
+
+  const monthsSet = new Set();
+
+  RAW_DATA.forEach(r => {
+    const d = new Date(r.Date);
+
+    const key = d.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric'
+    });
+
+    monthsSet.add(key);
+  });
+
+  const months = Array.from(monthsSet).sort((a,b)=>new Date(a)-new Date(b));
+
+  months.forEach(m => {
+    const opt1 = document.createElement("option");
+    opt1.value = m;
+    opt1.textContent = m;
+
+    const opt2 = opt1.cloneNode(true);
+
+    selectA.appendChild(opt1);
+    selectB.appendChild(opt2);
+  });
+
+}
+function applyComparison() {
+
+  const mA = document.getElementById("monthA").value;
+  const mB = document.getElementById("monthB").value;
+
+  if (!mA || !mB) return;
+
+  const filterMonth = (m) => {
+    return RAW_DATA.filter(r => {
+      const d = new Date(r.Date);
+
+      const key = d.toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric'
+      });
+
+      return key === m;
+    });
+  };
+
+  const dataA = filterMonth(mA);
+  const dataB = filterMonth(mB);
+
+  const sum = (rows, key) =>
+    rows.reduce((acc, r) => acc + num(r[key]), 0);
+
+  const incomeA = sum(dataA, currency === "USD" ? "Income USD" : "Income EGP");
+  const incomeB = sum(dataB, currency === "USD" ? "Income USD" : "Income EGP");
+
+  const diff = incomeB - incomeA;
+  const percent = incomeA ? ((diff / incomeA) * 100).toFixed(1) : 0;
+
+  // عرض الفرق
+  showComparisonResult(diff, percent, mA, mB);
+
+}
+function showComparisonResult(diff, percent, mA, mB) {
+
+  let el = document.getElementById("compare-kpi");
+
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "compare-kpi";
+    el.className = "kpi-card";
+    document.querySelector(".kpi-grid").prepend(el);
+  }
+
+  const prefix = currency === "USD" ? "$" : "EGP ";
+
+  el.innerHTML = `
+    <div class="kpi-label">📊 Comparison</div>
+    <div class="kpi-value" style="color:${diff>=0?'#3fb950':'#f78166'}">
+      ${prefix}${diff.toLocaleString()}
+    </div>
+    <div class="kpi-sub">
+      ${mA} → ${mB} (${percent}%)
+    </div>
+  `;
+}
+function selectMonth(value) {
+
+  document.querySelector(".select-selected").innerText =
+    value === "ALL" ? "All Months" : value;
+
+  document.getElementById("dropdownList").style.display = "none";
+
+  applyCustomFilter(value);
+
+}
+function applyCustomFilter(selected) {
+
+  let filtered = RAW_DATA;
+
+  if (selected !== "ALL") {
+
+    filtered = RAW_DATA.filter(r => {
+      const d = new Date(r.Date);
+
+      const key = d.toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric'
+      });
+
+      return key === selected;
+    });
+
+  }
+
+ buildData(filtered);
+ buildCharts();
+ updateKPIs();
+ updateExpenseKPIs();
+ updateDeptKPIs();
+
+}
+function filterMonths() {
+
+  const input = document.getElementById("searchMonth").value.toLowerCase();
+  const items = document.querySelectorAll(".option-item");
+
+  items.forEach(i => {
+    i.style.display = i.innerText.toLowerCase().includes(input) ? "block" : "none";
+  });
+
+}
 // INIT
 // ============================================================
 window.addEventListener('DOMContentLoaded', loadDashboardData);
