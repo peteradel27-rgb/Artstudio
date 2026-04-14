@@ -7,6 +7,25 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
+.advanced-filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-group select {
+  background: #161b22;
+  color: #e6edf3;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 6px;
+}
 .row-best {
   background: rgba(63,185,80,0.08);
   border-left: 4px solid #3fb950;
@@ -352,7 +371,31 @@
 
       </div>
     </div>
+<div class="advanced-filters">
 
+  <!-- Department -->
+  <div class="filter-group">
+    <div class="filter-label">🎪 Department</div>
+    <select id="filterDept" onchange="applyAdvancedFilter()"></select>
+  </div>
+
+  <!-- Name -->
+  <div class="filter-group">
+    <div class="filter-label">👤 Name</div>
+    <select id="filterName" onchange="applyAdvancedFilter()"></select>
+  </div>
+
+  <!-- Hotel -->
+  <div class="filter-group">
+    <div class="filter-label">🏨 Hotel</div>
+    <select id="filterHotel" onchange="applyAdvancedFilter()"></select>
+  </div>
+
+<div class="filter-group">
+  <div class="filter-label">💸 Expense</div>
+  <select id="filterExpense" onchange="applyAdvancedFilter()"></select>
+</div>
+</div>
     <!-- CURRENCY -->
     <div class="currency-switch">
 
@@ -795,6 +838,7 @@ async function loadDashboardData() {
   populateCustomMonths();
   populateCompareMonths();
   selectMonth("ALL");
+  populateAdvancedFilters();
 }
 
 
@@ -2106,6 +2150,92 @@ function filterMonths() {
   });
 
 }
+function populateAdvancedFilters() {
+
+  const deptSet = new Set();
+  const nameSet = new Set();
+  const hotelSet = new Set();
+  const expSet = new Set();
+
+  RAW_DATA.forEach(r => {
+    deptSet.add(r.Deparment || "Other");
+    nameSet.add(r["A Name"] || "Unknown");
+    hotelSet.add(r.Hotel || "Unknown");
+    expSet.add(r["Accounting Guidance"] || "Other"); // 👈 مهم
+  });
+
+  fillSelect("filterDept", deptSet);
+  fillSelect("filterName", nameSet);
+  fillSelect("filterHotel", hotelSet);
+  fillSelect("filterExpense", expSet);
+}
+
+function fillSelect(id, set) {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  el.innerHTML = `<option value="ALL">All</option>`;
+
+  Array.from(set).sort().forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v;
+    opt.textContent = v;
+    el.appendChild(opt);
+  });
+}
+function applyAdvancedFilter() {
+
+  const dept = document.getElementById("filterDept").value;
+  const name = document.getElementById("filterName").value;
+  const hotel = document.getElementById("filterHotel").value;
+  const expense = document.getElementById("filterExpense").value;
+
+  let filtered = RAW_DATA;
+
+  // Month filter
+  const selectedMonth = document.querySelector(".select-selected")?.innerText;
+
+  if (selectedMonth && selectedMonth !== "All Months") {
+    filtered = filtered.filter(r => {
+      const d = new Date(r.Date);
+      const key = d.toLocaleDateString('en-US', {
+        month:'short',
+        year:'numeric'
+      });
+      return key === selectedMonth;
+    });
+  }
+
+  // Department
+  if (dept !== "ALL") {
+    filtered = filtered.filter(r => (r.Deparment || "Other") === dept);
+  }
+
+  // Name
+  if (name !== "ALL") {
+    filtered = filtered.filter(r => (r["A Name"] || "Unknown") === name);
+  }
+
+  // Hotel
+  if (hotel !== "ALL") {
+    filtered = filtered.filter(r => (r.Hotel || "Unknown") === hotel);
+  }
+
+  // Expense 👇 (برا hotel)
+  if (expense !== "ALL") {
+    filtered = filtered.filter(r =>
+      (r["Accounting Guidance"] || "Other") === expense
+    );
+  }
+
+  // Update dashboard
+  buildData(filtered);
+  buildCharts();
+  updateKPIs();
+  updateExpenseKPIs();
+  updateDeptKPIs();
+}
+
 // INIT
 // ============================================================
 window.addEventListener('DOMContentLoaded', loadDashboardData);
