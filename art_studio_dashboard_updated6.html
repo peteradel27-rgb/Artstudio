@@ -2228,10 +2228,18 @@ function showComparisonResult(diff, percent, mA, mB) {
     </div>
   `;
 }
-function selectMonth(m) {
+function selectMonth(selected) {
 
-  filters.month = m;
+  filters.month = selected;
 
+  // 🔥 دي أهم سطر (تحديث الـ UI)
+  document.querySelector(".select-selected").innerText =
+    selected === "ALL" ? "All Months" : selected;
+
+  // 🔒 يقفل الـ dropdown بعد الاختيار
+  document.getElementById("dropdownList").style.display = "none";
+
+  // 🔄 تحديث الداشبورد
   const filtered = getFilteredData();
 
   buildData(filtered);
