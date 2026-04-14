@@ -652,18 +652,10 @@
       <div class="table-scroll">
         <table class="data-table">
           <thead>
-            <tr><th>Category</th><th>USD Amount</th><th>EGP Amount</th><th>% of Total (USD)</th><th>Type</th></tr>
+            <tr><th>Category</th><th>USD Amount</th><th>EGP Amount</th><th>% of Total (USD)</th><th>% of Total (EGP)</th><th>Type</th></tr>
           </thead>
-          <tbody>
-            <tr><td>Salaries</td><td>$204,870</td><td>EGP 499,717</td><td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:44.2%;background:#58a6ff"></div></div>44.2%</div></td><td><span class="pill pill-blue">Labor</span></td></tr>
-            <tr><td>By_Order</td><td>$14,714</td><td>EGP 578,750</td><td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:3.2%;background:#d2a8ff"></div></div>3.2%</div></td><td><span class="pill pill-purple">Contract</span></td></tr>
-            <tr><td>Visa_EXP</td><td>$9,812</td><td>EGP 52,770</td><td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:2.1%;background:#ffa657"></div></div>2.1%</div></td><td><span class="pill pill-orange">Admin</span></td></tr>
-            <tr><td>Tickets</td><td>$2,050</td><td>EGP 4,900</td><td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:0.4%;background:#3fb950"></div></div>0.4%</div></td><td><span class="pill pill-green">Travel</span></td></tr>
-            <tr><td>MR/Mohamed Ibrahim</td><td>$200</td><td>EGP 79,350</td><td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:0.04%;background:#f78166"></div></div>0.04%</div></td><td><span class="pill pill-red">Staff</span></td></tr>
-            <tr><td>Treatment_EXP</td><td>$130</td><td>EGP 18,235</td><td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:0.03%;background:#ffa657"></div></div>0.03%</div></td><td><span class="pill pill-orange">Welfare</span></td></tr>
-            <tr><td>Gasoline</td><td>—</td><td>EGP (field)</td><td>—</td><td><span class="pill pill-blue">Transport</span></td></tr>
-            <tr><td>Rent</td><td>—</td><td>EGP (field)</td><td>—</td><td><span class="pill pill-purple">Facilities</span></td></tr>
-          </tbody>
+<tbody id="exp-details-body">
+</tbody>
         </table>
       </div>
     </div>
@@ -829,16 +821,40 @@ function getExpense(row){
 // ============================================================
 let DATA = {};
 let RAW_DATA = [];
+let filters = {
+  month: "ALL",
+  dept: "ALL",
+  name: "ALL",
+  hotel: "ALL",
+  expense: "ALL"
+};
 
 async function loadDashboardData() {
+
   const res = await fetch("dashboard.json");
   RAW_DATA = await res.json();
 
-  
+  // 🔥 هنا بالظبط
+  RAW_DATA = RAW_DATA.map(r => {
+
+    const d = new Date(r.Date);
+
+    return {
+      ...r,
+      "A Name": (r["A Name"] || "").trim(),
+
+      _month: d.toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric'
+      })
+    };
+
+  });
+
   populateCustomMonths();
   populateCompareMonths();
-  selectMonth("ALL");
   populateAdvancedFilters();
+  selectMonth("ALL");
 }
 
 
@@ -1054,32 +1070,121 @@ DATA.dept_kpi = deptMap;
     currency === "USD" ? d.usd : d.egp
   );
 
-  // ================= EXPENSE CATEGORY =================
-  const sortedExpCat = Object.entries(expCatMap)
-    .map(([k,v]) => ({
-      name: k,
-      usd: v.usd,
-      egp: v.egp
-    }))
-    .sort((a,b)=> currency === "USD" ? b.usd - a.usd : b.egp - a.egp);
+// ================= EXPENSE CATEGORY =================
+const sortedExpCat = Object.entries(expCatMap)
+  .map(([k,v]) => ({
+    name: k,
+    usd: v.usd,
+    egp: v.egp
+  }))
+  .sort((a,b)=> currency === "USD" ? b.usd - a.usd : b.egp - a.egp);
 
-  const top = sortedExpCat.slice(0,5);
+const top = sortedExpCat.slice(0,5);
 
-  const others = sortedExpCat
-    .slice(5)
-    .reduce((sum,c)=> sum + (currency === "USD" ? c.usd : c.egp), 0);
+const others = sortedExpCat
+  .slice(5)
+  .reduce((sum,c)=> sum + (currency === "USD" ? c.usd : c.egp), 0);
 
-  if(others > 0){
-    top.push({ name: "Others", usd: others, egp: others });
-  }
-
-  DATA.exp_cat_labels = top.map(e => e.name);
-  DATA.exp_cat_values = top.map(e =>
-    currency === "USD" ? e.usd : e.egp
-  );
-
+if(others > 0){
+  top.push({ name: "Others", usd: others, egp: others });
 }
 
+// 🔥 مهم جدًا (3 arrays منفصلين)
+DATA.exp_cat_labels = top.map(e => e.name);
+DATA.exp_cat_values_usd = top.map(e => e.usd);
+DATA.exp_cat_values_egp = top.map(e => e.egp);
+
+// 🔥 ده للشارت فقط
+DATA.exp_cat_values = top.map(e =>
+  currency === "USD" ? e.usd : e.egp
+);
+}
+function getFilteredData() {
+  return RAW_DATA.filter(r => {
+
+    return (
+      (filters.month === "ALL" || r._month === filters.month) &&
+      (filters.dept === "ALL" || r["Deparment"] === filters.dept) &&
+      (filters.name === "ALL" || (r["A Name"] || "").trim() === filters.name) &&
+      (filters.hotel === "ALL" || r["Hotel"] === filters.hotel) &&
+      (filters.expense === "ALL" || r["Accounting Guidance"] === filters.expense)
+    );
+
+  });
+}
+function getExpenseType(name) {
+
+  const n = name.toLowerCase();
+
+  if (n.includes("salary") || n.includes("staff"))
+    return '<span class="pill pill-blue">Labor</span>';
+
+  if (n.includes("visa"))
+    return '<span class="pill pill-orange">Admin</span>';
+
+  if (n.includes("ticket") || n.includes("travel"))
+    return '<span class="pill pill-green">Travel</span>';
+
+  if (n.includes("order"))
+    return '<span class="pill pill-purple">Contract</span>';
+
+  if (n.includes("fuel") || n.includes("gas"))
+    return '<span class="pill pill-blue">Transport</span>';
+
+  if (n.includes("rent"))
+    return '<span class="pill pill-purple">Facilities</span>';
+
+  return '<span class="pill pill-red">Other</span>';
+}
+function buildExpenseTable() {
+
+  const body = document.getElementById("exp-details-body");
+  if (!body) return;
+
+  const labels = DATA.exp_cat_labels || [];
+  const valuesUSD = DATA.exp_cat_values_usd || [];
+  const valuesEGP = DATA.exp_cat_values_egp || [];
+
+  const totalUSD = valuesUSD.reduce((a,b)=>a+b,0);
+  const totalEGP = valuesEGP.reduce((a,b)=>a+b,0);
+
+  body.innerHTML = labels.map((name, i) => {
+
+    const usd = valuesUSD[i] || 0;
+    const egp = valuesEGP[i] || 0;
+
+    const percentUSD = totalUSD ? ((usd / totalUSD) * 100).toFixed(1) : 0;
+    const percentEGP = totalEGP ? ((egp / totalEGP) * 100).toFixed(1) : 0;
+
+    return `
+      <tr>
+        <td>${name}</td>
+        <td>$${usd.toLocaleString()}</td>
+        <td>EGP ${egp.toLocaleString()}</td>
+        <td>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="progress-bar" style="width:120px">
+      <div class="progress-fill" style="width:${percentUSD}%;background:#58a6ff"></div>
+    </div>
+    ${percentUSD}%
+  </div>
+</td>
+
+<td>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="progress-bar" style="width:120px">
+      <div class="progress-fill" style="width:${percentEGP}%;background:#f78166"></div>
+    </div>
+    ${percentEGP}%
+  </div>
+</td>
+
+<td>${getExpenseType(name)}</td>
+        
+      </tr>
+    `;
+  }).join("");
+}
 
 function updateKPIs() {
 
@@ -1418,6 +1523,16 @@ charts.perf = new Chart(pCtx, {
     }
   }
 });
+}
+function highlightExpense(index) {
+  if (!charts.expCat) return;
+
+  charts.expCat.setActiveElements([{
+    datasetIndex: 0,
+    index: index
+  }]);
+
+  charts.expCat.update();
 }
 function bindHover(id, keyword) {
   const el = document.getElementById(id);
@@ -1781,7 +1896,18 @@ function buildHotelTable() {
     
   }).join('');
 }
+function refreshDashboard() {
 
+  const filtered = getFilteredData();
+
+  buildData(filtered);
+  updateKPIs();
+  updateDeptKPIs();
+  updateExpenseKPIs();
+  rebuildDashboard();
+  buildExpenseTable();
+  populateAdvancedFilters();
+}
 
 // ============================================================
 // TABS
@@ -1809,7 +1935,9 @@ function showTab(tabName, btn) {
 // CURRENCY TOGGLE
 // ============================================================
 function setCurrency(cur) {
+
   currency = cur;
+  filters.currency = cur;
 
   document.querySelectorAll('.currency-btn').forEach(b => {
     b.classList.remove('active');
@@ -1817,11 +1945,7 @@ function setCurrency(cur) {
 
   event.target.classList.add('active');
 
-  applyCustomFilter(
-    document.querySelector(".select-selected").innerText === "All Months"
-      ? "ALL"
-      : document.querySelector(".select-selected").innerText
-  );
+  refreshDashboard(); // 🔥
 }
 
 
@@ -2104,41 +2228,36 @@ function showComparisonResult(diff, percent, mA, mB) {
     </div>
   `;
 }
-function selectMonth(value) {
+function selectMonth(m) {
 
-  document.querySelector(".select-selected").innerText =
-    value === "ALL" ? "All Months" : value;
+  filters.month = m;
 
-  document.getElementById("dropdownList").style.display = "none";
+  const filtered = getFilteredData();
 
-  applyCustomFilter(value);
-
+  buildData(filtered);
+  updateKPIs();
+  updateDeptKPIs();
+  updateExpenseKPIs();
+  rebuildDashboard();
+  buildExpenseTable();
+  populateAdvancedFilters();
 }
 function applyCustomFilter(selected) {
 
-  let filtered = RAW_DATA;
+  // خزّن الشهر في الفلاتر
+  filters.month = selected;
 
-  if (selected !== "ALL") {
+  // استخدم النظام الموحد
+  const filtered = getFilteredData();
 
-    filtered = RAW_DATA.filter(r => {
-      const d = new Date(r.Date);
+  buildData(filtered);
+  rebuildDashboard(); // 🔥 بدل buildCharts
 
-      const key = d.toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric'
-      });
-
-      return key === selected;
-    });
-
-  }
-
- buildData(filtered);
- buildCharts();
- updateKPIs();
- updateExpenseKPIs();
- updateDeptKPIs();
-
+  updateKPIs();
+  updateExpenseKPIs();
+  updateDeptKPIs();
+  buildExpenseTable();
+  populateAdvancedFilters(); // 🔥 مهم جدًا
 }
 function filterMonths() {
 
@@ -2152,81 +2271,39 @@ function filterMonths() {
 }
 function populateAdvancedFilters() {
 
-  const deptSet = new Set();
-  const nameSet = new Set();
-  const hotelSet = new Set();
-  const expSet = new Set();
+  const data = getFilteredData();
 
-  RAW_DATA.forEach(r => {
-    deptSet.add(r.Deparment || "Other");
-    nameSet.add(r["A Name"] || "Unknown");
-    hotelSet.add(r.Hotel || "Unknown");
-    expSet.add(r["Accounting Guidance"] || "Other"); // 👈 مهم
-  });
+const unique = (arr, key) => {
+  return [
+    "ALL",
+    ...[...new Set(
+      arr.map(r => (r[key] || "").trim()).filter(Boolean)
+    )]
+  ];
+};
 
-  fillSelect("filterDept", deptSet);
-  fillSelect("filterName", nameSet);
-  fillSelect("filterHotel", hotelSet);
-  fillSelect("filterExpense", expSet);
+  fillSelect("filterDept", unique(data, "Deparment"), filters.dept);
+  fillSelect("filterName", unique(data, "A Name"), filters.name);
+  fillSelect("filterHotel", unique(data, "Hotel"), filters.hotel);
+  fillSelect("filterExpense", unique(data, "Accounting Guidance"), filters.expense);
 }
 
-function fillSelect(id, set) {
+function fillSelect(id, options, selected) {
   const el = document.getElementById(id);
-  if (!el) return;
 
-  el.innerHTML = `<option value="ALL">All</option>`;
-
-  Array.from(set).sort().forEach(v => {
-    const opt = document.createElement("option");
-    opt.value = v;
-    opt.textContent = v;
-    el.appendChild(opt);
-  });
+  el.innerHTML = options.map(o => {
+    const val = (o || "").trim();
+    return `<option value="${val}" ${val===selected ? "selected":""}>${val}</option>`;
+  }).join("");
 }
 function applyAdvancedFilter() {
 
-  const dept = document.getElementById("filterDept").value;
-  const name = document.getElementById("filterName").value;
-  const hotel = document.getElementById("filterHotel").value;
-  const expense = document.getElementById("filterExpense").value;
+  filters.dept = document.getElementById("filterDept").value;
+  filters.name = document.getElementById("filterName").value.trim();
+  filters.hotel = document.getElementById("filterHotel").value;
+  filters.expense = document.getElementById("filterExpense").value;
 
-  let filtered = RAW_DATA;
-
-  // Month filter
-  const selectedMonth = document.querySelector(".select-selected")?.innerText;
-
-  if (selectedMonth && selectedMonth !== "All Months") {
-    filtered = filtered.filter(r => {
-      const d = new Date(r.Date);
-      const key = d.toLocaleDateString('en-US', {
-        month:'short',
-        year:'numeric'
-      });
-      return key === selectedMonth;
-    });
-  }
-
-  // Department
-  if (dept !== "ALL") {
-    filtered = filtered.filter(r => (r.Deparment || "Other") === dept);
-  }
-
-  // Name
-  if (name !== "ALL") {
-    filtered = filtered.filter(r => (r["A Name"] || "Unknown") === name);
-  }
-
-  // Hotel
-  if (hotel !== "ALL") {
-    filtered = filtered.filter(r => (r.Hotel || "Unknown") === hotel);
-  }
-
-  // Expense 👇 (برا hotel)
-  if (expense !== "ALL") {
-    filtered = filtered.filter(r =>
-      (r["Accounting Guidance"] || "Other") === expense
-    );
-  }
+  const filtered = getFilteredData();
 
   // Update dashboard
   buildData(filtered);
@@ -2234,6 +2311,9 @@ function applyAdvancedFilter() {
   updateKPIs();
   updateExpenseKPIs();
   updateDeptKPIs();
+  rebuildDashboard();
+  buildExpenseTable();
+  populateAdvancedFilters();
 }
 
 // INIT
