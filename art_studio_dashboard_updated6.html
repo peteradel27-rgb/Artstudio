@@ -420,6 +420,7 @@
   <button class="tab-btn" onclick="showTab('expenses',this)">📉 Expenses</button>
   <button class="tab-btn" onclick="showTab('departments',this)">🎪 Departments</button>
   <button class="tab-btn" onclick="showTab('hotels',this)">🏨 Hotels</button>
+  <button class="tab-btn" onclick="showTab('insights')">📊 Insights</button>
 </div>
 
 <!-- MAIN CONTENT -->
@@ -822,6 +823,60 @@
     </div>
   </div>
 
+<div id="tab-insights" class="tab-panel">
+
+  <!-- ===== FIRST ROW ===== -->
+  <div class="kpi-grid">
+
+    <div class="kpi-card">
+      <div class="kpi-label">🏨 Top Hotel</div>
+      <div class="kpi-value" id="insight-top-hotel"></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">🎭 Top Performance</div>
+      <div class="kpi-value" id="insight-top-performance"></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">💰 Best Prices</div>
+      <div id="insight-best-price"></div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECOND ROW ===== -->
+  <div class="kpi-grid" style="margin-top:16px">
+
+    <div class="kpi-card">
+      <div class="kpi-label">📈 Top Profit</div>
+      <div class="kpi-value" id="insight-top-profit"></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">🧠 Recommendation</div>
+      <div id="insight-recommendation"></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">🤖 AI Insights</div>
+      <div id="insight-ai"></div>
+    </div>
+
+  </div>
+
+  <!-- ===== RANKING TABLE ===== -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">📊 Performance Ranking</div>
+    <div id="insight-ranking"></div>
+  </div>
+<div class="card" style="margin-top:16px">
+  <div class="card-title">📈 Best Profit per Department</div>
+  <div id="insight-dept-profit"></div>
+</div>
+
+</div>
+
 </div><!-- /main -->
 
 <div class="footer">
@@ -1174,7 +1229,6 @@ rows.forEach(r => {
   const month = r._month;
   const incomeUSD = Number(r["Income USD"] || 0);
 
-  if (!monthMap[month]) monthMap[month] = 0;
 
   if (!monthMap[month]) {
   monthMap[month] = { usd: 0, egp: 0 };
@@ -1230,6 +1284,208 @@ Object.entries(revHotelMap).forEach(([h,v])=>{
 
 DATA.rev_top_hotel = topHotel;
 DATA.rev_top_value = topHotelValue;
+// ===== INSIGHTS =====
+
+// 🟢 Top Hotel
+const hotelRevenue = {};
+const performanceRevenue = {};
+const performanceMaxPrice = {};
+
+rows.forEach(r => {
+
+  const hotel = (r["Hotel"] || "").trim();
+  const perf = (r["Performance"] || "").trim();
+  const income = Number(r["Income USD"] || 0);
+
+  // Hotel Revenue
+  if (hotel) {
+    if (!hotelRevenue[hotel]) hotelRevenue[hotel] = 0;
+    hotelRevenue[hotel] += income;
+  }
+
+  // Performance Revenue
+  if (perf) {
+    if (!performanceRevenue[perf]) performanceRevenue[perf] = 0;
+    performanceRevenue[perf] += income;
+  }
+
+  // Max Price per Performance
+  if (perf) {
+    if (!performanceMaxPrice[perf] || income > performanceMaxPrice[perf].price) {
+      performanceMaxPrice[perf] = {
+        price: income,
+        hotel: hotel
+      };
+    }
+  }
+
+});
+
+// 🏨 Top Hotel
+let insightTopHotel = "-";
+let insightTopHotelValue = 0;
+
+Object.entries(hotelRevenue).forEach(([k,v])=>{
+if (v > insightTopHotelValue) {
+  insightTopHotel = k;
+  insightTopHotelValue = v;
+}
+});
+
+// 🎭 Top Performance
+let topPerf = "-";
+let topPerfValue = 0;
+
+Object.entries(performanceRevenue).forEach(([k,v])=>{
+  if (v > topPerfValue) {
+    topPerf = k;
+    topPerfValue = v;
+  }
+});
+
+// 💰 Best Prices
+const bestPrices = Object.entries(performanceMaxPrice)
+  .map(([k,v]) => [k, v.price, v.hotel])
+  .sort((a,b)=> b[1] - a[1])
+  .slice(0,5);
+
+DATA.insight_best_prices = bestPrices;
+
+// حفظ
+DATA.insight_top_hotel = insightTopHotel;
+DATA.insight_top_hotel_value = insightTopHotelValue;
+
+DATA.insight_top_perf = topPerf;
+DATA.insight_top_perf_value = topPerfValue;
+
+DATA.insight_best_prices = bestPrices;
+// ===== PROFIT ANALYSIS =====
+const performanceProfit = {};
+
+rows.forEach(r => {
+
+  const perf = (r["Performance"] || "").trim();
+
+  const income = Number(r["Income USD"] || 0);
+  const cost = Number(r["Exp.USD"] || 0);
+
+  const profit = income - cost;
+
+  if (!perf) return;
+
+  if (!performanceProfit[perf]) performanceProfit[perf] = 0;
+
+  performanceProfit[perf] += profit;
+
+});
+
+// أعلى Profit
+let topProfitPerf = "-";
+let topProfitValue = 0;
+
+Object.entries(performanceProfit).forEach(([k,v])=>{
+  if (v > topProfitValue) {
+    topProfitPerf = k;
+    topProfitValue = v;
+  }
+});
+
+DATA.top_profit_perf = topProfitPerf;
+DATA.top_profit_value = topProfitValue;
+// ===== RECOMMENDATION =====
+DATA.recommendation = 
+  `Focus on ${DATA.insight_top_hotel} — The Highest Revenue Currently`;
+// ===== AI SUGGESTIONS =====
+
+const suggestions = [];
+
+// Profit عالي
+if (DATA.top_profit_value > 0) {
+  suggestions.push(`💰   From The Highest Profit ${DATA.top_profit_perf}`);
+}
+
+// Expense عالي
+if (DATA.kpi_expense_ratio > 80) {
+  suggestions.push(`⚠️ High Expenses (${DATA.kpi_expense_ratio.toFixed(1)}%)`);
+}
+
+// Hotel قوي
+if (DATA.insight_top_hotel) {
+  suggestions.push(`🏨 Focus on ${DATA.insight_top_hotel}`);
+}
+
+DATA.ai_suggestions = suggestions;
+// ===== RANKING TABLE =====
+DATA.performance_ranking = Object.entries(performanceProfit)
+  .map(([k,v]) => ({ name: k, profit: v }))
+  .sort((a,b)=> b.profit - a.profit)
+  .slice(0,10);  
+// ===== SMART RECOMMENDATION =====
+
+const bestHotel = DATA.insight_top_hotel;
+const bestPerf = DATA.top_profit_perf;
+const profit = DATA.top_profit_value;
+
+DATA.recommendation = `
+ركز على ${bestHotel} في ${bestPerf} — بيحقق أعلى ربح (${profit.toLocaleString()}$)
+`;
+// ===== BEST PROFIT PER DEPARTMENT =====
+
+const deptPerfProfit = {};
+
+rows.forEach(r => {
+
+  const dept = (r["Deparment"] || "").trim();
+  const perf = (r["Performance"] || "").trim();
+
+  const income = Number(r["Income USD"] || 0);
+  const cost = Number(r["Exp.USD"] || 0);
+
+  const profit = income - cost;
+
+  if (!dept || !perf) return;
+
+  if (!deptPerfProfit[dept]) deptPerfProfit[dept] = {};
+
+const performer = (r["A Name"] || "").trim();
+
+if (!deptPerfProfit[dept][perf] || profit > deptPerfProfit[dept][perf].profit) {
+  deptPerfProfit[dept][perf] = {
+    profit: profit,
+    performer: performer
+  };
+}
+
+});
+
+// نطلع أفضل واحد في كل قسم
+const bestDept = [];
+
+Object.entries(deptPerfProfit).forEach(([dept, perfs]) => {
+
+  let bestName = "-";
+  let bestValue = 0;
+  let bestPerformer = "-";
+
+  Object.entries(perfs).forEach(([p,v])=>{
+    if (v.profit > bestValue) {
+      bestName = p;
+      bestValue = v.profit;
+      bestPerformer = v.performer;
+    }
+  });
+
+  bestDept.push({
+    dept: dept,
+    name: bestName,
+    performer: bestPerformer,
+    profit: bestValue
+  });
+
+}); // ✅ القفلة الصح هنا
+
+// ✅ برا اللوب
+DATA.dept_best_profit = bestDept;
 
 }
 function getFilteredData() {
@@ -1439,6 +1695,94 @@ const hotelValEl = document.getElementById("rev-top-hotel-value");
 if (hotelValEl) {
   hotelValEl.innerText = "$" + (DATA.rev_top_value || 0).toLocaleString();
 }
+// ===== INSIGHTS =====
+
+// 🏨 Top Hotel
+const hotelInsight = document.getElementById("insight-top-hotel");
+if (hotelInsight) {
+  hotelInsight.innerHTML =
+    `<b>${DATA.insight_top_hotel}</b><br>$${(DATA.insight_top_hotel_value || 0).toLocaleString()}`;
+}
+
+// 🎭 Top Performance
+const perfInsight = document.getElementById("insight-top-performance");
+if (perfInsight) {
+  perfInsight.innerHTML =
+    `<b>${DATA.insight_top_perf}</b><br>$${(DATA.insight_top_perf_value || 0).toLocaleString()}`;
+}
+
+// 💰 Best Prices
+const priceInsight = document.getElementById("insight-best-price");
+
+if (priceInsight && DATA.insight_best_prices) {
+
+  priceInsight.innerHTML = DATA.insight_best_prices.map(p => {
+    return `
+      <div style='display:flex;justify-content:space-between'>
+        <span>${p[0]}</span>
+        <span>
+          <b>$${Number(p[1]).toLocaleString()}</b>
+          <span style='opacity:.6'>(${p[2]})</span>
+        </span>
+      </div>
+    `;
+  }).join("");
+
+}
+const profitEl = document.getElementById("insight-top-profit");
+if (profitEl) {
+  profitEl.innerHTML =
+    `<b>${DATA.top_profit_perf}</b><br>$${(DATA.top_profit_value || 0).toLocaleString()}`;
+}
+const recEl = document.getElementById("insight-recommendation");
+if (recEl) {
+  recEl.innerText = DATA.recommendation || "-";
+}
+const aiEl = document.getElementById("insight-ai");
+if (aiEl) {
+  aiEl.innerHTML = (DATA.ai_suggestions || []).map(s => `
+    <div>${s}</div>
+  `).join("");
+}
+const rankEl = document.getElementById("insight-ranking");
+if (rankEl) {
+
+  rankEl.innerHTML = `
+    <table style="width:100%">
+      <tr>
+        <th>Performance</th>
+        <th>Profit</th>
+      </tr>
+      ${DATA.performance_ranking.map(r => `
+        <tr>
+          <td>${r.name}</td>
+          <td>$${r.profit.toLocaleString()}</td>
+        </tr>
+      `).join("")}
+    </table>
+  `;
+}
+// ===== BEST PER DEPARTMENT =====
+
+const deptEl = document.getElementById("insight-dept-profit");
+
+if (deptEl && DATA.dept_best_profit) {
+
+  deptEl.innerHTML = DATA.dept_best_profit.map(d => {
+    return `
+      <div style='display:flex;justify-content:space-between;margin-bottom:6px'>
+        <span>${d.dept}</span>
+        <span>
+          <b>${d.name}</b>
+          <span style='opacity:.6'>(${d.performer})</span>
+          - $${Number(d.profit).toLocaleString()}
+        </span>
+      </div>
+    `;
+  }).join("");
+
+}
+
 }
 function updateDeptKPIs() {
 
@@ -2147,6 +2491,9 @@ function showTab(tabName, btn) {
   });
 
   if (btn) btn.classList.add('active');
+
+  // 🔥 السطر ده هو الحل
+  updateKPIs();
 }
 
 // ============================================================
