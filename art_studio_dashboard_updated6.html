@@ -441,37 +441,63 @@
         <div class="kpi-label">Total Expenses</div>
         <div class="kpi-value" id="kpi-exp">$463,684</div>
         <div class="kpi-sub" id="kpi-exp-sub">EGP 6,589,189</div>
-        <div class="kpi-badge badge-down">95.8% of income</div>
+        <div class="kpi-badge badge-down" id="kpi-expense-ratio"></div>
       </div>
       <div class="kpi-card" style="--accent-color:#3fb950">
         <div class="kpi-icon">📈</div>
         <div class="kpi-label">Net Profit (USD)</div>
         <div class="kpi-value" id="kpi-net" style="color:#3fb950">$20,139</div>
-        <div class="kpi-sub">4.2% margin</div>
+        <div class="kpi-sub" id="kpi-margin"></div>
         <div class="kpi-badge badge-up">↑ Positive</div>
       </div>
       <div class="kpi-card" style="--accent-color:#ffa657">
         <div class="kpi-icon">🏗️</div>
         <div class="kpi-label">Total Operating Cost</div>
-        <div class="kpi-value">EGP 3.19M</div>
+        <div class="kpi-value" id="kpi-operating"></div>
         <div class="kpi-sub">Travel + Labor</div>
         <div class="kpi-badge badge-down">Internal cost</div>
       </div>
       <div class="kpi-card" style="--accent-color:#d2a8ff">
         <div class="kpi-icon">📋</div>
         <div class="kpi-label">Transactions</div>
-        <div class="kpi-value">5,224</div>
+        <div class="kpi-value" id="kpi-transactions"></div>
         <div class="kpi-sub">Jan–Feb 2026</div>
         <div class="kpi-badge badge-up">↑ Active</div>
       </div>
       <div class="kpi-card" style="--accent-color:#58a6ff">
         <div class="kpi-icon">🏨</div>
         <div class="kpi-label">Hotels Served</div>
-        <div class="kpi-value">68+</div>
+        <div class="kpi-value" id="kpi-hotels"></div>
         <div class="kpi-sub">Across Egypt</div>
         <div class="kpi-badge badge-up">↑ Wide reach</div>
       </div>
     </div>
+<!-- COST BREAKDOWN -->
+<div class="card" style="margin-top:16px;">
+  <div class="card-title">💸 Cost Breakdown</div>
+
+  <div style="display:flex;gap:20px;flex-wrap:wrap">
+
+    <!-- Labor -->
+    <div>
+      <div>Labor</div>
+      <div id="kpi-labor-percent" style="font-weight:bold"></div>
+    </div>
+
+    <!-- Operating -->
+    <div>
+      <div>Operating</div>
+      <div id="kpi-operating-percent" style="font-weight:bold"></div>
+    </div>
+
+    <!-- Visa -->
+    <div>
+      <div>Visa</div>
+      <div id="kpi-visa-percent" style="font-weight:bold"></div>
+    </div>
+
+  </div>
+</div>
 
     <!-- Monthly Income vs Expenses -->
     <div class="chart-grid-2">
@@ -541,24 +567,25 @@
     </div>
     <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
       <div class="kpi-card" id="rev-card-jan" style="--accent-color:#58a6ff">
-        <div class="kpi-label">Jan Income</div>
-        <div class="kpi-value" style="font-size:22px">$129,986</div>
-        <div class="kpi-sub">EGP 1,610,067</div>
+        <div class="kpi-label" id="rev-last-month-label">Last Month</div>
+        <div class="kpi-value" id="rev-jan-income"></div>
+        <div class="kpi-sub" id="rev-jan-income-egp"></div>
+        
       </div>
       <div class="kpi-card" id="rev-card-feb" style="--accent-color:#d2a8ff">
-        <div class="kpi-label">Feb Income</div>
-        <div class="kpi-value" style="font-size:22px">$111,926</div>
-        <div class="kpi-sub">EGP 1,438,508</div>
+        <div class="kpi-label" id="rev-prev-month-label">Previous Month</div>
+        <div class="kpi-value" id="rev-feb-income"></div>
+        <div class="kpi-sub" id="rev-feb-income-egp"></div>
       </div>
       <div class="kpi-card" style="--accent-color:#ffa657">
         <div class="kpi-label">Total Selected Income</div>
-        <div class="kpi-value" id="rev-kpi-total" style="font-size:22px">$483,823</div>
-        <div class="kpi-sub" id="rev-kpi-total-sub">EGP 6,097,150</div>
+        <div class="kpi-value" id="rev-total-income"></div>
+        <div class="kpi-sub" id="rev-total-income-egp"></div>
       </div>
       <div class="kpi-card" style="--accent-color:#3fb950">
         <div class="kpi-label">Top Hotel</div>
-        <div class="kpi-value" style="font-size:16px">Xanadu</div>
-        <div class="kpi-sub">$20,204 income</div>
+        <div class="kpi-value" id="rev-top-hotel"></div>
+        <div class="kpi-sub" id="rev-top-hotel-value"></div>
       </div>
     </div>
 
@@ -983,6 +1010,14 @@ Object.entries(expMap).forEach(([k, v]) => {
   }
 
 });
+// ===== COST BREAKDOWN =====
+const totalCost = DATA.exp_kpi.total || 1;
+
+DATA.cost_breakdown = {
+  labor: (DATA.exp_kpi.salary / totalCost) * 100,
+  operating: (DATA.exp_kpi.operating / totalCost) * 100,
+  visa: (DATA.exp_kpi.visa / totalCost) * 100
+};
 // ================= هنا تحطه =================
 
 // ===== TOP EXPENSE =====
@@ -1001,18 +1036,49 @@ DATA.exp_top = {
   value: topValue
 };
 // ===== KPI FROM DEPT (🔥 هنا بالظبط) =====
-let deptIncome = 0;
-let deptExpense = 0;
+let totalIncome = 0;
+let totalExpense = 0;
 
-Object.values(deptMap).forEach(d => {
-  deptIncome += currency === "USD" ? d.i : d.iEGP;
-  deptExpense += currency === "USD" ? d.e : d.eEGP;
+rows.forEach(r => {
+
+  const income = currency === "USD"
+    ? num(r["Income USD"])
+    : num(r["Income EGP"]);
+
+  const expense = currency === "USD"
+    ? num(r["Exp.USD"])
+    : num(r["Exp.EGP"]);
+
+  totalIncome += income;
+  totalExpense += expense;
+
 });
 
-DATA.kpi_income = deptIncome;
-DATA.kpi_expense = deptExpense;
-DATA.kpi_net = deptIncome - deptExpense;
+DATA.kpi_income = totalIncome;
+DATA.kpi_expense = totalExpense;
+DATA.kpi_net = totalIncome - totalExpense;
+DATA.kpi_margin =
+  totalIncome ? (DATA.kpi_net / totalIncome) * 100 : 0;
+DATA.kpi_expense_ratio =
+  totalIncome ? (totalExpense / totalIncome) * 100 : 0;
 DATA.dept_kpi = deptMap;
+
+// ===== NEW KPIs =====
+
+// Operating Cost = Labor + Operating
+DATA.kpi_operating_cost =
+  (DATA.exp_kpi.salary || 0) +
+  (DATA.exp_kpi.operating || 0);
+
+// Transactions = عدد الصفوف
+DATA.kpi_transactions = rows.length;
+
+// Hotels = unique
+const uniqueHotels = new Set(
+  rows.map(r => (r["Hotel"] || "").trim()).filter(Boolean)
+);
+
+DATA.kpi_hotels = uniqueHotels.size;
 
   // ================= SAFE =================
   const safe = arr => Array.isArray(arr) ? arr : [];
@@ -1081,23 +1147,90 @@ const sortedExpCat = Object.entries(expCatMap)
 
 const top = sortedExpCat.slice(0,5);
 
-const others = sortedExpCat
-  .slice(5)
-  .reduce((sum,c)=> sum + (currency === "USD" ? c.usd : c.egp), 0);
+// 🔥 احسب Others صح
+const othersUSD = sortedExpCat.slice(5).reduce((s,c)=>s+c.usd,0);
+const othersEGP = sortedExpCat.slice(5).reduce((s,c)=>s+c.egp,0);
 
-if(others > 0){
-  top.push({ name: "Others", usd: others, egp: others });
+if (othersUSD > 0 || othersEGP > 0){
+  top.push({ name: "Others", usd: othersUSD, egp: othersEGP });
 }
 
-// 🔥 مهم جدًا (3 arrays منفصلين)
+// 🔥 مهم جدًا (بره أي if)
 DATA.exp_cat_labels = top.map(e => e.name);
 DATA.exp_cat_values_usd = top.map(e => e.usd);
 DATA.exp_cat_values_egp = top.map(e => e.egp);
 
-// 🔥 ده للشارت فقط
+// للشارت
 DATA.exp_cat_values = top.map(e =>
   currency === "USD" ? e.usd : e.egp
 );
+// ===== REVENUE KPIs (DYNAMIC) =====
+
+// 🟢 هنجمع الداتا حسب الشهر
+const monthMap = {};
+
+rows.forEach(r => {
+
+  const month = r._month;
+  const incomeUSD = Number(r["Income USD"] || 0);
+
+  if (!monthMap[month]) monthMap[month] = 0;
+
+  if (!monthMap[month]) {
+  monthMap[month] = { usd: 0, egp: 0 };
+}
+
+monthMap[month].usd += Number(r["Income USD"] || 0);
+monthMap[month].egp += Number(r["Income EGP"] || 0);
+});
+
+// 🟢 نرتب الشهور
+const sortedMonths = Object.keys(monthMap)
+  .sort((a,b)=> new Date(a) - new Date(b));
+
+// 🟢 نجيب آخر شهرين
+const lastMonth = sortedMonths[sortedMonths.length - 1];
+const prevMonth = sortedMonths[sortedMonths.length - 2] || lastMonth;
+DATA.rev_last_month_name = lastMonth || "";
+DATA.rev_prev_month_name = prevMonth || "";
+// 🟢 القيم
+DATA.rev_last_month_value_usd = monthMap[lastMonth]?.usd || 0;
+DATA.rev_last_month_value_egp = monthMap[lastMonth]?.egp || 0;
+
+DATA.rev_prev_month_value_usd = monthMap[prevMonth]?.usd || 0;
+DATA.rev_prev_month_value_egp = monthMap[prevMonth]?.egp || 0;
+
+// 🟢 Total
+DATA.rev_total = DATA.kpi_income;
+
+
+// ===== TOP HOTEL =====
+const revHotelMap = {};
+
+rows.forEach(r => {
+
+  const incomeUSD = Number(r["Income USD"] || 0);
+  const hotel = (r["Hotel"] || "").trim();
+  if (!hotel) return;
+
+  if (!revHotelMap[hotel]) revHotelMap[hotel] = 0;
+  revHotelMap[hotel] += incomeUSD;
+
+});
+
+let topHotel = "-";
+let topHotelValue = 0;
+
+Object.entries(revHotelMap).forEach(([h,v])=>{
+  if (v > topHotelValue) {
+    topHotel = h;
+    topHotelValue = v;
+  }
+});
+
+DATA.rev_top_hotel = topHotel;
+DATA.rev_top_value = topHotelValue;
+
 }
 function getFilteredData() {
   return RAW_DATA.filter(r => {
@@ -1194,33 +1327,118 @@ function updateKPIs() {
   const expense = DATA.kpi_expense || 0;
   const net = DATA.kpi_net || 0;
 
-  // ===== كل KPI values =====
-  document.querySelectorAll('[id*="kpi-income"]').forEach(el => {
-    el.innerText = prefix + income.toLocaleString();
-  });
+  // ✅ Income
+  const incomeEl = document.getElementById("kpi-income");
+  if (incomeEl) incomeEl.innerText = prefix + income.toLocaleString();
 
+  // ✅ Expense (🔥 ده كان ناقص)
+  const expEl = document.getElementById("kpi-exp");
+  if (expEl) expEl.innerText = prefix + expense.toLocaleString();
 
-
-  document.querySelectorAll('[id*="kpi-net"]').forEach(el => {
-    el.innerText = prefix + net.toLocaleString();
-    el.style.color = net >= 0 ? "#3fb950" : "#f78166";
-  });
-
-  // ===== Revenue =====
-  document.querySelectorAll('[id*="rev-kpi"]').forEach(el => {
-    el.innerText = prefix + income.toLocaleString();
-  });
-
-// Expense page
-document.querySelectorAll('[id^="exp-kpi"]').forEach(el => {
-  if (!el.id.includes("sub")) {
-    el.innerText = prefix + expense.toLocaleString();
+  // ✅ Net
+  const netEl = document.getElementById("kpi-net");
+  if (netEl) {
+    netEl.innerText = prefix + net.toLocaleString();
+    netEl.style.color = net >= 0 ? "#3fb950" : "#f78166";
   }
-});
+// ===== NEW KPIs =====
 
-// Departments page (مبدئي)
+// Operating Cost
+const opEl = document.getElementById("kpi-operating");
+if (opEl) {
+  opEl.innerText = prefix + (DATA.kpi_operating_cost || 0).toLocaleString();
+}
 
 
+
+// Transactions
+const trxEl = document.getElementById("kpi-transactions");
+if (trxEl) {
+  trxEl.innerText = (DATA.kpi_transactions || 0).toLocaleString();
+}
+
+// Hotels
+const hotelEl = document.getElementById("kpi-hotels");
+if (hotelEl) {
+  hotelEl.innerText = (DATA.kpi_hotels || 0).toLocaleString();
+}
+// ===== Margin % =====
+const marginEl = document.getElementById("kpi-margin");
+if (marginEl) {
+  const m = DATA.kpi_margin || 0;
+  marginEl.innerText = m.toFixed(1) + "%";
+  marginEl.style.color = m >= 0 ? "#3fb950" : "#f78166";
+}
+
+// ===== Expense Ratio =====
+const ratioEl = document.getElementById("kpi-expense-ratio");
+if (ratioEl) {
+  const r = DATA.kpi_expense_ratio || 0;
+  ratioEl.innerText = r.toFixed(1) + "%";
+}
+
+// ===== Cost Breakdown =====
+const laborEl = document.getElementById("kpi-labor-percent");
+if (laborEl) {
+  laborEl.innerText = (DATA.cost_breakdown.labor || 0).toFixed(1) + "%";
+}
+
+const operatingPercentEl = document.getElementById("kpi-operating-percent");
+if (operatingPercentEl) {
+  operatingPercentEl.innerText = (DATA.cost_breakdown.operating || 0).toFixed(1) + "%";
+}
+
+// Visa
+const visaEl = document.getElementById("kpi-visa-percent");
+if (visaEl) {
+  visaEl.innerText = (DATA.cost_breakdown.visa || 0).toFixed(1) + "%";
+}
+
+// ===== REVENUE KPIs (DYNAMIC) =====
+
+// ===== LAST MONTH =====
+const lastEl = document.getElementById("rev-jan-income");
+if (lastEl) {
+  lastEl.innerText = "$" + (DATA.rev_last_month_value_usd || 0).toLocaleString();
+}
+
+const lastSubEl = document.getElementById("rev-jan-income-egp");
+if (lastSubEl) {
+  lastSubEl.innerText = "EGP " + (DATA.rev_last_month_value_egp || 0).toLocaleString();
+  lastSubEl.style.opacity = 0.7; // 👈 هنا الـ Bonus
+}
+// ===== PREVIOUS MONTH =====
+const prevEl = document.getElementById("rev-feb-income");
+if (prevEl) {
+  prevEl.innerText = "$" + (DATA.rev_prev_month_value_usd || 0).toLocaleString();
+}
+
+const prevSubEl = document.getElementById("rev-feb-income-egp");
+if (prevSubEl) {
+  prevSubEl.innerText = "EGP " + (DATA.rev_prev_month_value_egp || 0).toLocaleString();
+}
+
+// Labels (اختياري لو عايز تغير الاسم)
+const lastLabel = document.getElementById("rev-last-month-label");
+if (lastLabel) lastLabel.innerText = DATA.rev_last_month_name;
+
+const prevLabel = document.getElementById("rev-prev-month-label");
+if (prevLabel) prevLabel.innerText = DATA.rev_prev_month_name;
+
+// Total
+const totalEl = document.getElementById("rev-total-income");
+if (totalEl) totalEl.innerText = "$" + (DATA.rev_total || 0).toLocaleString();
+
+// Top Hotel
+const topHotelEl = document.getElementById("rev-top-hotel");
+if (topHotelEl) {
+  topHotelEl.innerText = DATA.rev_top_hotel || "-";
+}
+
+const hotelValEl = document.getElementById("rev-top-hotel-value");
+if (hotelValEl) {
+  hotelValEl.innerText = "$" + (DATA.rev_top_value || 0).toLocaleString();
+}
 }
 function updateDeptKPIs() {
 
