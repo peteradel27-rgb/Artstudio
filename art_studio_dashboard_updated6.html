@@ -1004,39 +1004,32 @@ body {
   <div class="kpi-label">💸 Cheapest Prices</div>
   <div id="insight-cheapest-price"></div>
 </div>
+<!-- ⚠️ Action Recommendation -->
 <div class="kpi-card">
-  <div class="kpi-label">⚠️ Alerts</div>
-  <div id="insight-alerts"></div>
+  <div class="kpi-label">⚠️ Action Needed</div>
+  <div id="insight-action"></div>
 </div>
 <div class="kpi-card">
-  <div class="kpi-label">📊 Price Comparison</div>
-  <div id="insight-comparison"></div>
+  <div class="kpi-label">🚀 Opportunity</div>
+  <div id="insight-opportunity"></div>
 </div>
 
-<div class="kpi-card">
-  <div class="kpi-label">💡 Recommendation</div>
-  <div id="insight-price-rec"></div>
-</div>
 <!-- 🧠 AI Recommendation -->
 <div class="kpi-card">
   <div class="kpi-label">🧠 Smart Recommendation</div>
   <div id="insight-recommendation"></div>
 </div>
 
-<!-- ⚠️ Action Recommendation -->
-<div class="kpi-card">
-  <div class="kpi-label">⚠️ Action Needed</div>
-  <div id="insight-action"></div>
-</div>
 <div class="kpi-card loss-card">
   <div class="loss-header">
     📉 Loss Analysis
   </div>
   <div id="loss-analysis" class="loss-content"></div>
 </div>
-<div class="kpi-card">
-  <div class="kpi-label">🚀 Opportunity</div>
-  <div id="insight-opportunity"></div>
+
+<div class="kpi-card" style="grid-column: span 2;">
+  <div class="kpi-label">🧠 Decision Engine</div>
+  <div id="decision-engine"></div>
 </div>
 
   </div>
@@ -1394,7 +1387,88 @@ DATA.auto_alerts = AUTO_ALERTS
     return priority[b.severity] - priority[a.severity];
   })
   .slice(0,6);
+// ===== PERFORMANCE DECISION ENGINE =====
+
+DATA.performance_decisions = Object.entries(lossByPerf).map(([name, d]) => {
+
+  const income = d.incomeUSD || 0;
+  const cost   = d.costUSD || 0;
+  const profit = d.profitUSD || 0;
+
+  const margin = income > 0 ? (profit / income) * 100 : 0;
+
+  let decision = "";
+  let reason = "";
+
+  if (profit > 0 && margin > 25) {
+    decision = "KEEP";
+    reason = "Strong profit & high margin";
+  } else if (profit > 0 && margin > 10) {
+    decision = "KEEP";
+    reason = "Good performance";
+  } else if (profit > 0) {
+    decision = "FIX";
+    reason = "Low margin";
+  } else if (income > 0 && cost > income) {
+    decision = "FIX";
+    reason = "High cost vs revenue";
+  } else {
+    decision = "STOP";
+    reason = "Consistent loss";
+  }
+
+  return {
+    name,
+    profit,
+    margin,
+    decision,
+    reason
+  };
+
+});
+
+// ===== HOTEL DECISION ENGINE =====
+
+DATA.hotel_decisions = Object.entries(lossByHotel).map(([name, d]) => {
+
+  const income = d.incomeUSD || 0;
+  const cost   = d.costUSD || 0;
+  const profit = d.profitUSD || 0;
+
+  const margin = income > 0 ? (profit / income) * 100 : 0;
+
+  let decision = "";
+  let reason = "";
+
+  if (profit > 0 && margin > 25) {
+    decision = "KEEP";
+    reason = "High profitability";
+  } else if (profit > 0 && margin > 10) {
+    decision = "KEEP";
+    reason = "Stable";
+  } else if (profit > 0) {
+    decision = "FIX";
+    reason = "Needs pricing optimization";
+  } else if (cost > income) {
+    decision = "STOP";
+    reason = "Loss making";
+  } else {
+    decision = "FIX";
+    reason = "Weak performance";
+  }
+
+  return {
+    name,
+    profit,
+    margin,
+    decision,
+    reason
+  };
+
+});
+
 // ===== EXPENSE KPI BUILD =====
+
 const expMap = {};
 
 rows.forEach(r => {
@@ -2117,36 +2191,140 @@ const totalProfit =
   rows.reduce((s,r)=> s + (safeNum(r["Income USD"]||0) - safeNum(r["Exp.USD"]||0)), 0);
 
 DATA.avg_profit = rows.length ? totalProfit / rows.length : 0;
-// ===== PROFIT MARGIN PER DEPT =====
+// ===== PROFIT MARGIN PER DEPT (USD + EGP) =====
 const deptMargin = {};
 
 rows.forEach(r => {
 
   const dept = (r["Deparment"] || "").trim();
-
-  const income = r["Income USD"];
-  const cost = r["Exp.USD"];
-
   if (!dept) return;
 
+  const incomeUSD = safeNum(r["Income USD"]);
+  const costUSD   = safeNum(r["Exp.USD"]);
+
+  const incomeEGP = safeNum(r["Income EGP"]);
+  const costEGP   = safeNum(r["Exp.EGP"]);
+
   if (!deptMargin[dept]) {
-    deptMargin[dept] = { income: 0, cost: 0 };
+    deptMargin[dept] = {
+      incomeUSD: 0,
+      costUSD: 0,
+      incomeEGP: 0,
+      costEGP: 0
+    };
   }
 
-  deptMargin[dept].income += income;
-  deptMargin[dept].cost += cost;
+  deptMargin[dept].incomeUSD += incomeUSD;
+  deptMargin[dept].costUSD   += costUSD;
+
+  deptMargin[dept].incomeEGP += incomeEGP;
+  deptMargin[dept].costEGP   += costEGP;
 
 });
 
-DATA.dept_margin = Object.entries(deptMargin).map(([k,v]) => ({
-  dept: k,
-  margin: v.income ? ((v.income - v.cost)/v.income)*100 : 0
-}));
-const margin = DATA.kpi_margin || 0;
-const totalProfitValue = DATA.kpi_net || 0;
+
+// ===== BUILD RESULT =====
+DATA.dept_margin = Object.entries(deptMargin).map(([dept, v]) => {
+
+  const profitUSD = v.incomeUSD - v.costUSD;
+  const profitEGP = v.incomeEGP - v.costEGP;
+
+  const marginUSD = (v.incomeUSD && isFinite(v.incomeUSD))
+    ? (profitUSD / v.incomeUSD) * 100
+    : 0;
+
+  const marginEGP = (v.incomeEGP && isFinite(v.incomeEGP))
+    ? (profitEGP / v.incomeEGP) * 100
+    : 0;
+
+  const score = profitUSD + (profitEGP / 50);
+
+  return {
+    dept,
+    profitUSD,
+    profitEGP,
+    marginUSD,
+    marginEGP,
+    score
+  };
+});
+
+const avgMarginUSD =
+  DATA.dept_margin.reduce((s,d)=> s + (d.marginUSD || 0), 0) 
+  / (DATA.dept_margin.length || 1);
+
+const totalScore =
+  DATA.dept_margin.reduce((s,d)=> s + (d.score || 0), 0);
+
 DATA.health_score = Math.round(
-  (margin * 0.6) + (totalProfitValue > 0 ? 40 : 0)
+  (avgMarginUSD * 0.5) +
+  (totalScore > 0 ? 30 : 0) +
+  (avgMarginUSD > 20 ? 20 : 0)
 );
+DATA.health_score = Math.round(
+  (avgMarginUSD * 0.5) +
+  (totalScore > 0 ? 30 : 0) +
+  (avgMarginUSD > 20 ? 20 : 0)
+);
+
+// 👇 هنا بالظبط تضيف التفسير
+// ===== AI INSIGHTS ENGINE (CLEAN) =====
+
+// 🧠 1. احسب avg margin مرة واحدة بس
+const avgMargin =
+  DATA.dept_margin.reduce((s,d)=> s + (d.marginUSD || 0), 0) 
+  / (DATA.dept_margin.length || 1);
+
+
+// ❤️ 2. HEALTH REASON
+let healthReason = [];
+
+if (avgMargin < 10) healthReason.push("Low profitability");
+if (avgMargin > 25) healthReason.push("Strong margins");
+
+if (DATA.health_score < 50) healthReason.push("High operational risk");
+if (DATA.health_score > 75) healthReason.push("Stable performance");
+
+DATA.health_reason = healthReason.join(" • ");
+
+
+// 🤖 3. AI SUMMARY
+let summary = [];
+
+// Health
+if (DATA.health_score < 50) {
+  summary.push("Overall performance is weak with high operational risk.");
+} else if (DATA.health_score < 75) {
+  summary.push("Performance is moderate but needs improvement.");
+} else {
+  summary.push("Performance is strong and stable.");
+}
+
+// Margin insight (مرة واحدة بس)
+if (avgMargin < 10) {
+  summary.push("Margins are low, indicating pricing or cost issues.");
+} else if (avgMargin > 25) {
+  summary.push("Margins are healthy across departments.");
+}
+
+// Loss Analysis
+if (DATA.worst_performances?.length) {
+  const worst = DATA.worst_performances[0];
+  if (worst.profitUSD < 0) {
+    summary.push(`Top loss comes from ${worst.name}.`);
+  }
+}
+
+// Alerts
+if (DATA.auto_alerts?.length) {
+  const critical = DATA.auto_alerts.find(a => a.severity === "high");
+  if (critical) {
+    summary.push(`Critical issue: ${critical.reason} in ${critical.name}.`);
+  }
+}
+
+// 🎯 Final
+DATA.ai_summary = summary.join(" ");
 // ===== BUILD DATA (SAFE + CLEAN) =====
 
 
@@ -2224,6 +2402,102 @@ if (lossEl) {
 
           const profit = Number.isFinite(d.profitUSD) ? d.profitUSD : 0;
           const egp    = Number.isFinite(d.profitEGP) ? d.profitEGP : 0;
+const decisionEl = document.getElementById("decision-engine");
+
+if (decisionEl) {
+
+  const worstPerf = DATA.performance_decisions
+    .sort((a,b)=> a.profit - b.profit)
+    .slice(0,5);
+
+  decisionEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+      <!-- 🎭 Performance -->
+      <div>
+        <div style="color:#f87171;font-weight:700;margin-bottom:10px">
+          🎭 Performance Decisions
+        </div>
+
+        ${worstPerf.map(d => {
+
+          const color =
+            d.decision === "KEEP" ? "#22c55e" :
+            d.decision === "FIX"  ? "#facc15" :
+            "#ef4444";
+
+          return `
+            <div style="
+              padding:12px;
+              margin-bottom:10px;
+              border-radius:12px;
+              border:1px solid ${color}33;
+            ">
+
+              <div style="font-weight:600">${d.name}</div>
+
+              <div style="font-size:12px;color:#9ca3af">
+                ${d.reason}
+              </div>
+
+              <div style="
+                margin-top:6px;
+                color:${color};
+                font-weight:700;
+              ">
+                ${d.decision}
+              </div>
+
+            </div>
+          `;
+        }).join("")}
+      </div>
+
+
+      <!-- 🏨 Hotels -->
+      <div>
+        <div style="color:#facc15;font-weight:700;margin-bottom:10px">
+          🏨 Hotel Decisions
+        </div>
+
+        ${DATA.hotel_decisions.slice(0,5).map(d => {
+
+          const color =
+            d.decision === "KEEP" ? "#22c55e" :
+            d.decision === "FIX"  ? "#facc15" :
+            "#ef4444";
+
+          return `
+            <div style="
+              padding:12px;
+              margin-bottom:10px;
+              border-radius:12px;
+              border:1px solid ${color}33;
+            ">
+
+              <div style="font-weight:600">${d.name}</div>
+
+              <div style="font-size:12px;color:#9ca3af">
+                ${d.reason}
+              </div>
+
+              <div style="
+                margin-top:6px;
+                color:${color};
+                font-weight:700;
+              ">
+                ${d.decision}
+              </div>
+
+            </div>
+          `;
+        }).join("")}
+      </div>
+
+    </div>
+  `;
+}          
+
 const income = d.incomeUSD || 0;
 const cost   = d.costUSD || 0;
 const margin = income > 0 ? (profit / income) : 0;
@@ -2811,9 +3085,98 @@ if (oppEl) {
 const healthEl = document.getElementById("insight-health");
 
 if (healthEl) {
+
+  const score = Number(DATA.health_score) || 0;
+  const totalProfit = Number(DATA.kpi_net) || 0;
+
+  // 🎨 تحديد اللون (يعتمد على الربح + السكور)
+  let color = "#ef4444";
+  let text  = "Poor Performance";
+
+  if (totalProfit > 0 && score >= 75) {
+    color = "#22c55e";
+    text = "Strong";
+  } else if (score >= 50) {
+    color = "#facc15";
+    text = "Needs Improvement";
+  } else if (totalProfit > 0) {
+    color = "#22c55e";
+    text = "Profitable";
+  }
+
+  // 🎯 SVG math
+  const radius = 42;
+  const circumference = 2 * Math.PI * radius;
+
+  const safeScore = Math.max(0, Math.min(score, 100)); // clamp
+  const progress = (safeScore / 100) * circumference;
+
   healthEl.innerHTML = `
-    <div style="font-size:18px;font-weight:700">
-      ${DATA.health_score}%
+    <div style="
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+    ">
+
+      <!-- 🎯 Gauge -->
+      <svg width="120" height="120">
+
+        <!-- Background -->
+        <circle
+          cx="60" cy="60" r="${radius}"
+          stroke="#1f2937"
+          stroke-width="10"
+          fill="none"
+        />
+
+        <!-- Progress -->
+        <circle
+          cx="60" cy="60" r="${radius}"
+          stroke="${color}"
+          stroke-width="10"
+          fill="none"
+          stroke-dasharray="${circumference}"
+          stroke-dashoffset="${circumference - progress}"
+          stroke-linecap="round"
+          transform="rotate(-90 60 60)"
+          style="transition: all 0.6s ease"
+        />
+
+      </svg>
+
+      <!-- Score -->
+      <div style="
+        position:absolute;
+        margin-top:-78px;
+        font-size:24px;
+        font-weight:900;
+        color:${color};
+      ">
+        ${safeScore}
+      </div>
+
+      <!-- Label -->
+      <div style="
+        margin-top:8px;
+        font-size:13px;
+        color:${color};
+        font-weight:600;
+      ">
+        ${text}
+      </div>
+
+      <!-- Reason -->
+      <div style="
+        font-size:11px;
+        color:#6b7280;
+        text-align:center;
+        max-width:160px;
+      ">
+        ${DATA.health_reason || ""}
+      </div>
+
     </div>
   `;
 }
@@ -2831,37 +3194,38 @@ if (compEl) {
     </div>
   `).join("");
 }
-const priceRecEl = document.getElementById("insight-price-rec");
 
-if (priceRecEl) {
-  priceRecEl.innerHTML = DATA.price_recommendation.map(r => `
-    <div style="font-size:13px;margin-bottom:6px">
-      ${r}
-    </div>
-  `).join("");
-}
 
-const recEl = document.getElementById("insight-recommendation");
-if (recEl) {
-  alertEl.innerHTML = DATA.insight_alerts.map(a => {
+const aiEl = document.getElementById("insight-recommendation");
 
-  const color = a.type === "low"
-    ? "var(--red)"
-    : "var(--yellow)";
-
-  return `
+if (aiEl) {
+  aiEl.innerHTML = `
     <div style="
-      margin-bottom:8px;
-      padding:8px;
-      border-left:3px solid ${color};
-      background:#0f172a;
-      border-radius:6px;
-      font-size:12px;
+      background:linear-gradient(145deg,#020617,#0f172a);
+      border:1px solid rgba(99,102,241,0.2);
+      border-radius:14px;
+      padding:14px;
+      line-height:1.6;
     ">
-      ⚠️ ${a.text}
+
+      <div style="
+        font-size:13px;
+        font-weight:600;
+        margin-bottom:8px;
+        color:#818cf8;
+      ">
+        🤖 AI Summary
+      </div>
+
+      <div style="
+        font-size:13px;
+        color:#cbd5f5;
+      ">
+        ${DATA.ai_summary || "No insights available"}
+      </div>
+
     </div>
   `;
-}).join("");
 }
 const rankEl = document.getElementById("performance-ranking");
 
@@ -2982,27 +3346,7 @@ if (actionEl && DATA.action_recommendation.length) {
     </div>
   `;
 }
-const smartEl = document.getElementById("insight-recommendation");
 
-if (smartEl) {
-  smartEl.innerHTML = `
-    <div style="line-height:1.6">
-
-      <div style="color:#22c55e;font-weight:700">
-        ${DATA.insight_top_perf}
-      </div>
-
-      <div style="font-size:12px;color:#9ca3af">
-        في ${DATA.insight_top_hotel}
-      </div>
-
-      <div style="margin-top:8px;color:#facc15">
-        💰 $${Number(DATA.insight_top_perf_value || 0).toLocaleString()}
-      </div>
-
-    </div>
-  `;
-}
 
 // ===== BEST PER DEPARTMENT =====
 
@@ -3205,56 +3549,55 @@ const marginEl = document.getElementById("profit-margin");
 
 if (marginEl && DATA.dept_margin) {
 
-  const sorted = [...DATA.dept_margin]
-    .sort((a,b)=> b.margin - a.margin)
-    .slice(0, 12);
+ const sorted = [...DATA.dept_margin]
+  .sort((a,b)=> b.marginUSD - a.marginUSD)
+  .slice(0, 12);
 
-  const max = Math.max(...sorted.map(d => d.margin));
+const max = Math.max(...sorted.map(d => d.marginUSD || 0));
 
-  marginEl.innerHTML = sorted.map((d,i) => {
+marginEl.innerHTML = sorted.map((d,i) => {
 
-    const width = max ? (d.margin / max) * 100 : 0;
+  const marginUSD = d.marginUSD || 0;
+  const marginEGP = d.marginEGP || 0;
 
-    const color =
-      d.margin < 0 ? "#f87171" :
-      d.margin < 10 ? "#facc15" :
-      "#22c55e";
+  const width = max ? (marginUSD / max) * 100 : 0;
 
-    const gradient =
-      d.margin < 0 ? "linear-gradient(90deg,#f87171,#ef4444)" :
-      d.margin < 10 ? "linear-gradient(90deg,#facc15,#f59e0b)" :
-      "linear-gradient(90deg,#22c55e,#16a34a)";
+  const color =
+    marginUSD < 0 ? "#f87171" :
+    marginUSD < 10 ? "#facc15" :
+    "#22c55e";
 
-    const isTop = i < 5;
+  const gradient =
+    marginUSD < 0 ? "linear-gradient(90deg,#f87171,#ef4444)" :
+    marginUSD < 10 ? "linear-gradient(90deg,#facc15,#f59e0b)" :
+    "linear-gradient(90deg,#22c55e,#16a34a)";
 
-    return `
-      <div class="margin-card ${isTop ? "top" : ""}">
+  return `
+    <div class="margin-card">
 
-        <!-- Header -->
-        <div style="display:flex;justify-content:space-between">
+      <div style="display:flex;justify-content:space-between">
 
-          <div style="font-weight:600">
-            ${i < 3 ? ["🥇","🥈","🥉"][i] : i+1}
-            ${d.dept}
-          </div>
-
-          <div style="color:${color};font-weight:700">
-            ${d.margin.toFixed(1)}%
-          </div>
-
+        <div style="font-weight:600">
+          ${i < 3 ? ["🥇","🥈","🥉"][i] : i+1}
+          ${d.dept}
         </div>
 
-        <!-- Bar -->
-        <div class="margin-bar">
-          <div class="margin-fill" 
-               style="background:${gradient}" 
-               data-width="${width}">
-          </div>
+        <div style="color:${color};font-weight:700">
+          ${marginUSD.toFixed(1)}% • ${marginEGP.toFixed(1)}%
         </div>
 
       </div>
-    `;
-  }).join("");
+
+      <div class="margin-bar">
+        <div class="margin-fill" 
+             style="background:${gradient}" 
+             data-width="${width}">
+        </div>
+      </div>
+
+    </div>
+  `;
+}).join("");
 
   // 🎬 Animation بعد الرندر
   setTimeout(() => {
