@@ -132,6 +132,152 @@
     --positive: #3fb950;
     --negative: #f78166;
   }
+  .kpi-card {
+  background: linear-gradient(145deg, #161b22, #0f141a);
+  border: 1px solid #30363d;
+  border-radius: 14px;
+  padding: 18px;
+  transition: all 0.25s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+
+.kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.kpi-sub {
+  font-size: 12px;
+  color: #8b949e;
+}
+:root {
+  --bg: #0b1220;
+  --card: #111827;
+  --border: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --green: #22c55e;
+  --red: #f87171;
+  --yellow: #facc15;
+}
+.kpi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  transition: 0.25s;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.kpi-title {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.kpi-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+.highlight {
+  border: 1px solid var(--green);
+  box-shadow: 0 0 20px rgba(34,197,94,0.2);
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #cbd5f5;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+.fade-in {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(5px);}
+  to {opacity:1; transform:translateY(0);}
+}
+.margin-card {
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  transition: 0.25s;
+}
+
+.margin-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.margin-card.top {
+  border: 1px solid #22c55e;
+  box-shadow: 0 0 15px rgba(34,197,94,0.2);
+}
+
+.margin-bar {
+  height: 8px;
+  background: #1f2937;
+  border-radius: 6px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.margin-fill {
+  height: 100%;
+  border-radius: 6px;
+  width: 0%;
+  transition: width 1s ease;
+}
+.kpi-card {
+  min-height: 380px;
+}
+.loss-card {
+  grid-column: span 4;
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #020617, #0f172a);
+  border: 1px solid rgba(248, 113, 113, 0.15);
+}
+
+.loss-header {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: #f87171;
+}
+
+.loss-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
@@ -837,42 +983,87 @@
       <div class="kpi-label">🎭 Top Performance</div>
       <div class="kpi-value" id="insight-top-performance"></div>
     </div>
-
     <div class="kpi-card">
-      <div class="kpi-label">💰 Best Prices</div>
-      <div id="insight-best-price"></div>
+      <div class="kpi-label">📈 Top Profit</div>
+      <div class="kpi-value" id="insight-top-profit"></div>
     </div>
+    <div class="kpi-card">
+  <div class="kpi-label">❤️ Health Score</div>
+  <div id="insight-health"></div>
+</div>
 
   </div>
 
   <!-- ===== SECOND ROW ===== -->
   <div class="kpi-grid" style="margin-top:16px">
-
     <div class="kpi-card">
-      <div class="kpi-label">📈 Top Profit</div>
-      <div class="kpi-value" id="insight-top-profit"></div>
+      <div class="kpi-label">💰 Best Prices</div>
+      <div id="insight-best-price"></div>
     </div>
+        <div class="kpi-card">
+  <div class="kpi-label">💸 Cheapest Prices</div>
+  <div id="insight-cheapest-price"></div>
+</div>
+<div class="kpi-card">
+  <div class="kpi-label">⚠️ Alerts</div>
+  <div id="insight-alerts"></div>
+</div>
+<div class="kpi-card">
+  <div class="kpi-label">📊 Price Comparison</div>
+  <div id="insight-comparison"></div>
+</div>
 
-    <div class="kpi-card">
-      <div class="kpi-label">🧠 Recommendation</div>
-      <div id="insight-recommendation"></div>
-    </div>
+<div class="kpi-card">
+  <div class="kpi-label">💡 Recommendation</div>
+  <div id="insight-price-rec"></div>
+</div>
+<!-- 🧠 AI Recommendation -->
+<div class="kpi-card">
+  <div class="kpi-label">🧠 Smart Recommendation</div>
+  <div id="insight-recommendation"></div>
+</div>
 
-    <div class="kpi-card">
-      <div class="kpi-label">🤖 AI Insights</div>
-      <div id="insight-ai"></div>
-    </div>
+<!-- ⚠️ Action Recommendation -->
+<div class="kpi-card">
+  <div class="kpi-label">⚠️ Action Needed</div>
+  <div id="insight-action"></div>
+</div>
+<div class="kpi-card loss-card">
+  <div class="loss-header">
+    📉 Loss Analysis
+  </div>
+  <div id="loss-analysis" class="loss-content"></div>
+</div>
+<div class="kpi-card">
+  <div class="kpi-label">🚀 Opportunity</div>
+  <div id="insight-opportunity"></div>
+</div>
 
   </div>
 
   <!-- ===== RANKING TABLE ===== -->
   <div class="card" style="margin-top:16px">
     <div class="card-title">📊 Performance Ranking</div>
+    <div id="performance-ranking"></div>
     <div id="insight-ranking"></div>
   </div>
 <div class="card" style="margin-top:16px">
   <div class="card-title">📈 Best Profit per Department</div>
   <div id="insight-dept-profit"></div>
+</div>
+<div class="card">
+  <div class="card-title">👑 Best Performer</div>
+  <div id="insight-best-performer"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">📊 Average Profit</div>
+  <div id="insight-avg-profit"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">📉 Profit Margin per Dept</div>
+  <div id="profit-margin"></div>
 </div>
 
 </div>
@@ -884,8 +1075,16 @@
 </div>
 
 <script>
-function num(v){
-  return v ? Number(v) : 0;
+function toNumber(v) {
+  if (v === null || v === undefined) return 0;
+
+  const n = parseFloat(
+    String(v)
+      .replace(/,/g, "")
+      .replace(/\s/g, "")
+  );
+
+  return Number.isFinite(n) ? n : 0;
 }
 
 function getIncome(row){
@@ -938,27 +1137,84 @@ async function loadDashboardData() {
   populateAdvancedFilters();
   selectMonth("ALL");
 }
+function toNumber(v){
+  if (v === null || v === undefined || v === "") return 0;
 
+  const n = parseFloat(
+    String(v)
+      .replace(/,/g, "")
+      .replace(/\s/g, "")
+  );
 
+  return Number.isFinite(n) ? n : 0;
+}
+function safeNum(v){
+  return toNumber(v);
+}
+function safeVal(n) {
+  return Number.isFinite(n) ? n : 0;
+}
+
+function formatNum(n) {
+  return safeVal(n).toLocaleString();
+}
+
+function formatCurrency(n) {
+  return `$${formatNum(n)}`;
+}
+
+function formatEGP(n) {
+  return `EGP ${formatNum(n)}`;
+}
+
+function formatPercent(n) {
+  return `${safeVal(n).toFixed(1)}%`;
+}
+function formatMoney(usd, egp) {
+  return `
+    <div style="font-size:20px;font-weight:700;color:#3fb950">
+      $${Number(usd || 0).toLocaleString()}
+    </div>
+    <div style="font-size:12px;color:#8b949e">
+      EGP ${Number(egp || 0).toLocaleString()}
+    </div>
+  `;
+}
+function profitColor(v){
+  return v >= 0 ? "#22c55e" : "#f87171";
+}
 function buildData(rows) {
+window.DEBUG_ROWS = rows;
+const AUTO_ALERTS = [];
+  // 🔥 ADD THIS HERE (أول سطر)
+  rows = rows.map(r => ({
 
+    ...r,
+
+    "Income USD": safeNum(r["Income USD"]),
+    "Exp.USD": safeNum(r["Exp.USD"]),
+
+    "Income EGP": safeNum(r["Income EGP"]),
+    "Exp.EGP": safeNum(r["Exp.EGP"])
+
+  }));
   const byDate = {};
   const byMonth = {};
   const deptMap = {};
   const hotelMap = {};
   const expCatMap = {};
+  
 
   rows.forEach(r => {
 
     const d = new Date(r.Date);
     const day = d.toLocaleDateString('en-US',{month:'short',day:'2-digit'});
     const month = d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+    const incUSD = safeNum(r["Income USD"]);
+    const expUSD = safeNum(r["Exp.USD"]);
 
-    const incUSD = num(r["Income USD"]);
-    const expUSD = num(r["Exp.USD"]);
-
-    const incEGP = num(r["Income EGP"]);
-    const expEGP = num(r["Exp.EGP"]);
+    const incEGP = safeNum(r["Income EGP"]);
+    const expEGP = safeNum(r["Exp.EGP"]);
 
     const category = r["Accounting Guidance"] || "Other";
     const dept = r["Deparment"] || "Other";
@@ -1001,6 +1257,143 @@ function buildData(rows) {
     hotelMap[hotel].c++;
 
   });
+// ===== LOSS ANALYSIS (SAFE MODE - NO SIDE EFFECTS) =====
+
+// ✅ نعمل نسخة نظيفة بس للجزء ده
+const cleanRows = rows.map(r => ({
+
+  perf: (r["Performance"] || "")
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, " "),
+
+  hotel: (r["Hotel"] || "").trim().toUpperCase(),
+  performer: (r["A Name"] || "").trim(),
+
+  incomeUSD: toNumber(r["Income USD"]),
+  costUSD:   toNumber(r["Exp.USD"]),
+
+  incomeEGP: toNumber(r["Income EGP"]),
+  costEGP:   toNumber(r["Exp.EGP"])
+}));
+
+
+const lossByPerf = {};
+const lossByHotel = {};
+
+cleanRows.forEach(r => {
+
+  if (!r.perf || !r.hotel) return;
+
+  // 🚫 skip empty rows
+  if (
+    r.incomeUSD === 0 &&
+    r.costUSD === 0 &&
+    r.incomeEGP === 0 &&
+    r.costEGP === 0
+  ) return;
+
+  const profitUSD = r.incomeUSD - r.costUSD;
+  const profitEGP = r.incomeEGP - r.costEGP;
+
+  // ===== 🎭 PERFORMANCE =====
+  if (!lossByPerf[r.perf]) {
+    lossByPerf[r.perf] = {
+      profitUSD: 0,
+      profitEGP: 0,
+      incomeUSD: 0,
+      costUSD: 0,
+      performers: new Set()
+    };
+  }
+
+  const p = lossByPerf[r.perf];
+
+  p.profitUSD += profitUSD;
+  p.profitEGP += profitEGP;
+  p.incomeUSD += r.incomeUSD;
+  p.costUSD += r.costUSD;
+
+  if (r.performer) p.performers.add(r.performer);
+
+
+  // ===== 🏨 HOTEL =====
+  if (!lossByHotel[r.hotel]) {
+    lossByHotel[r.hotel] = {
+      profitUSD: 0,
+      profitEGP: 0,
+      incomeUSD: 0
+    };
+  }
+
+  const h = lossByHotel[r.hotel];
+
+  h.profitUSD += profitUSD;
+  h.profitEGP += profitEGP;
+  h.incomeUSD += r.incomeUSD;
+
+});
+
+
+// ===== BUILD DATA =====
+
+// 🎭 Worst Performances
+DATA.worst_performances = Object.entries(lossByPerf)
+  .map(([name, d]) => ({
+
+    name,
+
+    performer: d.performers
+      ? [...d.performers].join(", ")
+      : "-",
+
+    profitUSD: Number(d.profitUSD) || 0,
+    profitEGP: Number(d.profitEGP) || 0,
+    incomeUSD: Number(d.incomeUSD) || 0, // 👈 جديد
+    costUSD: Number(d.costUSD) || 0      // 👈 جديد
+
+  }))
+  .sort((a,b)=> a.profitUSD - b.profitUSD)
+  .slice(0,5)
+
+
+// 🏨 Worst Hotels
+DATA.worst_hotels = Object.entries(lossByHotel)
+  .map(([name, d]) => {
+
+
+    const income = Number(d.incomeUSD) || 0;
+    const profit = Number(d.profitUSD) || 0;
+    const egp    = Number(d.profitEGP) || 0;
+
+    return {
+      name,
+      profitUSD: profit,
+      profitEGP: Number(d.profitEGP) || 0,
+      margin: income > 0 ? (profit / income) * 100 : 0
+    };
+  })
+  .sort((a,b)=> a.profitUSD - b.profitUSD)
+  .slice(0,5);
+
+
+// debug
+window.lossByPerf = lossByPerf;
+window.lossByHotel = lossByHotel;
+
+console.log("LOSS FIXED ✅");
+console.log(DATA.worst_performances)
+console.log(DATA.worst_hotels)
+
+console.log("LOSS PERF COUNT:", Object.keys(lossByPerf).length);
+console.log("LOSS HOTEL COUNT:", Object.keys(lossByHotel).length);
+console.log("LOSS BLOCK WORKING");
+DATA.auto_alerts = AUTO_ALERTS
+  .sort((a,b) => {
+    const priority = { high: 3, medium: 2, low: 1 };
+    return priority[b.severity] - priority[a.severity];
+  })
+  .slice(0,6);
 // ===== EXPENSE KPI BUILD =====
 const expMap = {};
 
@@ -1008,9 +1401,9 @@ rows.forEach(r => {
 
   const category = r["Accounting Guidance"] || "Other";
 
-  const value = currency === "USD"
-    ? num(r["Exp.USD"])
-    : num(r["Exp.EGP"]);
+const value = currency === "USD"
+  ? safeNum(r["Exp.USD"])
+  : safeNum(r["Exp.EGP"]);
 
   if (!expMap[category]) expMap[category] = 0;
 
@@ -1096,13 +1489,13 @@ let totalExpense = 0;
 
 rows.forEach(r => {
 
-  const income = currency === "USD"
-    ? num(r["Income USD"])
-    : num(r["Income EGP"]);
+ const income = currency === "USD"
+  ? safeNum(r["Income USD"])
+  : safeNum(r["Income EGP"]);
 
-  const expense = currency === "USD"
-    ? num(r["Exp.USD"])
-    : num(r["Exp.EGP"]);
+ const expense = currency === "USD"
+  ? safeNum(r["Exp.USD"])
+  : safeNum(r["Exp.EGP"]);
 
   totalIncome += income;
   totalExpense += expense;
@@ -1117,6 +1510,7 @@ DATA.kpi_margin =
 DATA.kpi_expense_ratio =
   totalIncome ? (totalExpense / totalIncome) * 100 : 0;
 DATA.dept_kpi = deptMap;
+
 
 // ===== NEW KPIs =====
 
@@ -1227,15 +1621,15 @@ const monthMap = {};
 rows.forEach(r => {
 
   const month = r._month;
-  const incomeUSD = Number(r["Income USD"] || 0);
+  const incomeUSD = safeNum(r["Income USD"]);
 
 
   if (!monthMap[month]) {
   monthMap[month] = { usd: 0, egp: 0 };
 }
 
-monthMap[month].usd += Number(r["Income USD"] || 0);
-monthMap[month].egp += Number(r["Income EGP"] || 0);
+monthMap[month].usd += safeNum(r["Income USD"]);
+monthMap[month].egp += safeNum(r["Income EGP"]);
 });
 
 // 🟢 نرتب الشهور
@@ -1263,12 +1657,14 @@ const revHotelMap = {};
 
 rows.forEach(r => {
 
-  const incomeUSD = Number(r["Income USD"] || 0);
-  const hotel = (r["Hotel"] || "").trim();
+  const income = r["Income USD"];
+  const cost = r["Exp.USD"];
+  const profit = income - cost;
+  const hotel = (r["Hotel"] || "Unknown").trim();
   if (!hotel) return;
 
   if (!revHotelMap[hotel]) revHotelMap[hotel] = 0;
-  revHotelMap[hotel] += incomeUSD;
+  revHotelMap[hotel] += income;
 
 });
 
@@ -1284,150 +1680,292 @@ Object.entries(revHotelMap).forEach(([h,v])=>{
 
 DATA.rev_top_hotel = topHotel;
 DATA.rev_top_value = topHotelValue;
-// ===== INSIGHTS =====
+// ===== INSIGHTS (FIXED CLEAN) =====
 
-// 🟢 Top Hotel
-const hotelRevenue = {};
-const performanceRevenue = {};
+const performanceProfit = {};
+const hotelProfit = {};
 const performanceMaxPrice = {};
+const performanceMinPrice = {};
+const performanceProfitEGP = {};
+const hotelProfitEGP = {};
 
-rows.forEach(r => {
+console.log("ROWS:", rows.length);
+console.log("SAMPLE:", rows[0]);
 
-  const hotel = (r["Hotel"] || "").trim();
-  const perf = (r["Performance"] || "").trim();
-  const income = Number(r["Income USD"] || 0);
+rows.forEach((r, i) => {
 
-  // Hotel Revenue
-  if (hotel) {
-    if (!hotelRevenue[hotel]) hotelRevenue[hotel] = 0;
-    hotelRevenue[hotel] += income;
+  const hotel = (r["Hotel"] || "Unknown").trim();
+  const perf = String(r["Performance"] || "Unknown").trim();
+
+  const incomeUSD = safeNum(r["Income USD"]);
+  const costUSD = safeNum(r["Exp.USD"]);
+
+ const incomeEGP = safeNum(r["Income EGP"]);
+ const costEGP = safeNum(r["Exp.EGP"]);
+
+ const rowProfit = incomeUSD - costUSD;
+ const rowProfitEGP = incomeEGP - costEGP;
+
+    // 🔥 ADD THIS HERE
+  if (i < 5) {
+    console.log("ROW DEBUG:", {
+      perf,
+      incomeUSD,
+      costUSD,
+      profit: rowProfit
+    });
   }
 
-  // Performance Revenue
-  if (perf) {
-    if (!performanceRevenue[perf]) performanceRevenue[perf] = 0;
-    performanceRevenue[perf] += income;
-  }
+// USD
+performanceProfit[perf] = (performanceProfit[perf] || 0) + rowProfit;
+hotelProfit[hotel] = (hotelProfit[hotel] || 0) + rowProfit;
 
-  // Max Price per Performance
-  if (perf) {
-    if (!performanceMaxPrice[perf] || income > performanceMaxPrice[perf].price) {
-      performanceMaxPrice[perf] = {
-        price: income,
-        hotel: hotel
-      };
-    }
-  }
+// EGP
+performanceProfitEGP[perf] = (performanceProfitEGP[perf] || 0) + rowProfitEGP;
+hotelProfitEGP[hotel] = (hotelProfitEGP[hotel] || 0) + rowProfitEGP;
 
-});
-
-// 🏨 Top Hotel
-let insightTopHotel = "-";
-let insightTopHotelValue = 0;
-
-Object.entries(hotelRevenue).forEach(([k,v])=>{
-if (v > insightTopHotelValue) {
-  insightTopHotel = k;
-  insightTopHotelValue = v;
+// 💰 Max Price
+if (!performanceMaxPrice[perf] || incomeUSD > performanceMaxPrice[perf].usd) {
+  performanceMaxPrice[perf] = {
+    usd: incomeUSD,
+    egp: incomeEGP,
+    hotel: hotel
+  };
 }
+
+// 💸 Min Price
+if (
+  incomeUSD > 0 && 
+  (!performanceMinPrice[perf] || incomeUSD < performanceMinPrice[perf].usd)
+) {
+  performanceMinPrice[perf] = {
+    usd: incomeUSD,
+    egp: incomeEGP,
+    hotel: hotel
+  };
+}
+
 });
 
-// 🎭 Top Performance
-let topPerf = "-";
-let topPerfValue = 0;
+console.log("PERFORMANCE PROFIT MAP:", performanceProfit);
+console.log("MIN:", performanceMinPrice);
+console.log("MAX:", performanceMaxPrice);
 
-Object.entries(performanceRevenue).forEach(([k,v])=>{
-  if (v > topPerfValue) {
-    topPerf = k;
-    topPerfValue = v;
+// ===== INSIGHT TOP PERFORMANCE (BY PROFIT NOT DEPT) =====
+const perfEntriesInsight = Object.entries(performanceProfit).sort((a,b)=>b[1]-a[1]);
+
+if (perfEntriesInsight.length) {
+
+  const [name, usd] = perfEntriesInsight[0];
+
+  DATA.insight_top_perf = name;
+  DATA.insight_top_perf_value = usd;
+  DATA.insight_top_perf_egp = performanceProfitEGP[name] || 0;
+
+}
+// ===== TOP HOTEL (PROFIT) =====
+const hotelArr = Object.entries(hotelProfit).sort((a,b)=>b[1]-a[1]);
+
+if (hotelArr.length) {
+  const [name, usd] = hotelArr[0];
+
+  DATA.insight_top_hotel = name;
+  DATA.insight_top_hotel_profit = usd;
+  DATA.insight_top_hotel_egp = hotelProfitEGP[name] || 0;
+}
+
+// ===== ALERTS SYSTEM =====
+
+const alerts = [];
+
+Object.keys(performanceMinPrice).forEach(perf => {
+
+  const min = performanceMinPrice[perf];
+  const max = performanceMaxPrice[perf];
+
+  if (!min || !max) return;
+
+  const diff = max.usd - min.usd;
+
+  // ⚠️ سعر قليل جدًا
+  if (min.usd < max.usd * 0.7) {
+    alerts.push({
+      type: "low",
+      text: `${perf} → $${min.usd.toFixed(2)} (${min.hotel})`
+    });
   }
-});
 
-// 💰 Best Prices
-const bestPrices = Object.entries(performanceMaxPrice)
-  .map(([k,v]) => [k, v.price, v.hotel])
-  .sort((a,b)=> b[1] - a[1])
+  // ⚠️ فرق كبير
+  if (diff > 500) {
+    alerts.push({
+      type: "gap",
+      text: `${perf} فرق كبير $${diff.toFixed(0)}`
+    });
+  }
+
+});
+// حفظ في DATA
+DATA.insight_alerts = alerts.slice(0, 6);
+console.log("ALERTS:", DATA.insight_alerts);
+// ===== FORCE TOP PROFIT FIX =====
+const perfEntries = Object.entries(performanceProfit);
+
+if (perfEntries.length > 0) {
+
+  const top = perfEntries.sort((a,b)=> b[1] - a[1])[0];
+
+  DATA.top_profit_name = top[0];
+  DATA.top_profit_value = top[1];
+
+  // 🔥 مهم
+  DATA.insight_top_perf = top[0];
+  DATA.insight_top_perf_value = top[1];
+
+} else {
+
+  DATA.top_profit_name = "-";
+  DATA.top_profit_value = 0;
+
+}
+// ===== TOP PERFORMANCE =====
+DATA.top_profit_name = DATA.insight_top_perf;
+DATA.top_profit_value = DATA.insight_top_perf_value;
+
+
+console.log("TOP PROFIT:", DATA.top_profit_name, DATA.top_profit_value);
+
+
+// ===== TOP HOTEL (BY PROFIT) =====
+const hotelEntries = Object.entries(hotelProfit);
+
+if (hotelEntries.length > 0) {
+  const sortedHotel = hotelEntries.sort((a,b)=> b[1]-a[1]);
+
+  DATA.insight_top_hotel = sortedHotel[0][0];
+  DATA.insight_top_hotel_profit = sortedHotel[0][1];
+} else {
+  DATA.insight_top_hotel = "-";
+  DATA.insight_top_hotel_profit = 0;
+}
+
+
+// ================= BEST / CHEAPEST =================
+DATA.insight_best_prices = Object.entries(performanceMaxPrice)
+  .map(([k,v]) => [k, v.usd, v.egp, v.hotel])
+  .sort((a,b)=> b[1]-a[1])
   .slice(0,5);
 
-DATA.insight_best_prices = bestPrices;
+DATA.insight_cheapest_prices = Object.entries(performanceMinPrice)
+  .map(([k,v]) => [k, v.usd, v.egp, v.hotel])
+  .sort((a,b)=> a[1]-b[1])
+  .slice(0,5);
 
-// حفظ
-DATA.insight_top_hotel = insightTopHotel;
-DATA.insight_top_hotel_value = insightTopHotelValue;
 
-DATA.insight_top_perf = topPerf;
-DATA.insight_top_perf_value = topPerfValue;
+// ================= ALERT =================
+DATA.low_price_alert = DATA.insight_cheapest_prices
+  .filter(p => p[1] <= 500)
+  .map(p => ({
+    name: p[0],
+    price: p[1],
+    hotel: p[3]
+  }));
 
-DATA.insight_best_prices = bestPrices;
-// ===== PROFIT ANALYSIS =====
-const performanceProfit = {};
 
-rows.forEach(r => {
+// ================= COMPARISON =================
+DATA.price_comparison = DATA.insight_best_prices.map((b,i)=>{
+  const c = DATA.insight_cheapest_prices[i];
+  if (!c) return null;
 
-  const perf = (r["Performance"] || "").trim();
+  return {
+    name: b[0],
+    max: b[1],
+    min: c[1],
+    diff: b[1] - c[1]
+  };
+}).filter(Boolean);
 
-  const income = Number(r["Income USD"] || 0);
-  const cost = Number(r["Exp.USD"] || 0);
 
-  const profit = income - cost;
+// ================= OPPORTUNITY =================
+const opp = DATA.price_comparison.sort((a,b)=> b.diff-a.diff)[0];
 
-  if (!perf) return;
+DATA.best_opportunity = opp
+  ? `${opp.name} → فرصة زيادة ${opp.diff}$`
+  : "-";
 
-  if (!performanceProfit[perf]) performanceProfit[perf] = 0;
+// 💡 Recommendation
+DATA.price_recommendation = DATA.price_comparison.map(d => {
 
-  performanceProfit[perf] += profit;
-
-});
-
-// أعلى Profit
-let topProfitPerf = "-";
-let topProfitValue = 0;
-
-Object.entries(performanceProfit).forEach(([k,v])=>{
-  if (v > topProfitValue) {
-    topProfitPerf = k;
-    topProfitValue = v;
+  if (d.diff > 2000) {
+    return `💡 ${d.name}: فيه فرق كبير (${d.diff}$)`;
   }
+
+  if (d.min < 500) {
+    return `⚠️ ${d.name}: سعر قليل جدًا`;
+  }
+
+  return `✅ ${d.name}: تسعير متوازن`;
 });
 
-DATA.top_profit_perf = topProfitPerf;
-DATA.top_profit_value = topProfitValue;
+
+
+
+
+
 // ===== RECOMMENDATION =====
 DATA.recommendation = 
   `Focus on ${DATA.insight_top_hotel} — The Highest Revenue Currently`;
 // ===== AI SUGGESTIONS =====
 
-const suggestions = [];
+const rec = [];
 
-// Profit عالي
-if (DATA.top_profit_value > 0) {
-  suggestions.push(`💰   From The Highest Profit ${DATA.top_profit_perf}`);
+if (DATA.insight_top_perf_value > 5000) {
+  rec.push(`🔥 ركز على ${DATA.insight_top_perf} — أعلى ربح`);
 }
 
-// Expense عالي
-if (DATA.kpi_expense_ratio > 80) {
-  suggestions.push(`⚠️ High Expenses (${DATA.kpi_expense_ratio.toFixed(1)}%)`);
+if (DATA.kpi_expense_ratio > 70) {
+  rec.push(`⚠️ المصاريف عالية (${DATA.kpi_expense_ratio.toFixed(1)}%)`);
 }
 
-// Hotel قوي
-if (DATA.insight_top_hotel) {
-  suggestions.push(`🏨 Focus on ${DATA.insight_top_hotel}`);
+if (DATA.low_price_alert?.length) {
+  rec.push(`💸 في أسعار قليلة محتاجة تعديل`);
 }
 
-DATA.ai_suggestions = suggestions;
+if (DATA.price_comparison?.length) {
+  const maxDiff = Math.max(...DATA.price_comparison.map(d=>d.diff));
+  if (maxDiff > 2000) {
+    rec.push(`📊 في فرصة Upsell قوية`);
+  }
+}
+
+DATA.ai_suggestions = rec;
 // ===== RANKING TABLE =====
-DATA.performance_ranking = Object.entries(performanceProfit)
-  .map(([k,v]) => ({ name: k, profit: v }))
+DATA.performance_ranking = Object.entries(lossByPerf)
+  .map(([name, d]) => ({
+
+    name,
+    profit: Number(d.profitUSD) || 0,
+    egp: Number(d.profitEGP) || 0,
+
+    status: d.profitUSD > 0 ? "profit" : "loss"
+
+  }))
   .sort((a,b)=> b.profit - a.profit)
-  .slice(0,10);  
+  .slice(0,10);
 // ===== SMART RECOMMENDATION =====
 
-const bestHotel = DATA.insight_top_hotel;
-const bestPerf = DATA.top_profit_perf;
-const profit = DATA.top_profit_value;
+const bestPerf = DATA.insight_top_perf || "-";
+const bestHotel = DATA.insight_top_hotel || "-";
+const bestProfitValue = DATA.insight_top_perf_value || 0;
 
-DATA.recommendation = `
-ركز على ${bestHotel} في ${bestPerf} — بيحقق أعلى ربح (${profit.toLocaleString()}$)
+// ===== SMART RECOMMENDATION =====
+
+DATA.smart_recommendation = `
+🔥 أفضل فرصة حالياً
+
+ركز على <b>${DATA.insight_top_perf}</b>
+في <b>${DATA.insight_top_hotel}</b>
+
+💰 ربح: $${Number(DATA.insight_top_perf_value || 0).toLocaleString()}
 `;
 // ===== BEST PROFIT PER DEPARTMENT =====
 
@@ -1438,8 +1976,8 @@ rows.forEach(r => {
   const dept = (r["Deparment"] || "").trim();
   const perf = (r["Performance"] || "").trim();
 
-  const income = Number(r["Income USD"] || 0);
-  const cost = Number(r["Exp.USD"] || 0);
+  const income = r["Income USD"];
+  const cost = r["Exp.USD"];
 
   const profit = income - cost;
 
@@ -1447,7 +1985,7 @@ rows.forEach(r => {
 
   if (!deptPerfProfit[dept]) deptPerfProfit[dept] = {};
 
-const performer = (r["A Name"] || "").trim();
+const performer = (r["A Name"] || "Unknown").trim();
 
 if (!deptPerfProfit[dept][perf] || profit > deptPerfProfit[dept][perf].profit) {
   deptPerfProfit[dept][perf] = {
@@ -1458,34 +1996,427 @@ if (!deptPerfProfit[dept][perf] || profit > deptPerfProfit[dept][perf].profit) {
 
 });
 
-// نطلع أفضل واحد في كل قسم
+// ===== CUMULATIVE PROFIT PER DEPT =====
+const deptPerfProfitSum = {};
+
+rows.forEach(r => {
+
+  const dept = (r["Deparment"] || "").trim();
+  const perf = (r["Performance"] || "").trim();
+  const performer = (r["A Name"] || "").trim();
+
+  const incomeUSD = safeNum(r["Income USD"]);
+  const costUSD = safeNum(r["Exp.USD"]);
+
+  const incomeEGP = safeNum(r["Income EGP"]);
+  const costEGP = safeNum(r["Exp.EGP"]);
+
+  const profitUSD = incomeUSD - costUSD;
+  const profitEGP = incomeEGP - costEGP;
+
+  if (!dept || !perf) return;
+
+  if (!deptPerfProfitSum[dept]) deptPerfProfitSum[dept] = {};
+  if (!deptPerfProfitSum[dept][perf]) {
+    deptPerfProfitSum[dept][perf] = {
+      usd: 0,
+      egp: 0,
+      performer: performer
+    };
+  }
+
+  deptPerfProfitSum[dept][perf].usd += profitUSD;
+  deptPerfProfitSum[dept][perf].egp += profitEGP;
+
+});
 const bestDept = [];
 
-Object.entries(deptPerfProfit).forEach(([dept, perfs]) => {
+Object.entries(deptPerfProfitSum).forEach(([dept, perfs]) => {
 
   let bestName = "-";
-  let bestValue = 0;
+  let bestUSD = 0;
+  let bestEGP = 0;
   let bestPerformer = "-";
 
   Object.entries(perfs).forEach(([p,v])=>{
-    if (v.profit > bestValue) {
+    if (v.usd > bestUSD) {
       bestName = p;
-      bestValue = v.profit;
+      bestUSD = v.usd;
+      bestEGP = v.egp;
       bestPerformer = v.performer;
     }
   });
 
   bestDept.push({
-    dept: dept,
+    dept,
     name: bestName,
     performer: bestPerformer,
-    profit: bestValue
+    usd: bestUSD,
+    egp: bestEGP
   });
 
-}); // ✅ القفلة الصح هنا
+});
 
-// ✅ برا اللوب
 DATA.dept_best_profit = bestDept;
+// ===== BEST PERFORMER OVERALL =====
+const performerMap = {};
+
+rows.forEach(r => {
+
+  const name = (r["A Name"] || "").trim();
+
+  const usd =
+    safeNum(r["Income USD"]) -
+    safeNum(r["Exp.USD"]);
+
+  const egp =
+    safeNum(r["Income EGP"]) -
+    safeNum(r["Exp.EGP"]);
+
+  if (!name) return;
+
+  if (!performerMap[name]) {
+    performerMap[name] = {
+      usd: 0,
+      egp: 0
+    };
+  }
+
+  performerMap[name].usd += usd;
+  performerMap[name].egp += egp;
+
+});
+
+let bestPerformer = "-";
+let bestUSD = 0;
+let bestEGP = 0;
+let bestScore = -Infinity;
+
+Object.entries(performerMap).forEach(([name, v]) => {
+
+  const usd = v.usd || 0;
+  const egp = v.egp || 0;
+
+  // 🧠 Score = USD + تحويل تقريبي من EGP
+  const score = usd; 
+
+  if (score > bestScore) {
+    bestScore = score;
+    bestPerformer = name;
+    bestUSD = usd;
+    bestEGP = egp;
+  }
+
+});
+
+DATA.best_performer = bestPerformer;
+DATA.best_performer_usd = bestUSD;
+DATA.best_performer_egp = bestEGP;
+// ===== AVERAGE PROFIT =====
+const totalProfit =
+  rows.reduce((s,r)=> s + (safeNum(r["Income USD"]||0) - safeNum(r["Exp.USD"]||0)), 0);
+
+DATA.avg_profit = rows.length ? totalProfit / rows.length : 0;
+// ===== PROFIT MARGIN PER DEPT =====
+const deptMargin = {};
+
+rows.forEach(r => {
+
+  const dept = (r["Deparment"] || "").trim();
+
+  const income = r["Income USD"];
+  const cost = r["Exp.USD"];
+
+  if (!dept) return;
+
+  if (!deptMargin[dept]) {
+    deptMargin[dept] = { income: 0, cost: 0 };
+  }
+
+  deptMargin[dept].income += income;
+  deptMargin[dept].cost += cost;
+
+});
+
+DATA.dept_margin = Object.entries(deptMargin).map(([k,v]) => ({
+  dept: k,
+  margin: v.income ? ((v.income - v.cost)/v.income)*100 : 0
+}));
+const margin = DATA.kpi_margin || 0;
+const totalProfitValue = DATA.kpi_net || 0;
+DATA.health_score = Math.round(
+  (margin * 0.6) + (totalProfitValue > 0 ? 40 : 0)
+);
+// ===== BUILD DATA (SAFE + CLEAN) =====
+
+
+DATA.worst_performances = Object.entries(lossByPerf)
+  .map(([name, d]) => ({
+
+    name,
+
+    performer: d.performers
+      ? [...d.performers].join(", ")
+      : "-",
+
+    profitUSD: Number(d.profitUSD) || 0,
+    profitEGP: Number(d.profitEGP) || 0,
+
+    incomeUSD: Number(d.incomeUSD) || 0, // ✅ مهم
+    costUSD: Number(d.costUSD) || 0      // ✅ مهم
+
+  }))
+  .sort((a,b)=> a.profitUSD - b.profitUSD)
+  .slice(0,5);
+
+
+DATA.worst_hotels = Object.entries(lossByHotel)
+  .map(([name, d]) => {
+
+    const income = Number(d.incomeUSD) || 0;
+    const profit = Number(d.profitUSD) || 0;
+    const egp    = Number(d.profitEGP) || 0;
+
+    return {
+      name,
+      profitUSD: profit,
+      profitEGP: egp,
+      margin: income > 0 ? (profit / income) * 100 : 0
+    };
+  })
+  .sort((a,b)=> a.profitUSD - b.profitUSD)
+  .slice(0,5);
+
+
+// ===== RENDER =====
+
+const lossEl = document.getElementById("loss-analysis");
+
+if (lossEl) {
+
+  lossEl.innerHTML = `
+    <div style="
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    ">
+
+      <!-- 🎭 Performances -->
+      <div>
+
+        <div style="
+          color:#f87171;
+          font-weight:700;
+          font-size:14px;
+          margin-bottom:10px;
+        ">
+          🎭 Worst Performances
+        </div>
+
+        <!-- ✅ GRID بدل LIST -->
+        <div style="
+          display:grid;
+          grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+          gap:12px;
+        ">
+
+        ${DATA.worst_performances.map((d,i) => {
+
+          const profit = Number.isFinite(d.profitUSD) ? d.profitUSD : 0;
+          const egp    = Number.isFinite(d.profitEGP) ? d.profitEGP : 0;
+const income = d.incomeUSD || 0;
+const cost   = d.costUSD || 0;
+const margin = income > 0 ? (profit / income) : 0;
+
+const reasonScores = [];
+
+if (income === 0 && cost > 0) {
+  reasonScores.push({ type: "No Revenue", score: 100, icon: "❌", color: "#facc15" });
+}
+
+if (cost > income) {
+  reasonScores.push({ type: "High Cost", score: (cost - income), icon: "⚠️", color: "#f87171" });
+}
+
+if (income > 0 && margin < 0.2) {
+  reasonScores.push({ type: "Low Margin", score: (0.2 - margin), icon: "⚠️", color: "#facc15" });
+}
+
+if (profit < 0) {
+  reasonScores.push({ type: "Loss", score: Math.abs(profit), icon: "📉", color: "#f87171" });
+}
+
+// 🔥 ترتيب حسب الأهم
+reasonScores.sort((a,b) => b.score - a.score);
+
+// 🎯 السبب الرئيسي
+const topReason = reasonScores[0];
+
+// 📊 كل الأسباب (ranking)
+const allReasons = reasonScores.map(r => `${r.icon} ${r.type}`).join(" • ");
+const recommendations = [];
+
+if (income === 0 && cost > 0) {
+  recommendations.push("Stop this performance or renegotiate cost");
+}
+
+if (cost > income) {
+  recommendations.push("Reduce cost or increase selling price");
+}
+
+if (margin < 0.2 && income > 0) {
+  recommendations.push("Improve pricing strategy");
+}
+
+if (profit < 0) {
+  recommendations.push("Critical: review contract immediately");
+}
+
+const recommendation = recommendations[0] || "Stable";
+if (topReason) {
+  AUTO_ALERTS.push({
+    name: d.name,
+    performer: d.performer,
+    reason: topReason.type,
+    icon: topReason.icon,
+    severity:
+      topReason.type === "No Revenue" ? "high" :
+      topReason.type === "High Cost" ? "high" :
+      topReason.type === "Low Margin" ? "medium" :
+      "low",
+    message: recommendation
+  });
+}
+return `
+  <div style="
+    background:linear-gradient(145deg,#0f172a,#020617);
+    border:1px solid rgba(248,113,113,0.2);
+    border-radius:16px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  ">
+
+    <!-- TITLE -->
+    <div style="font-size:15px;font-weight:700">
+      ${d.name}
+    </div>
+
+    <!-- PERFORMER -->
+    <div style="font-size:12px;color:#9ca3af">
+      👤 ${d.performer || "-"}
+    </div>
+
+    <!-- NUMBERS -->
+    <div style="display:flex;justify-content:space-between;align-items:center">
+
+      <div>
+        <div style="font-size:18px;font-weight:800;color:#f87171">
+          ${formatCurrency(profit)}
+        </div>
+        <div style="font-size:11px;color:#9ca3af">
+          ${formatEGP(egp)}
+        </div>
+      </div>
+
+      <!-- ALERT -->
+      <div style="
+        font-size:11px;
+        padding:5px 10px;
+        border-radius:8px;
+        background:#f8717122;
+        color:#f87171;
+        font-weight:600;
+      ">
+        ${topReason ? topReason.icon + " " + topReason.type : ""}
+      </div>
+
+    </div>
+
+    <!-- RECOMMENDATION -->
+    <div style="
+      font-size:12px;
+      background:#1e293b;
+      padding:8px;
+      border-radius:8px;
+      color:#cbd5f5;
+    ">
+      💡 ${recommendation}
+    </div>
+
+  </div>
+`;
+        }).join("")}
+
+        </div>
+      </div>
+
+
+      <!-- 🏨 Hotels -->
+      <div>
+
+        <div style="
+          color:#facc15;
+          font-weight:700;
+          font-size:14px;
+          margin-bottom:10px;
+        ">
+          🏨 Worst Hotels
+        </div>
+
+        <!-- ✅ GRID -->
+        <div style="
+          display:grid;
+          grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+          gap:12px;
+        ">
+
+        ${DATA.worst_hotels.map((d,i) => {
+
+          const profit = Number.isFinite(d.profitUSD) ? d.profitUSD : 0;
+          const egp    = Number.isFinite(d.profitEGP) ? d.profitEGP : 0;
+          const margin = Number.isFinite(d.margin) ? d.margin : 0;
+
+          return `
+            <div style="
+              background:linear-gradient(145deg,#0f172a,#020617);
+              border:1px solid rgba(250,204,21,0.2);
+              border-radius:14px;
+              padding:14px;
+              ${i === 0 ? "box-shadow:0 0 15px rgba(250,204,21,0.2);" : ""}
+            ">
+
+              <div style="font-size:14px;font-weight:700;margin-bottom:6px">
+                ${d.name}
+              </div>
+
+              <div style="font-size:18px;font-weight:800;color:#f87171">
+                ${formatCurrency(profit)}
+              </div>
+
+              <div style="font-size:11px;color:#9ca3af">
+                ${formatEGP(egp)}
+              </div>
+
+              <div style="
+                margin-top:6px;
+                font-size:11px;
+                color:${margin < 0 ? "#f87171" : "#22c55e"};
+              ">
+                ${formatPercent(margin)}
+              </div>
+
+            </div>
+          `;
+        }).join("")}
+
+        </div>
+      </div>
+
+    </div>
+  `;
+}
 
 }
 function getFilteredData() {
@@ -1698,17 +2629,47 @@ if (hotelValEl) {
 // ===== INSIGHTS =====
 
 // 🏨 Top Hotel
-const hotelInsight = document.getElementById("insight-top-hotel");
-if (hotelInsight) {
-  hotelInsight.innerHTML =
-    `<b>${DATA.insight_top_hotel}</b><br>$${(DATA.insight_top_hotel_value || 0).toLocaleString()}`;
-}
+const topHotelProfitEl = document.getElementById("insight-top-hotel");
 
-// 🎭 Top Performance
-const perfInsight = document.getElementById("insight-top-performance");
-if (perfInsight) {
-  perfInsight.innerHTML =
-    `<b>${DATA.insight_top_perf}</b><br>$${(DATA.insight_top_perf_value || 0).toLocaleString()}`;
+if (topHotelProfitEl) {
+  topHotelProfitEl.innerHTML = `
+    <div style="font-weight:600;margin-bottom:4px">
+      ${DATA.insight_top_hotel || "-"}
+    </div>
+
+    ${formatMoney(
+      DATA.insight_top_hotel_profit,
+      DATA.insight_top_hotel_egp
+    )}
+  `;
+}
+const topPerfEl = document.getElementById("insight-top-performance");
+
+if (topPerfEl) {
+  topPerfEl.innerHTML = `
+    <div style="font-weight:600;margin-bottom:4px">
+      ${DATA.insight_top_perf || "-"}
+    </div>
+
+    ${formatMoney(
+      DATA.insight_top_perf_value,
+      DATA.insight_top_perf_egp
+    )}
+  `;
+}
+// 📈 TOP PROFIT (FIXED)
+const topProfitEl = document.getElementById("insight-top-profit");
+
+if (topProfitEl) {
+  topProfitEl.innerHTML = `
+    <div style="font-weight:600">
+      ${DATA.top_profit_name || "-"}
+    </div>
+
+    <div style="color:#22c55e;font-size:18px;font-weight:bold">
+      $${Number(DATA.top_profit_value || 0).toLocaleString()}
+    </div>
+  `;
 }
 
 // 💰 Best Prices
@@ -1718,70 +2679,415 @@ if (priceInsight && DATA.insight_best_prices) {
 
   priceInsight.innerHTML = DATA.insight_best_prices.map(p => {
     return `
-      <div style='display:flex;justify-content:space-between'>
-        <span>${p[0]}</span>
-        <span>
-          <b>$${Number(p[1]).toLocaleString()}</b>
-          <span style='opacity:.6'>(${p[2]})</span>
-        </span>
+      <div style='margin-bottom:10px'>
+
+        <!-- Performance -->
+        <div style="font-weight:600">
+          ${p[0]}
+        </div>
+
+        <!-- Prices -->
+<span>
+  <b>$${Number(p[1]).toLocaleString()}</b>
+  <div style="font-size:11px;color:#9ca3af">
+    EGP ${Number(p[2]).toLocaleString()} • 🏨 ${p[3]}
+  </div>
+</span>
+
+        <!-- Hotel -->
+        <div style="font-size:11px;color:#9ca3af;margin-top:4px">
+          🏨 ${p[3] || "-"}
+        </div>
+
       </div>
     `;
   }).join("");
 
 }
-const profitEl = document.getElementById("insight-top-profit");
-if (profitEl) {
-  profitEl.innerHTML =
-    `<b>${DATA.top_profit_perf}</b><br>$${(DATA.top_profit_value || 0).toLocaleString()}`;
-}
-const recEl = document.getElementById("insight-recommendation");
-if (recEl) {
-  recEl.innerText = DATA.recommendation || "-";
-}
-const aiEl = document.getElementById("insight-ai");
-if (aiEl) {
-  aiEl.innerHTML = (DATA.ai_suggestions || []).map(s => `
-    <div>${s}</div>
-  `).join("");
-}
-const rankEl = document.getElementById("insight-ranking");
-if (rankEl) {
+const cheapEl = document.getElementById("insight-cheapest-price");
 
-  rankEl.innerHTML = `
-    <table style="width:100%">
-      <tr>
-        <th>Performance</th>
-        <th>Profit</th>
-      </tr>
-      ${DATA.performance_ranking.map(r => `
-        <tr>
-          <td>${r.name}</td>
-          <td>$${r.profit.toLocaleString()}</td>
-        </tr>
-      `).join("")}
-    </table>
+if (cheapEl && DATA.insight_cheapest_prices) {
+
+cheapEl.innerHTML = DATA.insight_cheapest_prices.map(d => `
+
+  <div style="
+    margin-bottom:10px;
+    padding-bottom:8px;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+  ">
+
+    <!-- Performance -->
+    <div style="font-weight:600">
+      ${d[0] || "-"}
+    </div>
+
+    <!-- USD -->
+    <div style="color:#f87171;font-size:14px">
+      $${Number(d[1] || 0).toLocaleString()}
+    </div>
+
+    <!-- EGP + Hotel -->
+    <div style="font-size:11px;color:#9ca3af">
+      EGP ${Number(d[2] || 0).toLocaleString()}
+      • 🏨 ${d[3] || "-"}
+    </div>
+
+  </div>
+
+`).join("");
+
+}
+const alertEl = document.getElementById("insight-alerts");
+
+if (alertEl) {
+
+  if (!DATA.auto_alerts || DATA.auto_alerts.length === 0) {
+
+    alertEl.innerHTML = `
+      <div style="color:#9ca3af;font-size:13px">
+        No Alerts ✔
+      </div>
+    `;
+
+  } else {
+
+    alertEl.innerHTML = DATA.auto_alerts.map(a => {
+
+      const color =
+        a.severity === "high" ? "#f87171" :
+        a.severity === "medium" ? "#facc15" :
+        "#22c55e";
+
+      return `
+        <div style="
+          margin-bottom:10px;
+          padding:10px;
+          border-left:4px solid ${color};
+          background:${color}15;
+          border-radius:8px;
+          font-size:12px;
+        ">
+
+          <div style="font-weight:600">
+            ${a.icon} ${a.name}
+          </div>
+
+          <div style="font-size:11px;color:#9ca3af">
+            👤 ${a.performer || "-"}
+          </div>
+
+          <div style="
+            font-size:11px;
+            margin-top:4px;
+            color:${color};
+          ">
+            ${a.reason}
+          </div>
+
+          <div style="
+            font-size:11px;
+            margin-top:4px;
+            color:#cbd5f5;
+          ">
+            💡 ${a.message}
+          </div>
+
+        </div>
+      `;
+    }).join("");
+
+  }
+
+}
+const oppEl = document.getElementById("insight-opportunity");
+
+if (oppEl) {
+  oppEl.innerHTML = `
+    <div style="font-size:13px;color:#3fb950">
+      ${DATA.best_opportunity}
+    </div>
   `;
 }
+const healthEl = document.getElementById("insight-health");
+
+if (healthEl) {
+  healthEl.innerHTML = `
+    <div style="font-size:18px;font-weight:700">
+      ${DATA.health_score}%
+    </div>
+  `;
+}
+
+const compEl = document.getElementById("insight-comparison");
+
+if (compEl) {
+  compEl.innerHTML = DATA.price_comparison.map(d => `
+    <div style="margin-bottom:6px;font-size:13px">
+      ${d.name}:
+      <span style="color:#3fb950">$${d.max}</span>
+      vs
+      <span style="color:#f78166">$${d.min}</span>
+      → Diff $${d.diff}
+    </div>
+  `).join("");
+}
+const priceRecEl = document.getElementById("insight-price-rec");
+
+if (priceRecEl) {
+  priceRecEl.innerHTML = DATA.price_recommendation.map(r => `
+    <div style="font-size:13px;margin-bottom:6px">
+      ${r}
+    </div>
+  `).join("");
+}
+
+const recEl = document.getElementById("insight-recommendation");
+if (recEl) {
+  alertEl.innerHTML = DATA.insight_alerts.map(a => {
+
+  const color = a.type === "low"
+    ? "var(--red)"
+    : "var(--yellow)";
+
+  return `
+    <div style="
+      margin-bottom:8px;
+      padding:8px;
+      border-left:3px solid ${color};
+      background:#0f172a;
+      border-radius:6px;
+      font-size:12px;
+    ">
+      ⚠️ ${a.text}
+    </div>
+  `;
+}).join("");
+}
+const rankEl = document.getElementById("performance-ranking");
+
+if (rankEl && DATA.performance_ranking) {
+
+  const max = Math.max(...DATA.performance_ranking.map(d => d.profit || 0));
+
+  rankEl.innerHTML = DATA.performance_ranking.map((d,i) => {
+    
+    const width = max ? (d.profit / max) * 100 : 0;
+
+    // 🎯 Top 3 highlight
+    const isTop = i < 3;
+
+    // 🎨 لون حسب القيمة
+    const color = d.profit < 0
+      ? "#f87171"
+      : i === 0
+      ? "#22c55e"
+      : "#3fb950";
+
+    return `
+      <div style="
+        margin-bottom:${isTop ? "14px" : "10px"};
+        padding:${isTop ? "10px" : "6px"};
+        border:${isTop ? "1px solid #22c55e33" : "none"};
+        border-radius:10px;
+        background:${isTop ? "rgba(34,197,94,0.05)" : "transparent"};
+      ">
+
+        <!-- Top Row -->
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          font-size:${isTop ? "14px" : "12px"};
+          font-weight:${isTop ? "600" : "400"};
+        ">
+          <span>
+            ${i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i+1)}
+            ${d.name}
+          </span>
+
+          <div style="text-align:right">
+            <div style="color:${profitColor(d.profit)}">
+              $${Number(d.profit || 0).toLocaleString()}
+            </div>
+
+            <div style="font-size:11px;color:#8b949e">
+              EGP ${Number(d.egp || 0).toLocaleString()}
+            </div>
+          </div>
+        </div>
+
+        <!-- Bar -->
+        <div style="
+          height:${isTop ? "8px" : "5px"};
+          background:#1f2937;
+          border-radius:6px;
+          margin-top:6px;
+        ">
+          <div style="
+            width:${width}%;
+            height:100%;
+            background:linear-gradient(90deg, ${color}, #58a6ff);
+            border-radius:6px;
+            transition:0.4s;
+          "></div>
+        </div>
+
+      </div>
+    `;
+  }).join("");
+
+}
+// ===== ACTION RECOMMENDATION =====
+
+DATA.action_recommendation = DATA.insight_alerts?.slice(0,4) || [];
+const actionEl = document.getElementById("insight-action");
+
+if (actionEl && DATA.action_recommendation.length) {
+
+  actionEl.innerHTML = DATA.action_recommendation.map(a => {
+
+    const color =
+      a.type === "low" ? "#f87171" :
+      a.type === "gap" ? "#facc15" :
+      "#60a5fa";
+
+    const icon =
+      a.type === "low" ? "🔻" :
+      a.type === "gap" ? "⚠️" :
+      "ℹ️";
+
+    return `
+      <div style="
+        margin-bottom:8px;
+        padding:8px;
+        border-radius:8px;
+        background:rgba(255,255,255,0.03);
+        border-left:3px solid ${color};
+      ">
+
+        <span style="margin-right:6px">${icon}</span>
+
+        <span style="font-size:13px">
+          ${a.text}
+        </span>
+
+      </div>
+    `;
+
+  }).join("");
+
+} else {
+  actionEl.innerHTML = `
+    <div style="color:#9ca3af;font-size:13px">
+      ✅ لا توجد مشاكل حالياً
+    </div>
+  `;
+}
+const smartEl = document.getElementById("insight-recommendation");
+
+if (smartEl) {
+  smartEl.innerHTML = `
+    <div style="line-height:1.6">
+
+      <div style="color:#22c55e;font-weight:700">
+        ${DATA.insight_top_perf}
+      </div>
+
+      <div style="font-size:12px;color:#9ca3af">
+        في ${DATA.insight_top_hotel}
+      </div>
+
+      <div style="margin-top:8px;color:#facc15">
+        💰 $${Number(DATA.insight_top_perf_value || 0).toLocaleString()}
+      </div>
+
+    </div>
+  `;
+}
+
 // ===== BEST PER DEPARTMENT =====
 
 const deptEl = document.getElementById("insight-dept-profit");
 
 if (deptEl && DATA.dept_best_profit) {
 
-  deptEl.innerHTML = DATA.dept_best_profit.map(d => {
+  deptEl.innerHTML = DATA.dept_best_profit.map((d,i) => {
+
+    const isTop = i === 0;
+
     return `
-      <div style='display:flex;justify-content:space-between;margin-bottom:6px'>
-        <span>${d.dept}</span>
-        <span>
-          <b>${d.name}</b>
-          <span style='opacity:.6'>(${d.performer})</span>
-          - $${Number(d.profit).toLocaleString()}
-        </span>
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:10px 12px;
+        margin-bottom:8px;
+        border-radius:10px;
+        background:${isTop ? "rgba(34,197,94,0.06)" : "#0f172a"};
+        border:${isTop ? "1px solid #22c55e33" : "1px solid #1f2937"};
+      ">
+
+        <!-- LEFT -->
+        <div>
+
+          <!-- Department -->
+          <div style="
+            font-size:11px;
+            color:#9ca3af;
+            margin-bottom:2px;
+          ">
+            ${d.dept}
+          </div>
+
+          <!-- Name -->
+          <div style="
+            font-size:13px;
+            font-weight:600;
+          ">
+            ${d.name}
+          </div>
+
+          <!-- Performer -->
+<span style="
+  font-size:15px;
+  font-weight:600;
+  color:#60a5fa;
+  background:rgba(96,165,250,0.1);
+  padding:2px 8px;
+  border-radius:999px;
+  margin-left:8px;
+">
+  👥 ${d.performer}
+</span>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div style="text-align:right">
+
+          <div style="
+            color:#3fb950;
+            font-weight:700;
+            font-size:${isTop ? "16px" : "14px"};
+          ">
+            $${Number(d.usd || 0).toLocaleString()}
+          </div>
+
+          <div style="
+            font-size:11px;
+            color:#9ca3af;
+          ">
+            EGP ${Number(d.egp || 0).toLocaleString()}
+          </div>
+
+        </div>
+
       </div>
     `;
   }).join("");
 
 }
+deptEl.style.maxHeight = "320px";
+deptEl.style.overflowY = "auto";
 
 }
 function updateDeptKPIs() {
@@ -1807,7 +3113,157 @@ function updateDeptKPIs() {
     if (badge) badge.innerText = "Cost: " + prefix + cost.toLocaleString();
 
   });
+// ===== NEW INSIGHTS =====
 
+// 👑 Best Performer
+const bpEl = document.getElementById("insight-best-performer");
+
+if (bpEl) {
+
+  bpEl.innerHTML = `
+    <div style="
+      background:linear-gradient(135deg,#111827,#0f172a);
+      border:1px solid rgba(63,185,80,0.3);
+      border-radius:14px;
+      padding:16px;
+    ">
+
+      <div style="font-size:12px;color:#9ca3af">
+        👑 Best Performer
+      </div>
+
+      <div style="font-size:18px;font-weight:600;margin-top:6px">
+        ${DATA.best_performer || "-"}
+      </div>
+
+      <!-- USD -->
+      <div style="
+        margin-top:8px;
+        font-size:16px;
+        color:#3fb950;
+        font-weight:700;
+      ">
+        $${Number(DATA.best_performer_usd || 0).toLocaleString()}
+      </div>
+
+      <!-- EGP -->
+      <div style="
+        font-size:13px;
+        color:#9ca3af;
+        margin-top:2px;
+      ">
+        EGP ${Number(DATA.best_performer_egp || 0).toLocaleString()}
+      </div>
+
+      <div style="
+        font-size:11px;
+        color:#6b7280;
+        margin-top:6px;
+      ">
+        Combined Performance Score
+      </div>
+
+    </div>
+  `;
+}
+
+// 📊 Average Profit
+const avgEl = document.getElementById("insight-avg-profit");
+
+if (avgEl) {
+  avgEl.innerHTML = `
+    <div style="
+      background:#111827;
+      border:1px solid rgba(255,255,255,0.05);
+      border-radius:12px;
+      padding:14px;
+    ">
+
+      <div style="font-size:12px;color:#9ca3af">
+        📊 Average Profit
+      </div>
+
+      <div style="
+        margin-top:6px;
+        font-size:18px;
+        font-weight:600;
+        color:#3fb950;
+      ">
+        $${Number(DATA.avg_profit || 0).toLocaleString()}
+      </div>
+
+      <div style="font-size:12px;color:#9ca3af;margin-top:4px">
+        Per Transaction
+      </div>
+
+    </div>
+  `;
+}
+
+// 📉 Margin per Dept
+const marginEl = document.getElementById("profit-margin");
+
+if (marginEl && DATA.dept_margin) {
+
+  const sorted = [...DATA.dept_margin]
+    .sort((a,b)=> b.margin - a.margin)
+    .slice(0, 12);
+
+  const max = Math.max(...sorted.map(d => d.margin));
+
+  marginEl.innerHTML = sorted.map((d,i) => {
+
+    const width = max ? (d.margin / max) * 100 : 0;
+
+    const color =
+      d.margin < 0 ? "#f87171" :
+      d.margin < 10 ? "#facc15" :
+      "#22c55e";
+
+    const gradient =
+      d.margin < 0 ? "linear-gradient(90deg,#f87171,#ef4444)" :
+      d.margin < 10 ? "linear-gradient(90deg,#facc15,#f59e0b)" :
+      "linear-gradient(90deg,#22c55e,#16a34a)";
+
+    const isTop = i < 5;
+
+    return `
+      <div class="margin-card ${isTop ? "top" : ""}">
+
+        <!-- Header -->
+        <div style="display:flex;justify-content:space-between">
+
+          <div style="font-weight:600">
+            ${i < 3 ? ["🥇","🥈","🥉"][i] : i+1}
+            ${d.dept}
+          </div>
+
+          <div style="color:${color};font-weight:700">
+            ${d.margin.toFixed(1)}%
+          </div>
+
+        </div>
+
+        <!-- Bar -->
+        <div class="margin-bar">
+          <div class="margin-fill" 
+               style="background:${gradient}" 
+               data-width="${width}">
+          </div>
+        </div>
+
+      </div>
+    `;
+  }).join("");
+
+  // 🎬 Animation بعد الرندر
+  setTimeout(() => {
+    document.querySelectorAll(".margin-fill").forEach(el => {
+      el.style.width = el.dataset.width + "%";
+    });
+  }, 100);
+
+}
 }
 function updateExpenseKPIs() {
 
