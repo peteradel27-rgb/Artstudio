@@ -286,8 +286,309 @@ body {
   background:#1e293b;
   border-radius:6px;
 }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+#decision-engine {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media print {
+  /* Hide decision-engine on print (show only report-container) */
+  #decision-engine {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+/* كل Section */
+.decision-section {
+  display: flex;
+  flex-direction: column;
+  background: #0b1220;
+  border-radius: 12px;
+  padding: 10px;
+  height: 260px; /* 🔥 مهم */
+}
+
+/* العنوان ثابت */
+.section-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* الليست هي اللي بتسكرول */
+.section-list {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 6px;
+}
+
+/* Screen-level styling for decision cards */
+.decision-card {
+  position: relative;
+  z-index: 1;
+  transform: translateZ(0); /* Enable hardware acceleration but won't affect print */
+}
+
+/* Ensure print-friendly rendering */
+@media screen {
+  .decision-card {
+    /* Screen-only styles */
+  }
+}
+
+.report-page {
+  page-break-after: always;
+}
+
+.report-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.report-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.report-section {
+  margin-top: 20px;
+}
+
+.report-badge {
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.report-page {
+  padding: 10px;
+}
+
+.report-section {
+  margin-bottom: 15px;
+  page-break-inside: avoid;
+}
+
+.report-section h2 {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* =========================
+   PRINT MODE - MATCH SCREEN LAYOUT EXACTLY
+========================= */
+
+@media print {
+  
+  /* ===== GLOBAL PRINT SETTINGS ===== */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    -webkit-color-adjust: exact !important;
+    color-adjust: exact !important;
+    background: white !important;
+    color: #1a1a1a !important;
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.4;
+  }
+
+  /* ===== HIDE ALL UI ELEMENTS ===== */
+  .header,
+  .tabs,
+  .main,
+  .footer,
+  .filter-box,
+  .advanced-filters,
+  .header-controls,
+  .currency-toggle,
+  .currency-switch,
+  .month-toggle,
+  button:not(.hidden),
+  input[type="text"],
+  select,
+  .header-badge,
+  #tab-overview,
+  #tab-revenue,
+  #tab-expenses,
+  #tab-departments,
+  #tab-hotels,
+  #tab-insights {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* ===== PAGE SETUP - MATCH SCREEN VIEWPORT ===== */
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+
+  /* ===== SHOW ONLY REPORT CONTAINER ===== */
+  #report-container {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  #report-container * {
+    visibility: visible !important;
+    display: inherit !important;
+  }
+
+  /* ===== REPORT GRID - MATCH SCREEN GRID LAYOUT ===== */
+  /* A4 landscape: 297mm width - margins = ~267mm usable */
+  /* Match screen grid: repeat(auto-fit, minmax(240px, 1fr)) */
+  /* At A4 width, this should render as 2 columns naturally */
+  .report-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    padding: 0 !important;
+    background: white !important;
+    page-break-before: auto !important;
+  }
+
+  /* ===== DECISION CARDS - MATCH SCREEN CARD STYLING ===== */
+  .decision-card {
+    display: block !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+    padding: 14px !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb !important;
+    background: white !important;
+    color: #1a1a1a !important;
+    overflow: visible !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08) !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    flex: 1 !important;
+  }
+
+  /* ===== CARD CONTENT ===== */
+  .decision-card * {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .decision-card div,
+  .decision-card span,
+  .decision-card p {
+    display: inherit !important;
+    margin: inherit !important;
+    padding: inherit !important;
+    word-break: break-word !important;
+  }
+
+  .decision-card h3,
+  .decision-card h4 {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #000 !important;
+  }
+
+  .decision-card h5 {
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: #666 !important;
+  }
+
+  /* ===== CARD VALUES ===== */
+  .decision-card .usd,
+  .decision-card [class*="usd"],
+  .decision-card [class*="USD"] {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #ef4444 !important;
+  }
+
+  .decision-card .egp,
+  .decision-card [class*="egp"],
+  .decision-card [class*="EGP"] {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #22c55e !important;
+  }
+
+  /* ===== PAGE BREAKS ===== */
+  .report-page,
+  [class*="page-break"] {
+    page-break-after: always !important;
+  }
+
+  div[style*="page-break-after"] {
+    page-break-after: always !important;
+  }
+
+  /* ===== TYPOGRAPHY ===== */
+  body { font-size: 12px !important; }
+  h1 { font-size: 28px !important; }
+  h2 { font-size: 20px !important; }
+  h3 { font-size: 14px !important; }
+
+  /* ===== PREVENT FORCED SIZING ===== */
+  .decision-card[style*="width: 580px"] {
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  .decision-card[style*="min-height"] {
+    min-height: auto !important;
+  }
+
+  .decision-card[style*="max-height"] {
+    max-height: none !important;
+  }
+
+  /* ===== CLEAN UP INLINE STYLES ===== */
+  [style*="linear-gradient"] {
+    background: white !important;
+  }
+
+  [style*="box-shadow"] {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08) !important;
+  }
+
+  /* ===== ANIMATIONS & TRANSFORMS OFF ===== */
+  * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+}
 
   /* Header */
   .header {
@@ -491,6 +792,7 @@ body {
   .footer { text-align: center; padding: 20px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); margin-top: 40px; }
 </style>
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <body>
 
 <!-- HEADER -->
@@ -562,6 +864,8 @@ body {
     Reset Filters
   </button>
 </div>
+
+<button onclick="printReport()">Export Report</button>
 
     <!-- CURRENCY -->
     <div class="currency-switch">
@@ -1050,11 +1354,13 @@ body {
 
 <div class="kpi-card" style="grid-column: span 2;">
   <div class="kpi-label">🧠 Decision Engine</div>
-  <div id="decision-engine"></div>
+
+  <div id="decision-engine" class="report-grid"></div>
 </div>
 
-  </div>
 
+<!-- 👇 ده يتحط لوحده بره -->
+<div id="report-container"></div>
   <!-- ===== RANKING TABLE ===== -->
   <div class="card" style="margin-top:16px">
     <div class="card-title">📊 Performance Ranking</div>
@@ -1089,21 +1395,21 @@ body {
 </div>
 
 <script>
-  function formatUSD(val) {
-  const num = Number(val) || 0;
-  return num >= 0
-    ? `+$${num.toLocaleString()}`
-    : `-$${Math.abs(num).toLocaleString()}`;
+function formatUSD(val) {
+  return signedMoney(val);
 }
+// =======================
+// GLOBALS
+// =======================
+const EGP_RATE = 50;
 
-function formatEGP(val) {
-  const num = Number(val) || 0;
-  return num >= 0
-    ? `EGP +${num.toLocaleString()}`
-    : `EGP -${Math.abs(num).toLocaleString()}`;
-}
-function toNumber(v) {
-  if (v === null || v === undefined) return 0;
+// =======================
+// SAFE HELPERS
+// =======================
+const safe = (v, d = 0) => (v == null || isNaN(v) ? d : Number(v));
+
+function toNumber(v){
+  if (v === null || v === undefined || v === "") return 0;
 
   const n = parseFloat(
     String(v)
@@ -1113,6 +1419,8 @@ function toNumber(v) {
 
   return Number.isFinite(n) ? n : 0;
 }
+
+const num = toNumber;
 
 function getIncome(row){
   return currency === "USD"
@@ -1137,6 +1445,165 @@ let filters = {
   hotel: "ALL",
   expense: "ALL"
 };
+const KPI_CACHE = new Map();
+
+function getKpiCacheKey(rows) {
+  return JSON.stringify({
+    currency,
+    filters,
+    performances: ACTIVE_PERFORMANCES,
+    length: rows.length,
+    firstDate: rows[0]?._month || rows[0]?.Date || "",
+    lastDate: rows[rows.length - 1]?._month || rows[rows.length - 1]?.Date || ""
+  });
+}
+
+function normalizeDashboardRows(rows) {
+  return rows.map(r => ({
+    ...r,
+    "Income USD": safeNum(r["Income USD"]),
+    "Exp.USD": safeNum(r["Exp.USD"]),
+    "Income EGP": safeNum(r["Income EGP"]),
+    "Exp.EGP": safeNum(r["Exp.EGP"])
+  }));
+}
+
+function getExpenseBucket(category) {
+  const name = String(category || "").toLowerCase();
+
+  return {
+    salary: name.includes("salary") || name.includes("salaries") || name.includes("staff"),
+    visa: name.includes("visa"),
+    operating:
+      name.includes("transport") ||
+      name.includes("travel") ||
+      name.includes("ticket") ||
+      name.includes("fuel") ||
+      name.includes("rent") ||
+      name.includes("order") ||
+      name.includes("service") ||
+      name.includes("operation")
+  };
+}
+
+function calculateKPIData(rows) {
+  const byDate = {};
+  const byMonth = {};
+  const deptMap = {};
+  const hotelMap = {};
+  const expCatMap = {};
+  const expMap = {};
+  const monthMap = {};
+  const revHotelMap = {};
+  const uniqueHotels = new Set();
+  const expKpi = { total: 0, salary: 0, operating: 0, visa: 0 };
+
+  let totalIncome = 0;
+  let totalExpense = 0;
+
+  rows.forEach(r => {
+    const d = new Date(r.Date);
+    const day = d.toLocaleDateString('en-US',{month:'short',day:'2-digit'});
+    const month = r._month || d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+    const incUSD = safeNum(r["Income USD"]);
+    const expUSD = safeNum(r["Exp.USD"]);
+    const incEGP = safeNum(r["Income EGP"]);
+    const expEGP = safeNum(r["Exp.EGP"]);
+    const category = String(r["Accounting Guidance"] || "Other").trim() || "Other";
+    const dept = String(r["Deparment"] || "Other").trim() || "Other";
+    const hotel = String(r["Hotel"] || "Unknown").trim() || "Unknown";
+    const activeIncome = currency === "USD" ? incUSD : incEGP;
+    const activeExpense = currency === "USD" ? expUSD : expEGP;
+
+    if(!byDate[day]) byDate[day]={i:0,e:0,iEGP:0,eEGP:0};
+    if(!byMonth[month]) byMonth[month]={i:0,e:0,iEGP:0,eEGP:0};
+    if(!deptMap[dept]) deptMap[dept]={i:0,e:0,c:0,iEGP:0,eEGP:0};
+    if(!hotelMap[hotel]) hotelMap[hotel]={iUSD:0,iEGP:0,c:0};
+    if(!expCatMap[category]) expCatMap[category]={usd:0, egp:0};
+    if(!monthMap[month]) monthMap[month] = { usd: 0, egp: 0 };
+    if(!revHotelMap[hotel]) revHotelMap[hotel] = { usd: 0, egp: 0 };
+
+    expCatMap[category].usd += expUSD;
+    expCatMap[category].egp += expEGP;
+
+    byDate[day].i += incUSD;
+    byDate[day].e += expUSD;
+    byDate[day].iEGP += incEGP;
+    byDate[day].eEGP += expEGP;
+
+    byMonth[month].i += incUSD;
+    byMonth[month].e += expUSD;
+    byMonth[month].iEGP += incEGP;
+    byMonth[month].eEGP += expEGP;
+
+    deptMap[dept].i += incUSD;
+    deptMap[dept].e += expUSD;
+    deptMap[dept].iEGP += incEGP;
+    deptMap[dept].eEGP += expEGP;
+    deptMap[dept].c++;
+
+    hotelMap[hotel].iUSD += incUSD;
+    hotelMap[hotel].iEGP += incEGP;
+    hotelMap[hotel].c++;
+
+    expMap[category] = (expMap[category] || 0) + activeExpense;
+    expKpi.total += activeExpense;
+
+    const bucket = getExpenseBucket(category);
+    if (bucket.salary) expKpi.salary += activeExpense;
+    if (bucket.visa) expKpi.visa += activeExpense;
+    if (bucket.operating) expKpi.operating += activeExpense;
+
+    totalIncome += activeIncome;
+    totalExpense += activeExpense;
+    monthMap[month].usd += incUSD;
+    monthMap[month].egp += incEGP;
+    revHotelMap[hotel].usd += incUSD;
+    revHotelMap[hotel].egp += incEGP;
+    if (hotel) uniqueHotels.add(hotel);
+  });
+
+  const totalCost = expKpi.total || 1;
+
+  return {
+    rows,
+    byDate,
+    byMonth,
+    deptMap,
+    hotelMap,
+    expCatMap,
+    expMap,
+    monthMap,
+    revHotelMap,
+    expKpi,
+    costBreakdown: {
+      labor: (expKpi.salary / totalCost) * 100,
+      operating: (expKpi.operating / totalCost) * 100,
+      visa: (expKpi.visa / totalCost) * 100
+    },
+    totals: {
+      income: totalIncome,
+      expense: totalExpense,
+      net: totalIncome - totalExpense,
+      margin: totalIncome ? ((totalIncome - totalExpense) / totalIncome) * 100 : 0,
+      expenseRatio: totalIncome ? (totalExpense / totalIncome) * 100 : 0,
+      operatingCost: (expKpi.salary || 0) + (expKpi.operating || 0),
+      transactions: rows.length,
+      hotels: uniqueHotels.size
+    }
+  };
+}
+
+function getCachedKPIData(rows) {
+  const key = getKpiCacheKey(rows);
+  if (KPI_CACHE.has(key)) return KPI_CACHE.get(key);
+
+  if (KPI_CACHE.size > 8) KPI_CACHE.clear();
+
+  const result = calculateKPIData(rows);
+  KPI_CACHE.set(key, result);
+  return result;
+}
 
 async function loadDashboardData() {
 
@@ -1166,17 +1633,7 @@ async function loadDashboardData() {
   selectMonth("ALL");
 
 }
-function toNumber(v){
-  if (v === null || v === undefined || v === "") return 0;
 
-  const n = parseFloat(
-    String(v)
-      .replace(/,/g, "")
-      .replace(/\s/g, "")
-  );
-
-  return Number.isFinite(n) ? n : 0;
-}
 function safeNum(v){
   return toNumber(v);
 }
@@ -1189,104 +1646,1160 @@ function formatNum(n) {
 }
 
 function formatCurrency(n) {
-  return `$${formatNum(n)}`;
+  return signedMoney(n);
 }
 
 function formatEGP(n) {
-  return `EGP ${formatNum(n)}`;
+  return signedMoney(n, "EGP ");
 }
 
 function formatPercent(n) {
-  return `${safeVal(n).toFixed(1)}%`;
+  const value = safeVal(n);
+  const percent = Math.abs(value) <= 1 ? value * 100 : value;
+  return `${percent.toFixed(1)}%`;
 }
 function formatMoney(usd, egp) {
+  const usdVal = finiteNumber(usd);
+  const egpVal = finiteNumber(egp);
   return `
-    <div style="font-size:20px;font-weight:700;color:#3fb950">
-      $${Number(usd || 0).toLocaleString()}
+    <div style="font-size:20px;font-weight:700;color:${valueColor(usdVal)}">
+      ${signedMoney(usdVal)}
     </div>
-    <div style="font-size:12px;color:#8b949e">
-      EGP ${Number(egp || 0).toLocaleString()}
+    <div style="font-size:12px;color:${valueColor(egpVal)}">
+      ${signedMoney(egpVal, "EGP ")}
     </div>
   `;
 }
 function profitColor(v){
   return v >= 0 ? "#22c55e" : "#f87171";
 }
+
+function finiteNumber(v, fallback = 0) {
+  const n = toNumber(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function readFirstNumber(obj, keys, fallback = 0) {
+  for (const key of keys) {
+    if (obj && obj[key] !== undefined && obj[key] !== null && obj[key] !== "") {
+      return finiteNumber(obj[key], fallback);
+    }
+  }
+  return fallback;
+}
+
+function signedMoney(value, prefix = "$") {
+  const n = finiteNumber(value);
+  const sign = n >= 0 ? "+" : "-";
+  return `${sign}${prefix}${Math.abs(n).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+}
+
+function valueColor(value) {
+  return finiteNumber(value) >= 0 ? "#22c55e" : "#ef4444";
+}
+
+function validatePerformanceCardData(d = {}) {
+  const incomeUSD = readFirstNumber(d, ["Income USD", "incomeUSD", "usdRevenue", "totalRevenueUSD"]);
+  const costUSD = readFirstNumber(d, ["Exp.USD", "costUSD", "usdCost", "totalCostUSD"]);
+  const incomeEGP = readFirstNumber(d, ["Income EGP", "incomeEGP", "egpRevenue", "totalRevenueEGP"]);
+  const costEGP = readFirstNumber(d, ["Exp.EGP", "costEGP", "egpCost", "totalCostEGP"]);
+
+  const hasUSDBreakdown = incomeUSD !== 0 || costUSD !== 0;
+  const hasEGPBreakdown = incomeEGP !== 0 || costEGP !== 0;
+  const profitUSD = hasUSDBreakdown ? incomeUSD - costUSD : readFirstNumber(d, ["profitUSD", "usdProfit", "operationalProfit"]);
+  const profitEGP = hasEGPBreakdown ? incomeEGP - costEGP : readFirstNumber(d, ["profitEGP", "egpProfit"]);
+  const fxContribution = profitEGP / EGP_RATE;
+  const combinedProfitUSD = profitUSD + fxContribution;
+  const volume = Math.max(0, readFirstNumber(d, ["volume", "count", "units"]));
+  const hasPricingData = volume > 0 && (incomeUSD > 0 || costUSD > 0);
+  const pricePerUnit = hasPricingData ? incomeUSD / volume : 0;
+  const costPerUnit = hasPricingData ? costUSD / volume : 0;
+  const margin = incomeUSD > 0 ? profitUSD / incomeUSD : 0;
+  const breakEvenPrice = hasPricingData ? costPerUnit : 0;
+  const targetPrice = hasPricingData ? costPerUnit * 1.2 : 0;
+  const priceGap = hasPricingData ? Math.max(0, breakEvenPrice - pricePerUnit) : 0;
+
+  const totalRevenueUSD = Math.abs(incomeUSD) + Math.abs(incomeEGP / EGP_RATE);
+  const usdShare = totalRevenueUSD > 0 ? Math.abs(incomeUSD) / totalRevenueUSD : 0;
+  const egpShare = totalRevenueUSD > 0 ? Math.abs(incomeEGP / EGP_RATE) / totalRevenueUSD : 0;
+  const fxImbalance = totalRevenueUSD > 0 ? Math.abs(usdShare - egpShare) : 0;
+
+  let fxStatusFinal = "FX neutral";
+  let fxInsight = "FX neutral";
+  let profitSource = "Operational";
+
+  if (Math.abs(fxContribution) < 0.01) {
+    fxStatusFinal = "FX neutral";
+    fxInsight = "FX neutral";
+  } else if (fxContribution > 0 && profitUSD < 0) {
+    fxStatusFinal = "FX helping, USD loss";
+    fxInsight = "FX is helping but USD is losing";
+    profitSource = "FX Helping Loss";
+  } else if (fxContribution > 0) {
+    fxStatusFinal = "FX helping profit";
+    fxInsight = "FX helping profit";
+    profitSource = "Operational + FX";
+  } else {
+    fxStatusFinal = "FX hurting profit";
+    fxInsight = "FX reducing profit";
+    profitSource = "FX Drag";
+  }
+
+  let level = "KEEP";
+  let levelLabel = "🟢 KEEP";
+  let levelColor = "#22c55e";
+  let action = "Stable performance";
+  let priority = "Low";
+  let explanation = "Stable operational performance.";
+
+  if (combinedProfitUSD < 0) {
+    level = "STOP";
+    levelLabel = "🔴 STOP";
+    levelColor = "#ef4444";
+    action = "Review or stop";
+    priority = "High";
+    explanation = profitUSD < 0 && fxContribution > 0
+      ? "USD loss is only partly offset by EGP/FX contribution."
+      : "Net loss after USD and EGP impact.";
+  } else if (profitUSD < 0 && fxContribution > 0) {
+    level = "OPTIMIZE";
+    levelLabel = "🟡 OPTIMIZE";
+    levelColor = "#facc15";
+    action = "Fix currency/pricing";
+    priority = "Medium";
+    explanation = "EGP/FX is helping, but USD operations are losing.";
+  } else if (incomeUSD > 0 && margin < 0.2) {
+    level = "OPTIMIZE";
+    levelLabel = "🟡 OPTIMIZE";
+    levelColor = "#facc15";
+    action = "Improve margin";
+    priority = "Medium";
+    explanation = "Low margin. Review pricing or cost.";
+  } else if (combinedProfitUSD > 0) {
+    level = "INVEST";
+    levelLabel = "🚀 INVEST";
+    levelColor = "#22c55e";
+    action = "Scale performance";
+    explanation = "Profitable after USD and EGP impact.";
+  }
+
+  const severity = priority === "High" ? 80 : priority === "Medium" ? 45 : 10;
+  const qualityScore = Math.max(0, Math.min(100, 100 - severity));
+
+  return {
+    ...d,
+    incomeUSD,
+    costUSD,
+    incomeEGP,
+    costEGP,
+    profitUSD,
+    profitEGP,
+    usdProfit: profitUSD,
+    egpProfit: profitEGP,
+    operationalProfit: profitUSD,
+    fxContribution,
+    fxNet: combinedProfitUSD,
+    combinedProfitUSD,
+    totalProfit: combinedProfitUSD,
+    expectedTotal: combinedProfitUSD,
+    margin,
+    volume,
+    pricePerUnit,
+    costPerUnit,
+    breakEvenPrice,
+    targetPrice,
+    priceGap,
+    hasPricingData,
+    currencyMix: { usd: usdShare, egp: egpShare },
+    fxImbalance,
+    fxStatusFinal,
+    fxInsight,
+    profitSource,
+    level,
+    levelLabel,
+    levelColor,
+    action,
+    priority,
+    severity,
+    qualityScore,
+    qualityLabel: qualityScore >= 70 ? "Good" : qualityScore >= 40 ? "Risky" : "Weak",
+    qualityColor: qualityScore >= 70 ? "#22c55e" : qualityScore >= 40 ? "#facc15" : "#ef4444",
+    explanation,
+    smartInsight: hasPricingData
+      ? (pricePerUnit < breakEvenPrice ? `+$${priceGap.toFixed(2)} → break-even` : `Margin ${(margin * 100).toFixed(1)}% → scale`)
+      : "Pricing data unavailable",
+    insightTitle: combinedProfitUSD >= 0 ? "🟢 Net profitable" : "🔴 Net loss",
+    insightColor: combinedProfitUSD >= 0 ? "#22c55e" : "#ef4444",
+    insightNote: `${signedMoney(profitUSD)} USD / ${signedMoney(fxContribution)} FX impact`,
+    cardBg: level === "STOP"
+      ? "linear-gradient(145deg,#2b0a0a,#450a0a)"
+      : level === "OPTIMIZE"
+        ? "linear-gradient(145deg,#2a1f05,#422006)"
+        : "linear-gradient(145deg,#022c22,#065f46)",
+    cardBorder: level === "STOP" ? "#ef4444" : level === "OPTIMIZE" ? "#facc15" : "#10b981",
+    glow: level === "STOP" ? "0 0 12px #ef444433" : "0 0 12px #22c55e33"
+  };
+}
+
+function analyzePerformanceClean(d) {
+  return validatePerformanceCardData(d);
+}
+// =======================
+// 🔥 AI PRICING ENGINE
+// =======================
+
+function findOptimalPrice(d) {
+
+  const income = Number(d.incomeUSD || 0);
+  const cost   = Number(d.costUSD || 0);
+  const egp    = Number(d.profitEGP || 0);
+
+  let best = { increase: 0, profit: -Infinity, score: -Infinity };
+
+  for (let i = 0; i <= 50; i++) {
+
+    const inc = i / 100;
+
+    const newIncome = income * (1 + inc);
+    const newProfitUSD = newIncome - cost;
+    const newScore = newProfitUSD + (egp / EGP_RATE);
+
+    let smartScore = newScore - (inc * 50);
+
+    if (smartScore > best.score) {
+      best = {
+        increase: inc,
+        profit: newScore,
+        score: smartScore
+      };
+    }
+  }
+
+  return best;
+}
+
+// =======================
+
+function getBreakEven(d) {
+
+  const income = Number(d.incomeUSD || 0);
+  const cost   = Number(d.costUSD || 0);
+
+  if (!income) return null;
+
+  const increase = (cost / income) - 1;
+
+  return {
+    percent: increase * 100
+  };
+}
+
+// =======================
+
+function getFXDependency(d) {
+
+  const usd = Number(d.profitUSD || 0);
+  const egp = Number(d.profitEGP || 0);
+
+  const fxUSD = egp / EGP_RATE;
+
+  const total = Math.abs(usd) + Math.abs(fxUSD);
+  if (!total) return 0;
+
+  return (Math.abs(fxUSD) / total) * 100;
+}
+
+// =======================
+
+function buildVerdicts(d, optimal, breakeven, fxDep) {
+
+  let v = [];
+
+  if (optimal.increase > 0.3) {
+    v.push("❗ Not scalable");
+  }
+
+  if (breakeven && breakeven.percent > 40) {
+    v.push(`⚠️ Requires ${breakeven.percent.toFixed(0)}% increase`);
+  }
+
+  if (fxDep > 60) {
+    v.push("💣 Highly dependent on FX");
+  }
+
+  return v;
+}
+function generateExplanation({ operationalProfit, fxContribution, margin }) {
+
+  if (operationalProfit < 0 && fxContribution > 0) {
+    return "Business is losing operationally. FX gains are masking the loss. This is unstable and high risk.";
+  }
+
+  if (operationalProfit < 0 && fxContribution <= 0) {
+    return "Business is fundamentally unprofitable. Immediate action required.";
+  }
+
+  if (operationalProfit > 0 && fxContribution < 0) {
+    return "Strong operations but FX is reducing profitability.";
+  }
+
+  if (margin < 0.15) {
+    return "Low margin business. Sensitive to small cost or price changes.";
+  }
+
+  if (margin > 0.4) {
+    return "High margin performance. Strong and scalable.";
+  }
+
+  return "Stable operational performance.";
+}
+function analyzePerformanceLegacy(d) {
+
+  const safe = v => isFinite(Number(v)) ? Number(v) : 0;
+
+  // =======================
+  // ✅ READ FROM JSON
+  // =======================
+
+// =======================
+// ✅ SAFE READ (ROW + GROUPED)
+// =======================
+
+const usdRevenue = safe(d["Income USD"]);
+const usdCost    = safe(d["Exp.USD"]);
+
+let usdProfit = usdRevenue - usdCost;
+
+// 🔥 FIX: لو مفيش revenue استخدم profit الجاهز
+if (!usdRevenue && !usdCost && isFinite(d.profitUSD)) {
+  usdProfit = safe(d.profitUSD);
+}
+const egpRevenue = safe(d["Income EGP"]);
+const egpCost    = safe(d["Exp.EGP"]);
+let egpProfit = egpRevenue - egpCost;
+
+if (egpRevenue === 0 && egpCost === 0 && d.profitEGP != null) {
+  egpProfit = safe(d.profitEGP);
+}
+
+if (!usdRevenue && !egpRevenue && !usdCost && !egpCost) {
+
+  const fallbackProfit = safe(d.profitUSD || 0);
+
+  return {
+    ...d,
+
+    operationalProfit: fallbackProfit,
+    fxContribution: safe(d.profitEGP) / EGP_RATE,
+    totalProfit: fallbackProfit,
+
+    margin: 0,
+
+    level: fallbackProfit > 0 ? "INVEST" : "STOP",
+    levelLabel: fallbackProfit > 0 ? "🚀 INVEST" : "🔴 STOP",
+    levelColor: fallbackProfit > 0 ? "#22c55e" : "#ef4444",
+
+    action: fallbackProfit > 0
+      ? "Profitable → scale"
+      : "Loss → investigate",
+
+    fxStatusFinal: "No detailed breakdown",
+
+    currencyMix: { usd: 0, egp: 0 },
+    barWidth: 10,
+
+    pricePerUnit: 0,
+    costPerUnit: 0,
+    breakEvenPrice: 0,
+    targetPrice: 0
+  };
+}
+
+
+const volume = safe(d.volume || d.count || 0);
+
+// 🔥 FINAL FIX
+const pricePerUnit =
+  volume > 0 ? usdRevenue / volume : usdRevenue > 0 ? usdRevenue : 0;
+
+const costPerUnit =
+  volume > 0 ? usdCost / volume : usdCost > 0 ? usdCost : 0;
+
+  const price = Number(pricePerUnit || 0);
+  const cost = Number(costPerUnit || 0);
+  const breakEvenPrice = costPerUnit;
+  
+const revenue = usdRevenue;
+
+
+// =======================
+// 🎯 BEST PRICE
+// =======================
+
+const breakEvenIncrease = usdRevenue > 0
+  ? ((usdCost - usdRevenue) / usdRevenue)
+  : 0;
+
+const breakEvenRevenue = usdCost;
+
+// optional
+const breakEvenStatus = breakEvenIncrease <= 0
+  ? "Profitable"
+  : "Needs Adjustment";
+
+// نفترض السعر الحالي = الإيراد / عدد العمليات
+const avgPrice = Number(d.avgPrice || d.price || 100); // مثال
+
+const bestPrice = avgPrice * (1 + breakEvenIncrease);
+
+// =======================
+// 💸 MIN COST TARGET
+// =======================
+
+const targetCost = usdRevenue;
+
+const costReduction = usdCost - targetCost;
+
+  const rate = Number(EGP_RATE) || 50;
+
+  // =======================
+  // 💰 PROFITS SPLIT
+  // =======================
+
+ 
+  const profitUSD = usdProfit;
+ 
+  // ✅ لازم يتحط الأول
+  const egpInUSD = egpProfit / rate;
+
+  // ✅ بعده نستخدمه
+  const totalProfit = usdProfit + egpInUSD;
+if (usdRevenue === 0 && usdCost === 0 && usdProfit !== 0) {
+
+  return {
+    ...d,
+
+    operationalProfit: usdProfit,
+    fxContribution: egpInUSD,
+    totalProfit,
+
+    margin: 0,
+
+    level: usdProfit > 0 ? "INVEST" : "STOP",
+    levelLabel: usdProfit > 0 ? "🚀 INVEST" : "🔴 STOP",
+    levelColor: usdProfit > 0 ? "#22c55e" : "#ef4444",
+
+    action: usdProfit > 0 ? "Scale performance" : "Stop immediately",
+
+    fxStatusFinal: egpInUSD !== 0 ? "FX data available" : "FX neutral",
+
+    currencyMix: { usd: 0, egp: 0 },
+
+    barWidth: 0,
+
+    pricePerUnit: 0,
+    costPerUnit: 0,
+    breakEvenPrice: 0,
+    targetPrice: 0
+  };
+}
+
+  const rateUsed = rate || 50;
+
+  // 🔥🔥🔥 حطه هنا بالظبط 🔥🔥🔥
+if (!isFinite(pricePerUnit) || !isFinite(costPerUnit) || !isFinite(usdProfit)) {
+
+  return {
+    ...d,
+
+    operationalProfit: usdProfit || 0,
+    fxContribution: egpInUSD || 0,
+    totalProfit: totalProfit || 0,
+
+    margin: 0,
+
+    level: "⚪ Invalid Data",
+    levelLabel: "⚪ Invalid Data",
+    levelColor: "#6b7280",
+
+    action: "Data issue → cannot evaluate",
+
+    fxStatusFinal: "Invalid calculation",
+
+    currencyMix: { usd: 0, egp: 0 },
+
+    barWidth: 0,
+
+    pricePerUnit: 0,
+    costPerUnit: 0,
+    breakEvenPrice: 0,
+    targetPrice: 0
+  };
+}
+// =======================
+// 💱 CURRENCY ANALYSIS (ORDER FIXED)
+// =======================
+
+
+
+const totalProfitUSD = usdProfit + egpInUSD;
+// =======================
+// 🔥 ZERO PRICE CASE (FINAL)
+// =======================
+if (price === 0 && cost === 0 && usdProfit !== 0) {
+
+  level = usdProfit > 0 ? "INVEST" : "STOP";
+  levelLabel = usdProfit > 0 ? "🚀 INVEST" : "🔴 STOP";
+  levelColor = usdProfit > 0 ? "#22c55e" : "#ef4444";
+
+  action = usdProfit > 0 ? "Scale performance" : "Stop immediately";
+
+  fxStatusFinal = egpInUSD !== 0 ? "FX data available" : "FX neutral";
+}
+
+const totalRevenueUSD = usdRevenue + (egpRevenue / EGP_RATE);
+
+const currencyMix = {
+  usd: totalRevenueUSD > 0 ? usdRevenue / totalRevenueUSD : 0,
+  egp: totalRevenueUSD > 0 ? (egpRevenue / EGP_RATE) / totalRevenueUSD : 0
+};
+
+const usdShare = totalRevenueUSD > 0 ? usdRevenue / totalRevenueUSD : 0;
+const egpShare = totalRevenueUSD > 0 ? (egpRevenue / rate) / totalRevenueUSD : 0;
+
+const fxImbalance = Math.abs(usdShare - egpShare);
+
+
+
+
+
+// استخدم الربح مش الإيراد
+
+
+// 👇 ده الحساب الصح
+const fxNet = usdProfit + egpInUSD;
+
+  // 💱 CORE LOGIC
+  // =======================
+
+  const operationalProfit = usdProfit;   // USD = real business
+  const fxContribution    = egpInUSD;    // EGP = FX effect
+
+  const totalAbs = Math.abs(operationalProfit) + Math.abs(fxContribution);
+
+  const fxDependency = totalAbs > 0
+    ? (Math.abs(fxContribution) / totalAbs) * 100
+    : 0;
+
+
+
+// =======================
+// 💸 COST REDUCTION OPTION (SAFE)
+// =======================
+
+const targetMargin = 0.20;
+const maxPriceJump = 0.50;
+
+// 🎯 TARGET
+let targetPrice = 0;
+let profitGap = 0;
+let targetIncreasePercent = 0;
+
+// 💸 COST
+let targetCostPerUnit = 0;
+let costGapPerUnit = 0;
+let totalCostReduction = 0;
+
+// حساب السعر المستهدف
+if (pricePerUnit > 0 && costPerUnit > 0) {
+
+  targetPrice = costPerUnit * (1 + targetMargin);
+  profitGap = targetPrice - pricePerUnit;
+  targetIncreasePercent = (profitGap / pricePerUnit) * 100;
+
+  // cost alternative
+  targetCostPerUnit = pricePerUnit / (1 + targetMargin);
+  costGapPerUnit = costPerUnit - targetCostPerUnit;
+  totalCostReduction = costGapPerUnit * volume;
+}
+
+// =======================
+// 🧠 FX INSIGHT (FINAL)
+// =======================
+
+let fxInsight = "";
+
+if (usdProfit < 0 && egpProfit > 0) {
+  fxInsight = "⚠️ FX is masking real USD loss";
+}
+else if (usdProfit > 0 && egpProfit < 0) {
+  fxInsight = "⚠️ FX is reducing profit";
+}
+else if (Math.abs(fxNet) < 1) {
+  fxInsight = "FX neutral";
+}
+else {
+  fxInsight = "FX balanced";
+}
+
+// =======================
+// 🧠 DETECT BUSINESS TYPE
+// =======================
+
+let businessType = "normal";
+
+if (usdRevenue === 0 && usdCost > 0) {
+  businessType = "cost_center";
+}
+else if (usdRevenue > 0 && usdCost === 0) {
+  businessType = "free_revenue";
+}
+
+// =======================
+// 🧠 SMART DECISION
+// =======================
+
+let smartAction = "";
+let strategy = "";
+
+// Cost Center
+if (businessType === "cost_center") {
+  strategy = "review";
+  smartAction = "⚠️ No revenue → review necessity";
+}
+
+// Loss case
+else if (profitGap > 0) {
+
+  const jumpRatio = profitGap / (pricePerUnit || 1);
+
+  if (jumpRatio <= maxPriceJump) {
+    strategy = "price";
+    smartAction = `Increase price to $${targetPrice.toFixed(2)} (+${targetIncreasePercent.toFixed(0)}%)`;
+  } else {
+    strategy = "cost";
+    smartAction = `Reduce cost by $${Math.abs(totalCostReduction).toFixed(0)}`;
+  }
+}
+
+// Profit case
+else {
+  strategy = "scale";
+  smartAction = "🚀 Profitable → scale volume";
+}
+
+  // =======================
+  // 🧠 PROFIT SOURCE
+  // =======================
+
+  let profitSource = "Operational";
+
+  if (operationalProfit < 0 && fxContribution > 0) {
+    profitSource = "FX Saving Loss";
+  }
+  else if (Math.abs(fxContribution) > Math.abs(operationalProfit)) {
+    profitSource = "FX Driven";
+  }
+  else if (operationalProfit > 0 && fxContribution < 0) {
+    profitSource = "FX Drag";
+  }
+
+  // =======================
+  // 📊 MARGIN
+  // =======================
+
+const margin =
+  pricePerUnit > 0
+    ? (pricePerUnit - costPerUnit) / pricePerUnit
+    : 0;
+
+  // =======================
+  // 🚨 ISSUES
+  // =======================
+
+  let issues = [];
+  let severity = 0;
+
+  if (operationalProfit < 0) {
+    issues.push("net loss");
+    severity += 40;
+  }
+
+  if (operationalProfit < 0 && fxContribution > 0) {
+    issues.push("fx illusion");
+    severity += 30;
+  }
+
+  if (margin < 0.2 && usdRevenue > 0) {
+    issues.push("low margin");
+    severity += 25;
+  }
+
+
+let rootCause = "stable";
+
+if (businessType === "cost_center") {
+  rootCause = "no revenue";
+}
+
+else if (operationalProfit < 0) {
+
+  if (pricePerUnit < costPerUnit) {
+    rootCause = "underpricing";
+  } 
+  else if (fxContribution > 0) {
+    rootCause = "fx illusion";
+  } 
+  else {
+    rootCause = "high cost";
+  }
+
+}
+
+else if (margin < 0.2) {
+  rootCause = "low margin";
+}
+
+  // =======================
+  // 🎯 DECISION
+  // =======================
+
+let decision = "KEEP";
+
+if (businessType === "cost_center") {
+  decision = "REVIEW";
+}
+else if (rootCause === "underpricing") {
+  decision = "FIX PRICE";
+}
+else if (rootCause === "high cost") {
+  decision = "REDUCE COST";
+}
+else if (rootCause === "fx illusion") {
+  decision = "FX RISK";
+}
+else if (severity > 70) {
+  decision = "STOP";
+}
+else if (severity > 30) {
+  decision = "FIX";
+}
+
+
+
+// =======================
+// 2. LEVEL (تعريف قبل الاستخدام)
+// =======================
+let level = "KEEP";
+let levelLabel = "🟢 KEEP";
+let levelColor = "#22c55e";
+let action = "Stable performance";
+
+if (level === "STOP") {
+  action = "STOP";
+}
+else if (level === "OPTIMIZE") {
+  action = "FIX";
+}
+else if (level === "INVEST") {
+  action = "SCALE";
+}
+let finalDecision = `${level} → ${action}`;
+let fxStatusFinal = "Balanced";
+
+if (usdProfit < 0 && egpInUSD > 0) {
+  fxStatusFinal = "⚠️ FX masking loss";
+}
+else if (egpInUSD < 0) {
+  fxStatusFinal = "FX hurting profit";
+}
+// =======================
+// GUARD (أهم سطر)
+// =======================
+if (!isFinite(price) || !isFinite(cost)) {
+  level = "NO_DATA";
+  levelLabel = "⚪ No Data";
+  levelColor = "#6b7280";
+  action = "No data available";
+}
+
+// =======================
+// CONDITIONS
+// =======================
+if (usdProfit < 0 && cost > price) {
+  level = "STOP";
+  levelLabel = "🔴 STOP";
+  levelColor = "#ef4444";
+  action = "Stop immediately";
+}
+
+else if (cost > 0 && ((price - cost) / price) < 0.2) {
+  level = "OPTIMIZE";
+  levelLabel = "🟡 OPTIMIZE";
+  levelColor = "#facc15";
+  action = "Optimize pricing or cost";
+}
+
+else if (usdProfit > 0 && price > 0) {
+  level = "INVEST";
+  levelLabel = "🚀 INVEST";
+  levelColor = "#22c55e";
+  action = "Scale performance";
+}
+
+if (!level) {
+  level = "KEEP";
+  levelLabel = "🟢 KEEP";
+  levelColor = "#22c55e";
+}
+
+if (!fxStatusFinal) {
+  fxStatusFinal = "Balanced";
+}
+
+// =======================
+// ACTION (بعد level)
+// =======================
+
+  // =======================
+  // 💰 EXPECTED
+  // =======================
+
+  let expectedOperational = operationalProfit;
+let recommendation = "";
+
+if (businessType === "cost_center") {
+  recommendation = "No revenue activity → evaluate necessity or allocate cost";
+}
+
+else if (rootCause === "underpricing") {
+  recommendation = `Increase price by $${(costPerUnit - pricePerUnit).toFixed(2)}`;
+}
+
+else if (rootCause === "high cost") {
+  recommendation = `Reduce cost by $${Math.abs(operationalProfit).toFixed(0)}`;
+}
+
+else if (rootCause === "fx illusion") {
+  recommendation = "Align USD pricing with FX exposure";
+}
+
+else if (rootCause === "low margin") {
+  recommendation = "Optimize price or cost";
+}
+
+  const expectedTotal = expectedOperational + fxContribution;
+
+  // =======================
+  // 🧠 EXPLANATION
+  // =======================
+
+let explanation = "";
+
+if (businessType === "cost_center") {
+  explanation = "No revenue generated → pure cost activity";
+}
+
+else if (rootCause === "underpricing") {
+  explanation = "Selling below cost → direct loss";
+}
+
+else if (rootCause === "high cost") {
+  explanation = "Costs exceed revenue";
+}
+
+else if (rootCause === "fx illusion") {
+  explanation = "FX masking real performance";
+}
+
+else if (rootCause === "low margin") {
+  explanation = "Low margin → risky";
+}
+
+else {
+  explanation = "Healthy performance";
+}
+
+let insight = "";
+
+if (rootCause === "underpricing") {
+  insight = "Pricing is the main issue";
+}
+else if (rootCause === "high cost") {
+  insight = "Cost structure needs optimization";
+}
+else if (rootCause === "fx illusion") {
+  insight = "Currency mismatch distorting results";
+}
+
+
+// =======================
+// 🧠 SMART DISPLAY FIX
+// =======================
+
+// 🟢 FX Status بدل الأصفار
+
+
+
+// 🎯 FIX PRICE GAP (حل مشكلة 0%)
+let priceGap = 0;
+let breakEvenPercent = 0;
+
+if (pricePerUnit > 0) {
+  priceGap = costPerUnit - pricePerUnit;
+  breakEvenPercent = (priceGap / pricePerUnit) * 100;
+}
+
+
+// 🧠 CLEAN SUMMARY
+let aiSummary = "";
+
+if (rootCause === "underpricing") {
+  aiSummary = `Increase price by $${priceGap.toFixed(2)}`;
+}
+else if (rootCause === "high cost") {
+  aiSummary = `Reduce cost by $${Math.abs(operationalProfit).toFixed(0)}`;
+}
+else if (rootCause === "fx illusion") {
+  aiSummary = "Fix currency imbalance";
+}
+else {
+  aiSummary = "Stable performance";
+}
+  // =======================
+  // 🧠 PRIORITY
+  // =======================
+
+let priority = "Low";
+
+if (businessType === "cost_center") priority = "Medium";
+else if (severity > 70) priority = "High";
+else if (severity > 30) priority = "Medium";
+
+
+let confidence = "High";
+
+if (businessType === "cost_center") confidence = "High";
+else if (severity > 70) confidence = "Low";
+else if (issues.length > 2) confidence = "Medium";
+
+
+// =======================
+// 🧠 HUMAN READABLE INSIGHT
+// =======================
+
+let insightTitle = "";
+let insightColor = "";
+let insightNote = "";
+
+// الحالة الأخطر
+if (usdProfit < 0 && egpInUSD > 0) {
+
+  const net = usdProfit + egpInUSD;
+
+  insightTitle = `🔴 USD loss $${Math.abs(usdProfit).toFixed(0)}`;
+
+  if (net > 0) {
+    insightNote = `🟢 FX saved it → Net +$${net.toFixed(0)}`;
+    insightColor = "#22c55e";
+  } else {
+    insightNote = `🔴 FX not enough → Net $${net.toFixed(0)}`;
+    insightColor = "#ef4444";
+  }
+}
+
+// حالة طبيعية
+else if (usdProfit > 0 && egpInUSD > 0) {
+  insightTitle = `🟢 Profitable in both currencies`;
+  insightColor = usdProfit < 0 ? "#ef4444" : "#22c55e";
+}
+
+// خسارة كاملة
+else if (usdProfit < 0 && egpInUSD <= 0) {
+  insightTitle = `🔴 Loss in both USD & EGP`;
+  insightColor = usdProfit < 0 ? "#ef4444" : "#22c55e";
+}
+
+// fallback
+else {
+  insightTitle = "Stable";
+  insightColor = "#94a3b8";
+}
+
+// =======================
+// 🎨 CARD STYLE
+// =======================
+
+let cardBg = "linear-gradient(145deg,#020617,#1e293b)";
+let cardBorder = "rgba(255,255,255,0.05)";
+let glow = "none";
+
+if (level === "STOP") {
+  cardBg = "linear-gradient(145deg,#2b0a0a,#450a0a)";
+  cardBorder = "#ef4444";
+  glow = "0 0 12px #ef444433";
+}
+
+else if (level === "OPTIMIZE") {
+  cardBg = "linear-gradient(145deg,#2a1f05,#422006)";
+  cardBorder = "#facc15";
+  glow = "0 0 12px #facc1533";
+}
+
+else if (level === "KEEP") {
+  cardBg = "linear-gradient(145deg,#052e16,#064e3b)";
+  cardBorder = "#22c55e";
+  glow = "0 0 12px #22c55e33";
+}
+
+else if (level === "INVEST") {
+  cardBg = "linear-gradient(145deg,#022c22,#065f46)";
+  cardBorder = "#10b981";
+  glow = "0 0 16px #10b98155";
+}
+
+let smartInsight = "";
+
+const breakEven = Number(breakEvenPrice || 0);
+const target = Number(targetPrice || 0);
+
+const gapToBE = Math.max(0, breakEven - price);
+
+// 🔴 STOP
+if (level === "STOP") {
+  smartInsight = "Stop → losing money";
+}
+
+// 🟡 OPTIMIZE
+else if (level === "OPTIMIZE") {
+
+  if (decision === "FIX PRICE") {
+    smartInsight = `+${gapToBE.toFixed(2)} → break-even`;
+  }
+  else if (decision === "REDUCE COST") {
+    smartInsight = `Reduce cost to $${breakEven.toFixed(2)}`;
+  }
+  else {
+    smartInsight = "Optimize pricing or cost";
+  }
+}
+
+// 🟢 INVEST
+else if (level === "INVEST") {
+  smartInsight = `Margin ${(margin * 100).toFixed(1)}% → scale`;
+}
+
+// ⚪ KEEP / REVIEW
+else {
+  smartInsight = "Stable performance";
+}
+
+// values safe
+
+const gapToTarget = Math.max(0, target - price);
+
+
+let isFakeProfit = false;
+
+if (usdProfit < 0 && totalProfit > 0) {
+  isFakeProfit = true;
+}
+const barWidth = Math.min(Math.abs(margin * 100), 100);
+  // =======================
+  // 🚀 RETURN (FIXED)
+  // =======================
+
+  return {
+    decision,
+    rootCause,
+    recommendation,
+
+    // 💰 DISPLAY VALUES (FIXED)
+    revenueUSD: usdRevenue + (egpRevenue / rate),
+    costUSD: usdCost + (egpCost / rate),
+
+    // 💱 SPLIT (IMPORTANT)
+    usdRevenue,
+    usdCost,
+    egpRevenue,
+    egpCost,
+    barWidth,
+    usdProfit,
+    egpProfit,
+    expectedProfit: expectedTotal,
+    totalProfit,
+    // 🔥 CORE
+    operationalProfit,
+    fxContribution,
+    fxDependency,
+    profitSource,
+    margin,
+    severity,
+    explanation,
+    priority,
+    confidence,
+    expectedOperational,
+    expectedTotal,
+  breakEvenIncrease,
+  breakEvenRevenue,
+  bestPrice,
+  avgPrice,
+  targetCost,
+costReduction,
+volume,
+costPerUnit,
+pricePerUnit,
+breakEvenPrice,
+insight,
+priceGap,
+breakEvenPercent,
+aiSummary,
+businessType,
+  targetPrice,
+  profitGap,
+  targetIncreasePercent,
+    targetCostPerUnit,
+  costGapPerUnit,
+  totalCostReduction,
+    smartAction,
+  strategy,
+    fxNet,
+  fxInsight,
+  fxImbalance,
+currencyMix,
+totalProfitUSD,
+insightTitle,
+insightColor,
+insightNote,
+action: action || "Stable performance",
+level: level || "KEEP",
+levelLabel: levelLabel || "🟢 KEEP",
+levelColor: levelColor || "#22c55e",
+fxStatusFinal: fxStatusFinal || "Balanced",
+  finalDecision,
+  cardBg,
+cardBorder,
+glow,
+smartInsight,
+isFakeProfit,
+  };
+}
+
+
 function buildData(rows) {
-  const EGP_RATE = 50;
+
 window.DEBUG_ROWS = rows;
 const AUTO_ALERTS = [];
-  // 🔥 ADD THIS HERE (أول سطر)
-  rows = rows.map(r => ({
-
-    ...r,
-
-    "Income USD": safeNum(r["Income USD"]),
-    "Exp.USD": safeNum(r["Exp.USD"]),
-
-    "Income EGP": safeNum(r["Income EGP"]),
-    "Exp.EGP": safeNum(r["Exp.EGP"])
-
-  }));
-  const byDate = {};
-  const byMonth = {};
-  const deptMap = {};
-  const hotelMap = {};
-  const expCatMap = {};
-  
-
-  rows.forEach(r => {
-
-    const d = new Date(r.Date);
-    const day = d.toLocaleDateString('en-US',{month:'short',day:'2-digit'});
-    const month = d.toLocaleDateString('en-US',{month:'short',year:'numeric'});
-    const incUSD = safeNum(r["Income USD"]);
-    const expUSD = safeNum(r["Exp.USD"]);
-
-    const incEGP = safeNum(r["Income EGP"]);
-    const expEGP = safeNum(r["Exp.EGP"]);
-
-    const category = r["Accounting Guidance"] || "Other";
-    const dept = r["Deparment"] || "Other";
-    const hotel = r["Hotel"] || "Unknown";
-
-    // ===== Init =====
-    if(!byDate[day]) byDate[day]={i:0,e:0};
-    if(!byMonth[month]) byMonth[month]={i:0,e:0,iEGP:0,eEGP:0};
-    if(!deptMap[dept]) deptMap[dept]={i:0,e:0,c:0,iEGP:0,eEGP:0};
-    if(!hotelMap[hotel]) hotelMap[hotel]={iUSD:0,iEGP:0,c:0};
-    if(!expCatMap[category]) expCatMap[category]={usd:0, egp:0};
-
-    // ===== Expense Category =====
-    expCatMap[category].usd += expUSD;
-    expCatMap[category].egp += expEGP;
-
-    // ===== Date =====
-    byDate[day].i += incUSD;
-    byDate[day].e += expUSD;
-
-    // ===== Month =====
-    byMonth[month].i += incUSD;
-    byMonth[month].e += expUSD;
-
-    byMonth[month].iEGP += incEGP;
-    byMonth[month].eEGP += expEGP;
-
-    // ===== Dept =====
-    deptMap[dept].i += incUSD;
-    deptMap[dept].e += expUSD;
-
-    deptMap[dept].iEGP += incEGP;
-    deptMap[dept].eEGP += expEGP;
-
-    deptMap[dept].c++;
-
-    // ===== Hotel =====
-    hotelMap[hotel].iUSD += incUSD;
-    hotelMap[hotel].iEGP += incEGP;
-    hotelMap[hotel].c++;
-
-  });
+rows = normalizeDashboardRows(rows);
+const KPI_DATA = getCachedKPIData(rows);
+const byDate = KPI_DATA.byDate;
+const byMonth = KPI_DATA.byMonth;
+const deptMap = KPI_DATA.deptMap;
+const hotelMap = KPI_DATA.hotelMap;
+const expCatMap = KPI_DATA.expCatMap;
+const expMap = KPI_DATA.expMap;
+const monthMap = KPI_DATA.monthMap;
+const revHotelMap = KPI_DATA.revHotelMap;
 // ===== LOSS ANALYSIS (SAFE MODE - NO SIDE EFFECTS) =====
 
 // ✅ نعمل نسخة نظيفة بس للجزء ده
@@ -1411,6 +2924,7 @@ else {
     score,   // ✅ جديد
     margin,  // ✅ جديد
     reason   // ✅ جديد
+    
   };
 })
 .sort((a,b)=> a.profitUSD - b.profitUSD) // ✅ بدل USD
@@ -1467,16 +2981,28 @@ DATA.performance_decisions = Object.entries(lossByPerf).map(([name, d]) => {
   const profitUSD = d.profitUSD || 0;
   const profitEGP = d.profitEGP || 0;
 
-  // 💡 unified score
-  const score = profitUSD + (profitEGP / EGP_RATE);
+// 💡 unified score
+const score = profitUSD + (profitEGP / EGP_RATE);
 
-  const margin = income > 0 ? (profitUSD / income) * 100 : 0;
-  const performer = d.performers
+const margin = income > 0 ? (profitUSD / income) * 100 : 0;
+
+const performer = d.performers
   ? [...d.performers].join(", ")
   : "-";
-  
-  // ===== PROFIT QUALITY SCORE =====
 
+// 💱 FX ANALYSIS (✔ هنا مكانه صح)
+const fxImpact = profitEGP / EGP_RATE;
+
+let fxRisk = "Stable";
+
+if (profitUSD < 0 && profitEGP > 0) {
+  fxRisk = "High FX Risk";
+} 
+else if (Math.abs(fxImpact) > Math.abs(profitUSD)) {
+  fxRisk = "FX Dominant";
+}
+
+// ===== PROFIT QUALITY SCORE =====
 let qualityScore = 0;
 
 // 🟢 ربح
@@ -1547,21 +3073,110 @@ else {
     reason = "Net loss (USD + EGP)";
   }
 
+  
 return {
   name,
-  performer, // 🔥 أضف السطر ده
+  performer,
   profitUSD,
   profitEGP,
   score,
   margin,
+    // 🔥 أهم حاجة
+  incomeUSD: d.incomeUSD || 0,
+  costUSD: d.costUSD || 0,
+  incomeEGP: d.incomeEGP || 0,
+  costEGP: d.costEGP || 0,
   decision,
   reason,
   qualityScore,
   qualityLabel,
-  qualityColor
+  qualityColor,
+  fxRisk // 🔥 هنا تضيفها
 };
 });
 
+const grouped = {};
+
+rows.forEach(d => {
+
+  const key = d["Performance"] || "Unknown";
+
+  if (!grouped[key]) {
+    grouped[key] = {
+      ...d,
+      volume: 0,
+      totalRevenueUSD: 0,
+      totalCostUSD: 0,
+      totalRevenueEGP: 0,
+      totalCostEGP: 0
+    };
+  }
+
+  // ✅ هنا أهم سطر (ده البديل الصح)
+  grouped[key].volume += 1;
+
+  grouped[key].totalRevenueUSD += Number(d["Income USD"] || 0);
+  grouped[key].totalCostUSD += Number(d["Exp.USD"] || 0);
+
+  grouped[key].totalRevenueEGP += Number(d["Income EGP"] || 0);
+  grouped[key].totalCostEGP += Number(d["Exp.EGP"] || 0);
+
+});
+// =======================
+// ✅ SEND TO AI
+// =======================
+
+const result = Object.values(grouped).map(d => analyzePerformanceClean({
+  ...d,
+  "Income USD": d.totalRevenueUSD,
+  "Exp.USD": d.totalCostUSD,
+  "Income EGP": d.totalRevenueEGP,
+  "Exp.EGP": d.totalCostEGP,
+  volume: d.volume
+}));
+
+DATA.performance_decisions = DATA.performance_decisions.map(d => {
+
+  const g = grouped[d.name];
+
+  // 🛡️ fallback لو مفيش grouping
+  if (!g) {
+    return {
+      ...d,
+      volume: 0,
+      ai: {
+        severity: 0,
+        decision: "KEEP",
+        priority: "Low",
+        confidence: "Low",
+        explanation: "No data available"
+      }
+    };
+  }
+
+  // 🧠 تحليل حقيقي
+  const ai = analyzePerformanceClean({
+    ...d,
+    "Income USD": g.totalRevenueUSD || 0,
+    "Exp.USD": g.totalCostUSD || 0,
+    "Income EGP": g.totalRevenueEGP || 0,
+    "Exp.EGP": g.totalCostEGP || 0,
+    volume: g.volume || 0
+  });
+
+  return {
+    ...d,
+    ...ai,
+    volume: g.volume || 0,
+    ai: ai || {   // 🛡️ حماية إضافية لو function رجعت undefined
+      severity: 0,
+      decision: "KEEP",
+      priority: "Low",
+      confidence: "Low",
+      explanation: "AI failed"
+    }
+  };
+});
 
 // 🏨 HOTEL DECISIONS
 DATA.hotel_decisions = Object.entries(lossByHotel).map(([name, d]) => {
@@ -1575,6 +3190,16 @@ DATA.hotel_decisions = Object.entries(lossByHotel).map(([name, d]) => {
   const score = profitUSD + (profitEGP / EGP_RATE);
   const margin = income > 0 ? (profitUSD / income) * 100 : 0;
 
+  const fxImpact = profitEGP / EGP_RATE;
+
+let fxRisk = "Stable";
+
+if (profitUSD < 0 && profitEGP > 0) {
+  fxRisk = "High FX Risk";
+} 
+else if (Math.abs(fxImpact) > Math.abs(profitUSD)) {
+  fxRisk = "FX Dominant";
+}
   // ===== QUALITY SCORE =====
   let qualityScore = 0;
 
@@ -1635,19 +3260,19 @@ DATA.hotel_decisions = Object.entries(lossByHotel).map(([name, d]) => {
     action = "Scale this hotel";
   }
 
-  return {
-    name,
-    profitUSD,
-    profitEGP,
-    score,
-    margin,
-    decision,
-    reason,
-    action,
-    qualityScore,
-    qualityLabel,
-    qualityColor
-  };
+return {
+  name,
+  profitUSD,
+  profitEGP,
+  score,
+  margin,
+  decision,
+  reason,
+  qualityScore,
+  qualityLabel,
+  qualityColor,
+  fxRisk // 🔥 هنا تضيفها
+};
 });
 
 // 🔥 Ranking
@@ -1655,79 +3280,8 @@ DATA.hotel_decisions.sort((a,b)=> a.score - b.score);
 
 
 // ===== EXPENSE KPI BUILD =====
-
-const expMap = {};
-
-rows.forEach(r => {
-
-  const category = r["Accounting Guidance"] || "Other";
-
-const value = currency === "USD"
-  ? safeNum(r["Exp.USD"])
-  : safeNum(r["Exp.EGP"]);
-
-  if (!expMap[category]) expMap[category] = 0;
-
-  expMap[category] += value;
-
-});
-
-// تحويلها لفورم مناسب
-// ===== EXPENSE KPI BUILD (SMART) =====
-DATA.exp_kpi = {
-  total: 0,
-  salary: 0,
-  operating: 0,
-  visa: 0
-};
-
-Object.entries(expMap).forEach(([k, v]) => {
-
-  const name = k.toLowerCase();
-
-  DATA.exp_kpi.total += v;
-
-
-  // ===== SALARY =====
-  if (
-    name.includes("salary") ||
-    name.includes("salaries") ||
-    name.includes("staff")
-  ) {
-    DATA.exp_kpi.salary += v;
-  }
-
-  // ===== VISA =====
-  if (
-    name.includes("visa")
-  ) {
-    DATA.exp_kpi.visa += v;
-  }
-
-  // ===== OPERATING =====
-  if (
-    name.includes("transport") ||
-    name.includes("travel") ||
-    name.includes("ticket") ||
-    name.includes("fuel") ||
-    name.includes("rent") ||
-    name.includes("order") ||
-    name.includes("service") ||
-    name.includes("operation")
-  ) {
-    DATA.exp_kpi.operating += v;
-  }
-
-});
-// ===== COST BREAKDOWN =====
-const totalCost = DATA.exp_kpi.total || 1;
-
-DATA.cost_breakdown = {
-  labor: (DATA.exp_kpi.salary / totalCost) * 100,
-  operating: (DATA.exp_kpi.operating / totalCost) * 100,
-  visa: (DATA.exp_kpi.visa / totalCost) * 100
-};
-// ================= هنا تحطه =================
+DATA.exp_kpi = KPI_DATA.expKpi;
+DATA.cost_breakdown = KPI_DATA.costBreakdown;
 
 // ===== TOP EXPENSE =====
 let topCategory = "";
@@ -1744,59 +3298,29 @@ DATA.exp_top = {
   name: topCategory,
   value: topValue
 };
-// ===== KPI FROM DEPT (🔥 هنا بالظبط) =====
-let totalIncome = 0;
-let totalExpense = 0;
-
-rows.forEach(r => {
-
- const income = currency === "USD"
-  ? safeNum(r["Income USD"])
-  : safeNum(r["Income EGP"]);
-
- const expense = currency === "USD"
-  ? safeNum(r["Exp.USD"])
-  : safeNum(r["Exp.EGP"]);
-
-  totalIncome += income;
-  totalExpense += expense;
-
-});
-
-DATA.kpi_income = totalIncome;
-DATA.kpi_expense = totalExpense;
-DATA.kpi_net = totalIncome - totalExpense;
-DATA.kpi_margin =
-  totalIncome ? (DATA.kpi_net / totalIncome) * 100 : 0;
-DATA.kpi_expense_ratio =
-  totalIncome ? (totalExpense / totalIncome) * 100 : 0;
+// ===== KPI FROM ONE FILTERED SUMMARY =====
+DATA.kpi = KPI_DATA.totals;
+DATA.kpi_income = KPI_DATA.totals.income;
+DATA.kpi_expense = KPI_DATA.totals.expense;
+DATA.kpi_net = KPI_DATA.totals.net;
+DATA.kpi_margin = KPI_DATA.totals.margin;
+DATA.kpi_expense_ratio = KPI_DATA.totals.expenseRatio;
 DATA.dept_kpi = deptMap;
 
 
 // ===== NEW KPIs =====
 
-// Operating Cost = Labor + Operating
-DATA.kpi_operating_cost =
-  (DATA.exp_kpi.salary || 0) +
-  (DATA.exp_kpi.operating || 0);
-
-// Transactions = عدد الصفوف
-DATA.kpi_transactions = rows.length;
-
-// Hotels = unique
-const uniqueHotels = new Set(
-  rows.map(r => (r["Hotel"] || "").trim()).filter(Boolean)
-);
-
-DATA.kpi_hotels = uniqueHotels.size;
+DATA.kpi_operating_cost = KPI_DATA.totals.operatingCost;
+DATA.kpi_transactions = KPI_DATA.totals.transactions;
+DATA.kpi_hotels = KPI_DATA.totals.hotels;
 
   // ================= SAFE =================
   const safe = arr => Array.isArray(arr) ? arr : [];
 
   // ================= DAILY =================
   DATA.daily_labels = safe(Object.keys(byDate));
-  DATA.daily_income = safe(Object.values(byDate).map(d=>d.i));
-  DATA.daily_exp = safe(Object.values(byDate).map(d=>d.e));
+  DATA.daily_income = safe(Object.values(byDate).map(d=> currency === "USD" ? d.i : d.iEGP));
+  DATA.daily_exp = safe(Object.values(byDate).map(d=> currency === "USD" ? d.e : d.eEGP));
   DATA.daily_balance = DATA.daily_income.map((v,i)=>v-DATA.daily_exp[i]);
 
   // ================= MONTHLY =================
@@ -1874,25 +3398,6 @@ DATA.exp_cat_values_egp = top.map(e => e.egp);
 DATA.exp_cat_values = top.map(e =>
   currency === "USD" ? e.usd : e.egp
 );
-// ===== REVENUE KPIs (DYNAMIC) =====
-
-// 🟢 هنجمع الداتا حسب الشهر
-const monthMap = {};
-
-rows.forEach(r => {
-
-  const month = r._month;
-  const incomeUSD = safeNum(r["Income USD"]);
-
-
-  if (!monthMap[month]) {
-  monthMap[month] = { usd: 0, egp: 0 };
-}
-
-monthMap[month].usd += safeNum(r["Income USD"]);
-monthMap[month].egp += safeNum(r["Income EGP"]);
-});
-
 // 🟢 نرتب الشهور
 const sortedMonths = Object.keys(monthMap)
   .sort((a,b)=> new Date(a) - new Date(b));
@@ -1913,29 +3418,14 @@ DATA.rev_prev_month_value_egp = monthMap[prevMonth]?.egp || 0;
 DATA.rev_total = DATA.kpi_income;
 
 
-// ===== TOP HOTEL =====
-const revHotelMap = {};
-
-rows.forEach(r => {
-
-  const income = r["Income USD"];
-  const cost = r["Exp.USD"];
-  const profit = income - cost;
-  const hotel = (r["Hotel"] || "Unknown").trim();
-  if (!hotel) return;
-
-  if (!revHotelMap[hotel]) revHotelMap[hotel] = 0;
-  revHotelMap[hotel] += income;
-
-});
-
 let topHotel = "-";
 let topHotelValue = 0;
 
 Object.entries(revHotelMap).forEach(([h,v])=>{
-  if (v > topHotelValue) {
+  const value = currency === "USD" ? (v.usd || 0) : (v.egp || 0);
+  if (value > topHotelValue) {
     topHotel = h;
-    topHotelValue = v;
+    topHotelValue = value;
   }
 });
 
@@ -2494,13 +3984,8 @@ const pushAlert = (key, alert) => {
   const usd = Number(d.profitUSD || 0);
   const egp = Number(d.profitEGP || 0);
 
-  const usdTxt = usd >= 0
-    ? `$${usd.toLocaleString()}`
-    : `$-${Math.abs(usd).toLocaleString()}`;
-
-  const egpTxt = egp >= 0
-    ? `EGP ${egp.toLocaleString()}`
-    : `EGP -${Math.abs(egp).toLocaleString()}`;
+  const usdTxt = signedMoney(usd);
+  const egpTxt = signedMoney(egp, "EGP ");
 
   // 🔴 HIGH
   if (d.qualityLabel === "Weak") {
@@ -2541,13 +4026,8 @@ const pushAlert = (key, alert) => {
   const usd = Number(d.profitUSD || 0);
   const egp = Number(d.profitEGP || 0);
 
-  const usdTxt = usd >= 0
-    ? `$${usd.toLocaleString()}`
-    : `$-${Math.abs(usd).toLocaleString()}`;
-
-  const egpTxt = egp >= 0
-    ? `EGP ${egp.toLocaleString()}`
-    : `EGP -${Math.abs(egp).toLocaleString()}`;
+  const usdTxt = signedMoney(usd);
+  const egpTxt = signedMoney(egp, "EGP ");
 
   if (d.decision === "STOP") {
     pushAlert(d.name + "_hotel_loss", {
@@ -2920,7 +4400,7 @@ else if (topReason?.type === "Net Loss") {
     font-weight:800;
     color:${usdColor};
   ">
-    ${profitUSD >= 0 ? "+" : "-"}$${Math.abs(profitUSD).toLocaleString()}
+    ${signedMoney(profitUSD)}
   </div>
 
   <!-- EGP -->
@@ -2929,7 +4409,7 @@ else if (topReason?.type === "Net Loss") {
     color:${(d.profitEGP || 0) >= 0 ? "#22c55e" : "#ef4444"}
     opacity:0.85;
   ">
-    EGP ${profitEGP >= 0 ? "+" : "-"}${Math.abs(profitEGP).toLocaleString()}
+    ${signedMoney(profitEGP, "EGP ")}
   </div>
 
 </div>
@@ -3045,15 +4525,124 @@ if (decisionEl) {
   const perf = DATA.performance_decisions || [];
 
   // 🎯 Grouping
-  const high = perf.filter(d => d.qualityScore < 40);
-  const medium = perf.filter(d => d.qualityScore >= 40 && d.qualityScore < 70);
-  const good = perf.filter(d => d.qualityScore >= 70);
+const classify = (d) => {
+
+  const m = validatePerformanceCardData(d);
+  const usd = m.profitUSD;
+  const egp = m.profitEGP;
+  const score = m.combinedProfitUSD;
+  const margin = m.margin;
+
+  // 🔴 Real Loss
+  if (score < 0) return "high";
+
+  // 🟡 Currency Risk (🔥 أهم تعديل)
+  if (usd < 0 && egp > 0) return "medium";
+
+  // 🟡 Low margin
+  if (margin < 0.2) return "medium";
+
+  // 🟢 Good
+  return "good";
+};
+
+const high = perf.filter(d => classify(d) === "high");
+const medium = perf.filter(d => classify(d) === "medium");
+const good = perf.filter(d => classify(d) === "good");
 
   // 🎨 Card Renderer
   const renderCard = (d) => {
 
-    const usd = Number(d.profitUSD || 0);
-    const egp = Number(d.profitEGP || 0);
+const baseAI = {
+  levelLabel: "🟢 KEEP",
+  levelColor: "#22c55e",
+  action: "Stable",
+  smartInsight: "No detailed data",
+  fxStatusFinal: "FX neutral",
+  fxImbalance: 0,
+  margin: 0,
+  pricePerUnit: 0,
+  breakEvenPrice: 0,
+  targetPrice: 0,
+  currencyMix: { usd: 0, egp: 0 }
+};
+
+// =======================
+// 🔥 SMART FIX (IMPORTANT)
+// =======================
+if (
+  (!d.ai || Object.keys(d.ai).length === 0) &&
+  (d.operationalProfit || d.totalProfit || d.profitUSD || d.profitEGP)
+) {
+
+  const profit =
+  d.operationalProfit ??
+  d.totalProfit ??
+  d.profitUSD ??
+  0;
+
+  baseAI.levelLabel = profit > 0 ? "🚀 INVEST" : "🔴 STOP";
+  baseAI.levelColor = profit > 0 ? "#22c55e" : "#ef4444";
+
+  baseAI.action = profit > 0
+    ? "Scale performance"
+    : "Stop immediately";
+
+  baseAI.smartInsight = "Profit exists but pricing data missing";
+
+  baseAI.fxStatusFinal = "FX data available";
+}
+
+// =======================
+// 🔥 FINAL AI OBJECT
+// =======================
+const ai = {
+  ...baseAI,
+  ...validatePerformanceCardData({
+    ...d,
+    ...(d.ai || {})
+  })
+};
+    const profitUI = (() => {
+
+  if (ai.profitSource === "FX Saving Loss") {
+    return {
+      color: "#ef4444",
+      text: "⚠️ FX covering losses"
+    };
+  }
+
+  if (ai.profitSource === "FX Driven") {
+    return {
+      color: "#f97316",
+      text: "💣 FX Driven Profit"
+    };
+  }
+
+  if (ai.profitSource === "FX Drag") {
+    return {
+      color: "#eab308",
+      text: "⚠️ FX hurting performance"
+    };
+  }
+
+  if (ai.operationalProfit > 0) {
+    return {
+      color: "#22c55e",
+      text: "✅ Healthy Operations"
+    };
+  }
+
+  return {
+    color: "#ef4444",
+    text: "❌ Operational Loss"
+  };
+
+})();
+    const safe = (v, d = 0) => finiteNumber(v).toFixed(d);
+    const money = (v) => finiteNumber(v).toLocaleString();
+    const usd = ai.profitUSD;
+    const egp = ai.profitEGP;
 
     const usdColor = usd >= 0 ? "#22c55e" : "#ef4444";
     const egpColor = egp >= 0 ? "#22c55e" : "#ef4444";
@@ -3065,20 +4654,69 @@ if (decisionEl) {
         ? "0 0 12px rgba(239,68,68,0.25)"
         : "0 0 12px rgba(34,197,94,0.15)";
 
-    const barWidth = Math.min(Math.abs(d.qualityScore || 0), 100);
+    const barWidth = Math.min(Math.abs(finiteNumber(ai.qualityScore)), 100);
+    
+let label = d.reason || "";
+
+if (currencyRisk) {
+  label = "Currency dependent performance";
+}
+let explain = [];
+
+if (usd < 0 && egp > 0) {
+  explain.push("USD loss vs EGP profit (currency imbalance)");
+}
+
+if (ai.margin < 0.2) {
+  explain.push("Low margin");
+}
+
+if (ai.combinedProfitUSD < 0) {
+  explain.push("Net loss");
+}
+
+if (ai.costUSD > ai.incomeUSD) {
+  explain.push("Cost higher than revenue");
+}
+
+const explainText = explain.join(" • ");
+let confidence = "Low";
+let confidenceColor = "#94a3b8";
+
+if (ai.combinedProfitUSD > 0 && ai.margin > 0.3) {
+  confidence = "High";
+  confidenceColor = "#22c55e";
+}
+else if (ai.combinedProfitUSD > 0) {
+  confidence = "Medium";
+  confidenceColor = "#facc15";
+}
+function toggleSection(el) {
+  const content = el.nextElementSibling;
+  content.style.display =
+    content.style.display === "none" ? "block" : "none";
+}
 
     return `
-      <div onclick="filterPerformance('${d.name}')"
-        style="
-          cursor:pointer;
-          background:linear-gradient(145deg,#0b1220,#020617);
-          border:1px solid rgba(255,255,255,0.05);
-          border-radius:16px;
-          padding:14px;
-          margin-bottom:12px;
-          transition:0.25s;
-          box-shadow:${glow};
-        "
+<div onclick="filterPerformance('${d.name}')"
+  style="
+    cursor:pointer;
+    background:linear-gradient(145deg,#0b1220,#020617);
+    border:1px solid rgba(255,255,255,0.05);
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:12px;
+    transition:0.25s;
+    box-shadow:${glow};
+
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow-x:hidden;
+
+    display:flex;
+    flex-direction:column;
+  "
         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.4)'"
         onmouseout="this.style.transform='none';this.style.boxShadow='${glow}'"
       >
@@ -3089,9 +4727,19 @@ if (decisionEl) {
         </div>
 
         <!-- PERFORMER -->
-        <div style="font-size:11px;color:#64748b;margin-top:2px">
-          👤 ${d.performer || "-"}
-        </div>
+<div style="
+  font-size:11px;
+  color:#64748b;
+  margin-top:2px;
+
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow-x:hidden;
+  word-break:break-word;
+">
+  👤 ${d.performer || "-"}
+</div>
 
         <!-- NUMBERS -->
         <div style="
@@ -3107,7 +4755,7 @@ if (decisionEl) {
               font-weight:800;
               color:${usdColor};
             ">
-              ${usd >= 0 ? "+" : "-"}$${Math.abs(usd).toLocaleString()}
+              ${signedMoney(usd)}
             </div>
 
             <div style="
@@ -3115,7 +4763,7 @@ if (decisionEl) {
               color:${egpColor};
               opacity:0.7;
             ">
-              EGP ${egp >= 0 ? "+" : "-"}${Math.abs(egp).toLocaleString()}
+              ${signedMoney(egp, "EGP ")}
             </div>
           </div>
 
@@ -3124,184 +4772,470 @@ if (decisionEl) {
             width:10px;
             height:10px;
             border-radius:50%;
-            background:${d.qualityColor};
+            background:${ai.qualityColor};
           "></div>
 
         </div>
 
-        <!-- BAR -->
-        <div style="
-          margin-top:8px;
-          height:4px;
-          background:#1f2937;
-          border-radius:6px;
-        ">
-          <div style="
-            width:${barWidth}%;
-            height:100%;
-            background:${d.qualityColor};
-            border-radius:6px;
-          "></div>
-        </div>
+<!-- BAR -->
+<div style="
+  margin-top:8px;
+  height:4px;
+  background:#1f2937;
+  border-radius:6px;
 
-        <!-- TAGS -->
-        <div style="
-          margin-top:6px;
-          font-size:10px;
-          color:#94a3b8;
-        ">
-          ${currencyRisk ? "💱 Currency Risk • " : ""}
-          ${d.reason || ""}
-        </div>
+  width:100%;
+  overflow-x:hidden;
+">
+  <div style="
+    width:${Math.min(barWidth, 100)}%;
+    height:100%;
+    background:${ai.qualityColor};
+    border-radius:6px;
+  "></div>
+</div>
 
-        <!-- ACTION -->
-        <div style="
-          margin-top:8px;
-          font-size:11px;
-          background:#1e293b;
-          padding:6px;
-          border-radius:6px;
-        ">
-          💡 ${d.action || d.reason || ""}
-        </div>
+<!-- TAGS -->
+<div style="
+  margin-top:6px;
+  font-size:10px;
+  color:#60a5fa;
 
-      </div>
+  max-width:100%;
+  overflow-x:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+">
+  ${ai.fxInsight ? `
+  <div style="color:#b91c1c;font-weight:700;margin-top:6px;">
+    💱 ${ai.fxInsight}
+  </div>
+` : ""}
+</div>
+
+<!-- AI DECISION CLEAN -->
+<div style="
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+background:${ai.cardBg};
+border:1px solid ${ai.cardBorder};
+box-shadow:${ai.glow};
+transition: all 0.25s ease;
+onmouseover="this.style.transform='translateY(-3px)'"
+onmouseout="this.style.transform='translateY(0)'"
+">
+
+  <!-- 🧠 HEADER -->
+<div style="
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:6px;
+">
+
+  <div style="
+    font-size:13px;
+    font-weight:700;
+    color:${ai.levelColor};
+  ">
+    🧠 ${ai.levelLabel}
+  </div>
+  <!-- 💡 INSIGHT -->
+<div style="
+  font-size:12px;
+  font-weight:600;
+  color:#93c5fd;
+  margin-bottom:6px;
+">
+  💡 ${ai.smartInsight}
+</div>
+
+  <div style="
+    font-size:10px;
+    padding:3px 6px;
+    border-radius:6px;
+    background:${ai.cardBorder}22;
+    color:${ai.cardBorder};
+    font-weight:600;
+  ">
+    ${ai.action}
+  </div>
+
+</div>
+
+    <div style="
+      font-size:10px;
+      padding:3px 6px;
+      border-radius:6px;
+      background:
+        ${ai.priority === "High" ? "#ef444422" :
+          ai.priority === "Medium" ? "#facc1522" : "#22c55e22"};
+      color:
+        ${ai.priority === "High" ? "#ef4444" :
+          ai.priority === "Medium" ? "#facc15" : "#22c55e"};
+      font-weight:600;
+    ">
+      ${ai.priority}
+    </div>
+
+  </div>
+
+  <!-- 💡 MAIN INSIGHT -->
+  <div style="
+    margin-top:6px;
+    font-size:12px;
+    font-weight:600;
+    color:#93c5fd;
+  ">
+💡 ${
+  ai.hasPricingData && ai.pricePerUnit < ai.breakEvenPrice
+    ? `Break-even +$${finiteNumber(ai.breakEvenPrice - ai.pricePerUnit).toFixed(2)} | Profit target $${finiteNumber(ai.targetPrice).toFixed(2)}`
+    : ai.hasPricingData ? `Profitable → scale` : `Pricing data unavailable`
+}
+  </div>
+
+  <!-- 💱 FX STATUS -->
+  <div style="
+    margin-top:4px;
+    font-size:11px;
+    color:#facc15;
+  ">
+    💱 ${ai.fxStatusFinal} (${(ai.fxImbalance * 100).toFixed(1)}%)
+  </div>
+
+  <!-- ▶ DETAILS TOGGLE -->
+<div onclick="event.stopPropagation();
+this.nextElementSibling.style.display =
+this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"
+style="
+  margin-top:8px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
+  color:#38bdf8;
+">
+  ▶ Details
+</div>
+
+  <!-- 🔽 DETAILS CONTENT -->
+  <div style="display:none; margin-top:8px; font-size:12px; line-height:1.6;">
+
+    <!-- 📊 PRICING -->
+<div style="margin-bottom:6px;">
+  📦 ${finiteNumber(ai.volume)} units  
+</div>
+
+<div>
+  💰 Selling at $${finiteNumber(ai.pricePerUnit).toFixed(2)}  
+</div>
+
+<div>
+  💸 Cost is $${finiteNumber(ai.costPerUnit).toFixed(2)}
+</div>
+    </div>
+<div style="
+  margin-top:4px;
+  font-size:11px;
+  color:${ai.margin < 0 ? '#ef4444' : ai.margin < 0.2 ? '#facc15' : '#22c55e'};
+">
+  📊 Margin: ${(finiteNumber(ai.margin) * 100).toFixed(1)}%
+</div>
+
+${ai.hasPricingData ? `
+  <div style="margin-top:4px;color:#facc15;">
+    🎯 Break-even: $${finiteNumber(ai.breakEvenPrice).toFixed(2)}
+  </div>
+
+  <div style="color:#22c55e;">
+    🚀 Target: $${finiteNumber(ai.targetPrice).toFixed(2)}
+  </div>
+` : ""}
+
+</div>
+
+    <!-- 📉 PROFIT -->
+<div style="
+  margin-top:6px;
+  padding:8px;
+  border-radius:8px;
+  background:rgba(255,255,255,0.03);
+">
+
+  <div style="display:flex;justify-content:space-between;color:${valueColor(ai.operationalProfit)};">
+    <span>USD</span>
+    <span>${signedMoney(ai.operationalProfit)}</span>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;color:${valueColor(ai.fxContribution)};">
+    <span>FX</span>
+    <span>${signedMoney(ai.fxContribution)}</span>
+  </div>
+
+  <div style="
+    height:1px;
+    background:rgba(255,255,255,0.08);
+    margin:6px 0;
+  "></div>
+
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    font-weight:700;
+    color:${valueColor(ai.fxNet)};
+  ">
+    <span>NET</span>
+    <span>${signedMoney(ai.fxNet)}</span>
+  </div>
+
+</div>
+    <div style="
+  margin-top:6px;
+  font-size:12px;
+  font-weight:700;
+  color:${ai.insightColor};
+">
+  ${ai.insightTitle}
+</div>
+
+${ai.insightNote ? `
+<div style="
+  font-size:11px;
+  color:#94a3b8;
+  margin-top:2px;
+">
+  ${ai.insightNote}
+</div>
+` : ""}
+
+    <!-- 💱 MIX -->
+ <!-- 📊 TEXT -->
+  <div style="display:flex;justify-content:space-between;font-size:12px;color:#94a3b8;">
+    <span>USD: ${(ai.currencyMix?.usd * 100 || 0).toFixed(0)}%</span>
+    <span>EGP: ${(ai.currencyMix?.egp * 100 || 0).toFixed(0)}%</span>
+  </div>
+
+  <!-- 📊 BAR -->
+  <div style="
+    width:100%;
+    height:8px;
+    background:#1e293b;
+    border-radius:999px;
+    overflow:hidden;
+    margin-top:4px;
+  ">
+    <div style="
+      width:${(ai.currencyMix?.usd * 100 || 0)}%;
+      height:100%;
+      background:#3b82f6;
+      float:left;
+    "></div>
+
+    <div style="
+      width:${(ai.currencyMix?.egp * 100 || 0)}%;
+      height:100%;
+      background:#22c55e;
+      float:left;
+    "></div>
+  </div>
+
+    <!-- 🧠 EXPLANATION -->
+    <div style="
+      margin-top:6px;
+      font-size:11px;
+      color:#cbd5f5;
+    ">
+      ${ai.explanation && `
+  <div style="color:#facc15;font-size:11px;">
+    ${ai.explanation}
+  </div>
+`}
+    </div>
+
+  </div>
+
+</div>
+
+  <!-- Recommendation -->
+  <div style="
+    margin-top:6px;
+    font-size:11px;
+    color:#e2e8f0;
+  ">
+    💡 ${
+  ai.hasPricingData && ai.pricePerUnit < ai.breakEvenPrice
+    ? `Increase price by $${(ai.breakEvenPrice - ai.pricePerUnit).toFixed(2)}`
+    : ai.hasPricingData ? `Profitable → scale` : `Pricing data unavailable`
+}
+  </div>
+
+</div>
     `;
   };
 
-  decisionEl.innerHTML = `
-    <div style="
-      display:grid;
-      grid-template-columns:1fr;
-      gap:20px;
-    ">
+decisionEl.innerHTML = `
 
-      <!-- 🔴 HIGH -->
-      <div style="
-        background:#020617;
-        border:1px solid rgba(255,255,255,0.06);
-        border-radius:18px;
-        padding:14px;
-      ">
-
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          margin-bottom:10px;
-        ">
-          <div style="color:#ef4444;font-weight:700;font-size:14px">
-            🔴 High Risk
-          </div>
-
-          <div style="
-            background:#ef444422;
-            color:#ef4444;
-            padding:4px 8px;
-            border-radius:8px;
-            font-size:11px;
-            font-weight:600;
-          ">
-            ${high.length}
-          </div>
-        </div>
-
-        <div style="max-height:500px;overflow:auto;padding-right:6px">
-          ${high.map(renderCard).join("")}
-        </div>
-
-      </div>
-
-
-      <!-- 🟡 MEDIUM -->
-      <div style="
-        background:#020617;
-        border:1px solid rgba(255,255,255,0.06);
-        border-radius:18px;
-        padding:14px;
-      ">
-
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          margin-bottom:10px;
-        ">
-          <div style="color:#facc15;font-weight:700;font-size:14px">
-            🟡 Needs Fix
-          </div>
-
-          <div style="
-            background:#facc1522;
-            color:#facc15;
-            padding:4px 8px;
-            border-radius:8px;
-            font-size:11px;
-            font-weight:600;
-          ">
-            ${medium.length}
-          </div>
-        </div>
-
-        <div style="max-height:500px;overflow:auto;padding-right:6px">
-          ${medium.map(renderCard).join("")}
-        </div>
-
-      </div>
-
-
-      <!-- 🟢 GOOD -->
-      <div style="
-        background:#020617;
-        border:1px solid rgba(255,255,255,0.06);
-        border-radius:18px;
-        padding:14px;
-      ">
-
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          margin-bottom:10px;
-        ">
-          <div style="color:#22c55e;font-weight:700;font-size:14px">
-            🟢 Good
-          </div>
-
-          <div style="
-            background:#22c55e22;
-            color:#22c55e;
-            padding:4px 8px;
-            border-radius:8px;
-            font-size:11px;
-            font-weight:600;
-          ">
-            ${good.length}
-          </div>
-        </div>
-
-        <div style="max-height:500px;overflow:auto;padding-right:6px">
-          ${good.map(renderCard).join("")}
-        </div>
-
-      </div>
-
+  <!-- 🎛️ WHAT IF -->
+  <div style="
+    margin-bottom:12px;
+    padding:10px;
+    background:#0b1220;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.06);
+  ">
+    <div style="font-size:12px;color:#9ca3af;margin-bottom:6px">
+      🎛️ What-if Simulation (Pricing Impact)
     </div>
-  `;
+
+    <input type="range" min="0" max="30" value="10" id="priceSlider" style="width:100%">
+
+    <div style="font-size:12px;margin-top:6px">
+      Increase Price: <span id="priceValue">10%</span>
+    </div>
+  </div>
+
+<!-- RIGHT COLUMN -->
+<div style="
+  flex:1;
+  min-width:320px;
+  height:calc(100vh - 160px);
+  display:flex;
+">
+
+  <!-- MAIN -->
+  <div style="
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    gap:12px;
+    width:100%;
+  ">
+
+    <!-- 🔴 HIGH -->
+<div style="
+  background:#020617;
+  border:1px solid rgba(239,68,68,0.25);
+  border-radius:18px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+        <div style="color:#ef4444;font-weight:700;">🔴 High Risk</div>
+        <div id="high-count" style="background:#ef444422;color:#ef4444;padding:4px 10px;border-radius:999px;font-size:11px;">
+          0
+        </div>
+      </div>
+
+      <div id="high-risk-list" style="
+        flex:1;
+        min-height:0;
+        overflow-y:auto;
+        padding-right:6px;
+      "></div>
+    </div>
+
+    <!-- 🟡 MEDIUM -->
+<div style="
+  background:#020617;
+  border:1px solid rgba(250,204,21,0.25);
+  border-radius:18px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+        <div style="color:#facc15;font-weight:700;">🟡 Needs Fix</div>
+        <div id="medium-count" style="background:#facc1522;color:#facc15;padding:4px 10px;border-radius:999px;font-size:11px;">
+          0
+        </div>
+      </div>
+
+      <div id="needs-fix-list" style="
+        flex:1;
+        min-height:0;
+        overflow-y:auto;
+        padding-right:6px;
+      "></div>
+    </div>
+
+    <!-- 🟢 GOOD -->
+<div style="
+  background:#020617;
+  border:1px solid rgba(34,197,94,0.25);
+  border-radius:18px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+        <div style="color:#22c55e;font-weight:700;">🟢 Good</div>
+        <div id="good-count" style="background:#22c55e22;color:#22c55e;padding:4px 10px;border-radius:999px;font-size:11px;">
+          0
+        </div>
+      </div>
+
+      <div id="good-list" style="
+        flex:1;
+        min-height:0;
+        overflow-y:auto;
+        padding-right:6px;
+      "></div>
+    </div>
+
+  </div>
+`;
+let highCount = 0;
+let mediumCount = 0;
+let goodCount = 0;
+
+DATA.performance_decisions.forEach(d => {
+
+  const ai = d.ai; // 🔥 مهم
+  const card = renderCard(d);
+
+if ((ai.severity || 0) >= 70) {
+  document.getElementById("high-risk-list").innerHTML += card;
+  highCount++;
+}
+else if (ai.severity >= 30) {
+  document.getElementById("needs-fix-list").innerHTML += card;
+  mediumCount++;
+}
+else {
+  document.getElementById("good-list").innerHTML += card;
+  goodCount++;
+}
+
+});
+
+// update counts
+document.getElementById("high-count").innerText = highCount;
+document.getElementById("medium-count").innerText = mediumCount;
+document.getElementById("good-count").innerText = goodCount;
 }
 
 }
-function getFilteredData() {
+function getFilteredData(ignoreFilters = []) {
+  const ignore = new Set(Array.isArray(ignoreFilters) ? ignoreFilters : [ignoreFilters]);
+
   return RAW_DATA.filter(r => {
 
     return (
-      (filters.month === "ALL" || r._month === filters.month) &&
-      (filters.dept === "ALL" || r["Deparment"] === filters.dept) &&
-      (filters.name === "ALL" || (r["A Name"] || "").trim() === filters.name) &&
-      (filters.hotel === "ALL" || r["Hotel"] === filters.hotel) &&
-      (filters.expense === "ALL" || r["Accounting Guidance"] === filters.expense) &&
+      (ignore.has("month") || filters.month === "ALL" || r._month === filters.month) &&
+      (ignore.has("dept") || filters.dept === "ALL" || (r["Deparment"] || "").trim() === filters.dept) &&
+      (ignore.has("name") || filters.name === "ALL" || (r["A Name"] || "").trim() === filters.name) &&
+      (ignore.has("hotel") || filters.hotel === "ALL" || (r["Hotel"] || "").trim() === filters.hotel) &&
+      (ignore.has("expense") || filters.expense === "ALL" || (r["Accounting Guidance"] || "").trim() === filters.expense) &&
 
       (
+        ignore.has("performance") ||
         ACTIVE_PERFORMANCES.length === 0 ||
         ACTIVE_PERFORMANCES.includes(
           (r["Performance"] || "").toUpperCase().trim()
@@ -3466,7 +5400,8 @@ if (visaEl) {
 // ===== LAST MONTH =====
 const lastEl = document.getElementById("rev-jan-income");
 if (lastEl) {
-  lastEl.innerText = "$" + (DATA.rev_last_month_value_usd || 0).toLocaleString();
+  const value = currency === "USD" ? DATA.rev_last_month_value_usd : DATA.rev_last_month_value_egp;
+  lastEl.innerText = prefix + (value || 0).toLocaleString();
 }
 
 const lastSubEl = document.getElementById("rev-jan-income-egp");
@@ -3477,7 +5412,8 @@ if (lastSubEl) {
 // ===== PREVIOUS MONTH =====
 const prevEl = document.getElementById("rev-feb-income");
 if (prevEl) {
-  prevEl.innerText = "$" + (DATA.rev_prev_month_value_usd || 0).toLocaleString();
+  const value = currency === "USD" ? DATA.rev_prev_month_value_usd : DATA.rev_prev_month_value_egp;
+  prevEl.innerText = prefix + (value || 0).toLocaleString();
 }
 
 const prevSubEl = document.getElementById("rev-feb-income-egp");
@@ -3494,7 +5430,7 @@ if (prevLabel) prevLabel.innerText = DATA.rev_prev_month_name;
 
 // Total
 const totalEl = document.getElementById("rev-total-income");
-if (totalEl) totalEl.innerText = "$" + (DATA.rev_total || 0).toLocaleString();
+if (totalEl) totalEl.innerText = prefix + (DATA.rev_total || 0).toLocaleString();
 
 // Top Hotel
 const topHotelEl = document.getElementById("rev-top-hotel");
@@ -3504,7 +5440,7 @@ if (topHotelEl) {
 
 const hotelValEl = document.getElementById("rev-top-hotel-value");
 if (hotelValEl) {
-  hotelValEl.innerText = "$" + (DATA.rev_top_value || 0).toLocaleString();
+  hotelValEl.innerText = prefix + (DATA.rev_top_value || 0).toLocaleString();
 }
 // ===== INSIGHTS =====
 
@@ -4331,6 +6267,7 @@ function rebuildDashboard() {
   Object.values(charts).forEach(c => {
     try { c.destroy(); } catch(e){}
   });
+  charts = {};
 
   buildCharts();
 }
@@ -4354,6 +6291,20 @@ const PALETTE = Object.values(COLORS);
 let currency = 'USD';
 let activeMonth = 'all';
 let charts = {};
+
+function moneyPrefix() {
+  return currency === "USD" ? "$" : "EGP ";
+}
+
+function moneyAxisLabel(value) {
+  const n = Number(value) || 0;
+  return moneyPrefix() + (n / 1000).toFixed(0) + "k";
+}
+
+function getChartContext(id) {
+  const canvas = document.getElementById(id);
+  return canvas ? canvas.getContext("2d") : null;
+}
 
 // ============================================================
 // CHART DEFAULTS
@@ -4423,47 +6374,56 @@ function buildCharts() {
   Object.values(charts).forEach(c => {
     try { c.destroy(); } catch(e){}
   });
+  charts = {};
+  const monthlyIncome = currency === "USD" ? DATA.monthly_income_usd : DATA.monthly_income_egp;
+  const monthlyExp = currency === "USD" ? DATA.monthly_exp_usd : DATA.monthly_exp_egp;
+  const monthlyNet = currency === "USD" ? DATA.monthly_net_usd : DATA.monthly_net_egp;
+  const deptIncome = currency === "USD" ? DATA.dept_income : DATA.dept_income_egp;
+  const deptExp = currency === "USD" ? DATA.dept_exp : DATA.dept_exp_egp;
   // ----- Monthly Bar -----
 
-  const mCtx = document.getElementById('chartMonthly').getContext('2d');
+  const mCtx = getChartContext('chartMonthly');
+  if (!mCtx) return;
   charts.monthly = new Chart(mCtx, {
     type: 'bar',
     data: {
       labels: DATA.monthly_labels,
       datasets: [
-        { label: 'Income', data: DATA.monthly_income_usd, backgroundColor: 'rgba(88,166,255,0.75)', borderRadius: 6, borderSkipped: false },
-        { label: 'Expenses', data: DATA.monthly_exp_usd, backgroundColor: 'rgba(247,129,102,0.75)', borderRadius: 6, borderSkipped: false },
-        { label: 'Net', data: DATA.monthly_net_usd, backgroundColor: d => d.raw >= 0 ? 'rgba(63,185,80,0.8)' : 'rgba(247,129,102,0.8)', borderRadius: 6, borderSkipped: false, type: 'bar' }
+        { label: 'Income', data: monthlyIncome, backgroundColor: 'rgba(88,166,255,0.75)', borderRadius: 6, borderSkipped: false },
+        { label: 'Expenses', data: monthlyExp, backgroundColor: 'rgba(247,129,102,0.75)', borderRadius: 6, borderSkipped: false },
+        { label: 'Net', data: monthlyNet, backgroundColor: d => d.raw >= 0 ? 'rgba(63,185,80,0.8)' : 'rgba(247,129,102,0.8)', borderRadius: 6, borderSkipped: false, type: 'bar' }
       ]
     },
     options: baseOptions({
       scales: {
         x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e' } },
-        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + (v/1000).toFixed(0)+'k' } }
+        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: moneyAxisLabel } }
       }
     })
   });
 
   // ----- Dept Donut -----
-  const dCtx = document.getElementById('chartDeptDonut').getContext('2d');
+  const dCtx = getChartContext('chartDeptDonut');
+  if (!dCtx) return;
   charts.deptDonut = new Chart(dCtx, {
     type: 'doughnut',
     data: {
       labels: DATA.dept_labels,
-      datasets: [{ data: DATA.dept_income, backgroundColor: PALETTE.slice(0,5), borderWidth: 2, borderColor: '#161b22', hoverOffset: 8 }]
+      datasets: [{ data: deptIncome, backgroundColor: PALETTE.slice(0,5), borderWidth: 2, borderColor: '#161b22', hoverOffset: 8 }]
     },
     options: {
       ...baseOptions(),
       cutout: '62%',
       plugins: {
         ...baseOptions().plugins,
-        tooltip: { ...baseOptions().plugins.tooltip, callbacks: { label: ctx => ` ${ctx.label}: $${ctx.raw.toLocaleString()}` } }
+        tooltip: { ...baseOptions().plugins.tooltip, callbacks: { label: ctx => ` ${ctx.label}: ${moneyPrefix()}${ctx.raw.toLocaleString()}` } }
       }
     }
   });
 
   // ----- Daily Trend (line) -----
-  const dlyCtx = document.getElementById('chartDaily').getContext('2d');
+  const dlyCtx = getChartContext('chartDaily');
+  if (!dlyCtx) return;
   charts.daily = new Chart(dlyCtx, {
     type: 'line',
     data: {
@@ -4511,8 +6471,8 @@ function buildCharts() {
       interaction: { mode: 'index', intersect: false },
       scales: {
         x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', maxTicksLimit: 16 } },
-        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + (v/1000).toFixed(1)+'k' }, position: 'left' },
-        y2: { grid: { drawOnChartArea: false }, ticks: { color: COLORS.green, callback: v => '$' + (v/1000).toFixed(0)+'k' }, position: 'right' }
+        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => moneyPrefix() + (v/1000).toFixed(1)+'k' }, position: 'left' },
+        y2: { grid: { drawOnChartArea: false }, ticks: { color: COLORS.green, callback: moneyAxisLabel }, position: 'right' }
       }
     }
   });
@@ -4522,10 +6482,8 @@ if (charts.perf) charts.perf.destroy();
 
 if (DATA.perf_labels && DATA.perf_labels.length > 0) {
 
-  const canvas = document.getElementById('chartPerfBar');
-  if (!canvas) return;
-
-  const pCtx = canvas.getContext('2d');
+  const pCtx = getChartContext('chartPerfBar');
+  if (!pCtx) return;
 
 charts.perf = new Chart(pCtx, {
   type: 'bar',
@@ -4549,7 +6507,7 @@ charts.perf = new Chart(pCtx, {
         ticks: {
           color: '#8b949e',
           callback: v =>
-            (currency === "USD" ? '$' : 'EGP ') +
+            moneyPrefix() +
             (v/1000).toFixed(0) + 'k'
         }
       },
@@ -4606,7 +6564,8 @@ const top5 = deptData
 const labels = top5.map(d => d.name);
 const values = top5.map(d => d.value);
 // 🔴 لحد هنا 👆👆👆
-  const rsCtx = document.getElementById('chartRevShare').getContext('2d');
+  const rsCtx = getChartContext('chartRevShare');
+  if (!rsCtx) return;
   charts.revShare = new Chart(rsCtx, {
   type: 'bar',
   data: {
@@ -4627,7 +6586,7 @@ const values = top5.map(d => d.value);
           label: ctx => {
             const total = values.reduce((a,b)=>a+b,0);
             const percent = total ? ((ctx.raw/total)*100).toFixed(1) : 0;
-            return ` ${ctx.label}: ${currency === "USD" ? "$" : "EGP "}${ctx.raw.toLocaleString()} (${percent}%)`;
+            return ` ${ctx.label}: ${moneyPrefix()}${ctx.raw.toLocaleString()} (${percent}%)`;
           }
         }
       }
@@ -4636,12 +6595,13 @@ const values = top5.map(d => d.value);
 });
 
   // ----- Hotel Bar (Revenue tab) -----
-  const hbCtx = document.getElementById('chartHotelBar').getContext('2d');
+  const hbCtx = getChartContext('chartHotelBar');
+  if (!hbCtx) return;
   charts.hotelBar = new Chart(hbCtx, {
     type: 'bar',
     data: {
       labels: DATA.hotel_labels,
-      datasets: [{ label: 'Income (USD)', data: currency === "USD"
+      datasets: [{ label: currency === "USD" ? 'Income (USD)' : 'Income (EGP)', data: currency === "USD"
   ? DATA.hotel_income_usd
   : DATA.hotel_income_egp, backgroundColor: PALETTE.map(c => c + 'cc'), borderRadius: 6, borderSkipped: false }]
     },
@@ -4650,7 +6610,7 @@ const values = top5.map(d => d.value);
       plugins: { ...baseOptions().plugins, legend: { display: false } },
       scales: {
         x: { grid: { display: false }, ticks: { color: '#e6edf3', font: { size: 11 }, maxRotation: 30 } },
-        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + (v/1000).toFixed(0)+'k' } }
+        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: moneyAxisLabel } }
       }
     }
   });
@@ -4659,10 +6619,8 @@ const values = top5.map(d => d.value);
 // ----- Expense Category -----
 if (DATA.exp_cat_labels && DATA.exp_cat_labels.length > 0) {
 
-  const ecCanvas = document.getElementById('chartExpCat');
-  if (!ecCanvas) return;
-
-const ecCtx = ecCanvas.getContext('2d');
+const ecCtx = getChartContext('chartExpCat');
+if (!ecCtx) return;
 
 if (charts.expCat) charts.expCat.destroy();
 
@@ -4708,7 +6666,7 @@ charts.expCat = new Chart(ecCtx, {
             const value = ctx.raw;
             const percent = total ? ((value/total)*100).toFixed(1) : 0;
 
-            return ` ${ctx.label}: ${currency === "USD" ? "$" : "EGP "}${value.toLocaleString()} (${percent}%)`;
+            return ` ${ctx.label}: ${moneyPrefix()}${value.toLocaleString()} (${percent}%)`;
           }
         }
       },
@@ -4730,47 +6688,50 @@ setTimeout(() => {
 }, 300);
 }
   // ----- Monthly Expense -----
-  const meCtx = document.getElementById('chartMonthlyExp').getContext('2d');
+  const meCtx = getChartContext('chartMonthlyExp');
+  if (!meCtx) return;
   charts.monthlyExp = new Chart(meCtx, {
     type: 'bar',
     data: {
       labels: DATA.monthly_labels,
       datasets: [
-        { label: 'Expenses USD', data: DATA.monthly_exp_usd, backgroundColor: 'rgba(247,129,102,0.8)', borderRadius: 6, yAxisID: 'y', borderSkipped: false },
-        { label: 'Income USD', data: DATA.monthly_income_usd, backgroundColor: 'rgba(88,166,255,0.6)', borderRadius: 6, yAxisID: 'y', borderSkipped: false }
+        { label: currency === "USD" ? 'Expenses USD' : 'Expenses EGP', data: monthlyExp, backgroundColor: 'rgba(247,129,102,0.8)', borderRadius: 6, yAxisID: 'y', borderSkipped: false },
+        { label: currency === "USD" ? 'Income USD' : 'Income EGP', data: monthlyIncome, backgroundColor: 'rgba(88,166,255,0.6)', borderRadius: 6, yAxisID: 'y', borderSkipped: false }
       ]
     },
     options: {
       ...baseOptions(),
       scales: {
         x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e' } },
-        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + (v/1000).toFixed(0)+'k' } }
+        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: moneyAxisLabel } }
       }
     }
   });
 
   // ----- Dept Compare -----
-  const dcCtx = document.getElementById('chartDeptCompare').getContext('2d');
+  const dcCtx = getChartContext('chartDeptCompare');
+  if (!dcCtx) return;
   charts.deptCompare = new Chart(dcCtx, {
     type: 'bar',
     data: {
       labels: DATA.dept_labels,
       datasets: [
-        { label: 'Income', data: DATA.dept_income, backgroundColor: 'rgba(88,166,255,0.8)', borderRadius: 6, borderSkipped: false },
-        { label: 'Expenses', data: DATA.dept_exp, backgroundColor: 'rgba(247,129,102,0.8)', borderRadius: 6, borderSkipped: false }
+        { label: 'Income', data: deptIncome, backgroundColor: 'rgba(88,166,255,0.8)', borderRadius: 6, borderSkipped: false },
+        { label: 'Expenses', data: deptExp, backgroundColor: 'rgba(247,129,102,0.8)', borderRadius: 6, borderSkipped: false }
       ]
     },
     options: {
       ...baseOptions(),
       scales: {
         x: { grid: { display: false }, ticks: { color: '#e6edf3' } },
-        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + (v/1000).toFixed(0)+'k' } }
+        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: moneyAxisLabel } }
       }
     }
   });
 
   // ----- Dept Transactions -----
-  const dtCtx = document.getElementById('chartDeptTxn').getContext('2d');
+  const dtCtx = getChartContext('chartDeptTxn');
+  if (!dtCtx) return;
   charts.deptTxn = new Chart(dtCtx, {
     type: 'bar',
     data: {
@@ -4788,9 +6749,10 @@ setTimeout(() => {
   });
 
   // ----- Dept P&L Ratio -----
-  const dpCtx = document.getElementById('chartDeptPL').getContext('2d');
+  const dpCtx = getChartContext('chartDeptPL');
+  if (!dpCtx) return;
   const margins = DATA.dept_labels.map((_, i) => {
-    const inc = DATA.dept_income[i], exp = DATA.dept_exp[i];
+    const inc = deptIncome[i], exp = deptExp[i];
     return inc > 0 ? ((inc - exp) / inc * 100).toFixed(1) : 0;
   });
   charts.deptPL = new Chart(dpCtx, {
@@ -4798,8 +6760,8 @@ setTimeout(() => {
     data: {
       labels: DATA.dept_labels,
       datasets: [
-        { label: 'Income $k', data: DATA.dept_income.map(v => (v/1000).toFixed(1)), borderColor: COLORS.blue, backgroundColor: 'rgba(88,166,255,0.1)', pointBackgroundColor: COLORS.blue, borderWidth: 2 },
-        { label: 'Expense $k', data: DATA.dept_exp.map(v => (v/1000).toFixed(1)), borderColor: COLORS.red, backgroundColor: 'rgba(247,129,102,0.1)', pointBackgroundColor: COLORS.red, borderWidth: 2 }
+        { label: currency === "USD" ? 'Income $k' : 'Income EGP k', data: deptIncome.map(v => (v/1000).toFixed(1)), borderColor: COLORS.blue, backgroundColor: 'rgba(88,166,255,0.1)', pointBackgroundColor: COLORS.blue, borderWidth: 2 },
+        { label: currency === "USD" ? 'Expense $k' : 'Expense EGP k', data: deptExp.map(v => (v/1000).toFixed(1)), borderColor: COLORS.red, backgroundColor: 'rgba(247,129,102,0.1)', pointBackgroundColor: COLORS.red, borderWidth: 2 }
       ]
     },
     options: {
@@ -4809,7 +6771,8 @@ setTimeout(() => {
   });
 
   // ----- New: Jan vs Feb Comparison Chart -----
-  const dcmCtx = document.getElementById('chartDeptCompareMonths').getContext('2d');
+  const dcmCtx = getChartContext('chartDeptCompareMonths');
+  if (!dcmCtx) return;
   charts.deptCompareMonths = new Chart(dcmCtx, {
     type: 'bar',
     data: {
@@ -4817,7 +6780,7 @@ setTimeout(() => {
 datasets: [
   { 
     label: 'Selected Income', 
-    data: DATA.dept_income || [], 
+    data: deptIncome || [], 
     backgroundColor: 'rgba(88,166,255,0.8)',
     borderRadius: 4 
   }
@@ -4827,7 +6790,7 @@ datasets: [
       ...baseOptions(),
       scales: {
         x: { grid: { display: false }, ticks: { color: '#e6edf3' } },
-        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + (v/1000).toFixed(0)+'k' } }
+        y: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: moneyAxisLabel } }
       },
       plugins: {
         ...baseOptions().plugins,
@@ -4847,12 +6810,13 @@ datasets: [
   });
 
   // ----- Hotel Rank -----
-  const hrCtx = document.getElementById('chartHotelRank').getContext('2d');
+  const hrCtx = getChartContext('chartHotelRank');
+  if (!hrCtx) return;
   charts.hotelRank = new Chart(hrCtx, {
     type: 'bar',
     data: {
       labels: DATA.hotel_labels,
-      datasets: [{ label: 'Income (USD)', data: currency === "USD"
+      datasets: [{ label: currency === "USD" ? 'Income (USD)' : 'Income (EGP)', data: currency === "USD"
   ? DATA.hotel_income_usd
   : DATA.hotel_income_egp, backgroundColor: PALETTE.map(c => c + 'cc'), borderRadius: 5, borderSkipped: false }]
     },
@@ -4860,14 +6824,15 @@ datasets: [
       ...baseOptions({ indexAxis: 'y' }),
       plugins: { ...baseOptions().plugins, legend: { display: false } },
       scales: {
-        x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: v => '$' + (v/1000).toFixed(0)+'k' } },
+        x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e', callback: moneyAxisLabel } },
         y: { grid: { display: false }, ticks: { color: '#e6edf3', font: { size: 11 } } }
       }
     }
   });
 
   // ----- Hotel Pie -----
-  const hpCtx = document.getElementById('chartHotelPie').getContext('2d');
+  const hpCtx = getChartContext('chartHotelPie');
+  if (!hpCtx) return;
   charts.hotelPie = new Chart(hpCtx, {
     type: 'pie',
     data: {
@@ -4980,10 +6945,9 @@ function setCurrency(cur) {
   filters.currency = cur;
 
   document.querySelectorAll('.currency-btn').forEach(b => {
-    b.classList.remove('active');
+    const isActive = b.textContent.toUpperCase().includes(cur);
+    b.classList.toggle('active', isActive);
   });
-
-  event.target.classList.add('active');
 
   refreshDashboard(); // 🔥
 }
@@ -5279,33 +7243,14 @@ function selectMonth(selected) {
   // 🔒 يقفل الـ dropdown بعد الاختيار
   document.getElementById("dropdownList").style.display = "none";
 
-  // 🔄 تحديث الداشبورد
-  const filtered = getFilteredData();
-
-  buildData(filtered);
-  updateKPIs();
-  updateDeptKPIs();
-  updateExpenseKPIs();
-  rebuildDashboard();
-  buildExpenseTable();
-  populateAdvancedFilters();
+  refreshDashboard();
 }
 function applyCustomFilter(selected) {
 
   // خزّن الشهر في الفلاتر
   filters.month = selected;
 
-  // استخدم النظام الموحد
-  const filtered = getFilteredData();
-
-  buildData(filtered);
-  rebuildDashboard(); // 🔥 بدل buildCharts
-
-  updateKPIs();
-  updateExpenseKPIs();
-  updateDeptKPIs();
-  buildExpenseTable();
-  populateAdvancedFilters(); // 🔥 مهم جدًا
+  refreshDashboard();
 }
 function filterMonths() {
 
@@ -5319,8 +7264,6 @@ function filterMonths() {
 }
 function populateAdvancedFilters() {
 
-  const data = getFilteredData();
-
 const unique = (arr, key) => {
   return [
     "ALL",
@@ -5330,65 +7273,72 @@ const unique = (arr, key) => {
   ];
 };
 
-  fillSelect("filterDept", unique(data, "Deparment"), filters.dept);
-  fillSelect("filterName", unique(data, "A Name"), filters.name);
-  fillSelect("filterHotel", unique(data, "Hotel"), filters.hotel);
-  fillSelect("filterExpense", unique(data, "Accounting Guidance"), filters.expense);
+  filters.dept = fillSelect("filterDept", unique(getFilteredData("dept"), "Deparment"), filters.dept);
+  filters.name = fillSelect("filterName", unique(getFilteredData("name"), "A Name"), filters.name);
+  filters.hotel = fillSelect("filterHotel", unique(getFilteredData("hotel"), "Hotel"), filters.hotel);
+  filters.expense = fillSelect("filterExpense", unique(getFilteredData("expense"), "Accounting Guidance"), filters.expense);
 }
 
 function fillSelect(id, options, selected) {
   const el = document.getElementById(id);
+  if (!el) return "ALL";
 
-  el.innerHTML = options.map(o => {
-    const val = (o || "").trim();
-    return `<option value="${val}" ${val===selected ? "selected":""}>${val}</option>`;
-  }).join("");
+  const cleanOptions = [...new Set(options.map(o => (o || "").trim()).filter(Boolean))];
+  const safeSelected = cleanOptions.includes(selected) ? selected : "ALL";
+  const fragment = document.createDocumentFragment();
+
+  el.innerHTML = "";
+
+  cleanOptions.forEach(o => {
+    const opt = document.createElement("option");
+    opt.value = o;
+    opt.textContent = o;
+    opt.selected = o === safeSelected;
+    fragment.appendChild(opt);
+  });
+
+  el.appendChild(fragment);
+  el.value = safeSelected;
+  return safeSelected;
 }
 function applyAdvancedFilter() {
 
-  filters.dept = document.getElementById("filterDept").value;
-  filters.name = document.getElementById("filterName").value.trim();
-  filters.hotel = document.getElementById("filterHotel").value;
-  filters.expense = document.getElementById("filterExpense").value;
+  filters.dept = (document.getElementById("filterDept")?.value || "ALL").trim();
+  filters.name = (document.getElementById("filterName")?.value || "ALL").trim();
+  filters.hotel = (document.getElementById("filterHotel")?.value || "ALL").trim();
+  filters.expense = (document.getElementById("filterExpense")?.value || "ALL").trim();
 
-  const filtered = getFilteredData();
-
-  // Update dashboard
-  buildData(filtered);
-  buildCharts();
-  updateKPIs();
-  updateExpenseKPIs();
-  updateDeptKPIs();
-  rebuildDashboard();
-  buildExpenseTable();
-  populateAdvancedFilters();
+  refreshDashboard();
 }
 function filterPerformance(name) {
 
-  const index = ACTIVE_PERFORMANCES.indexOf(name);
+  const perfName = (name || "").toUpperCase().trim();
+  if (!perfName) return;
+
+  const index = ACTIVE_PERFORMANCES.indexOf(perfName);
 
   if (index > -1) {
     // remove
     ACTIVE_PERFORMANCES.splice(index, 1);
   } else {
     // add
-    ACTIVE_PERFORMANCES.push(name);
+    ACTIVE_PERFORMANCES.push(perfName);
   }
 
-  applyAdvancedFilter();
+  refreshDashboard();
 
   console.log("Multi Filter:", ACTIVE_PERFORMANCES);
 }
 function filterHotel(name) {
 
-  filters.hotel = name;
+  filters.hotel = (name || "").trim() || "ALL";
 
   const hotelSelect = document.getElementById("filterHotel");
   if (hotelSelect) {
-    hotelSelect.value = name;
+    hotelSelect.value = filters.hotel;
   }
 
-  applyAdvancedFilter();
+  refreshDashboard();
 
   console.log("Filtered Hotel:", name);
 }
@@ -5431,22 +7381,618 @@ function resetAllFilters() {
   const dropdown = document.getElementById("dropdownList");
   if (dropdown) dropdown.style.display = "none";
 
-  // 🔥 rebuild dashboard
-  const filtered = getFilteredData();
-
-  buildData(filtered);
-  rebuildDashboard();
-
-  updateKPIs();
-  updateDeptKPIs();
-  updateExpenseKPIs();
-
-  buildExpenseTable();
-  populateAdvancedFilters();
+  refreshDashboard();
 
   console.log("🔥 All Filters Reset");
 }
+let PRICE_FACTOR = 1.1;
 
+document.addEventListener("DOMContentLoaded", () => {
+
+  const slider = document.getElementById("priceSlider");
+  const val = document.getElementById("priceValue");
+
+  if (slider) {
+
+    slider.oninput = () => {
+      val.innerText = slider.value + "%";
+
+      PRICE_FACTOR = 1 + (slider.value / 100);
+
+      // 🔥 إعادة بناء الداشبورد بالـ AI الجديد
+      const filtered = getFilteredData();
+      buildData(filtered);
+      updateKPIs();
+      updateDeptKPIs();
+      updateExpenseKPIs();
+      rebuildDashboard();
+      buildExpenseTable();
+    };
+
+  }
+
+});
+function buildCoverPage() {
+  return `
+    <div class="report-page" style="
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      height:100vh;
+    ">
+
+      <div style="font-size:32px;font-weight:800;">
+        Performance Report
+      </div>
+
+      <div style="margin-top:10px;font-size:16px;color:#555;">
+        Art Studio Dashboard
+      </div>
+
+      <div style="margin-top:20px;font-size:14px;color:#777;">
+        ${new Date().toLocaleDateString()}
+      </div>
+
+      <div style="
+        margin-top:80px;
+        font-size:12px;
+        color:#999;
+      ">
+        Confidential – Internal Use Only
+      </div>
+
+    </div>
+  `;
+}
+function buildSummary(data) {
+
+  const total = data.length;
+  const top = data.filter(d => d.level === "INVEST").length;
+  const risk = data.filter(d => d.level === "STOP").length;
+  const optimize = data.filter(d => d.level === "OPTIMIZE").length;
+
+  return `
+    <div class="report-page">
+
+      <h2 style="margin-bottom:20px;">📊 Executive Summary</h2>
+
+      <div style="display:flex;gap:20px;">
+
+        <div style="flex:1;padding:15px;border:1px solid #ddd;border-radius:10px;">
+          <div style="font-size:12px;color:#666;">Total</div>
+          <div style="font-size:22px;font-weight:700;">${total}</div>
+        </div>
+
+        <div style="flex:1;padding:15px;border:1px solid #22c55e;border-radius:10px;">
+          <div style="font-size:12px;color:#22c55e;">Top</div>
+          <div style="font-size:22px;font-weight:700;">${top}</div>
+        </div>
+
+        <div style="flex:1;padding:15px;border:1px solid #ef4444;border-radius:10px;">
+          <div style="font-size:12px;color:#ef4444;">High Risk</div>
+          <div style="font-size:22px;font-weight:700;">${risk}</div>
+        </div>
+
+        <div style="flex:1;padding:15px;border:1px solid #facc15;border-radius:10px;">
+          <div style="font-size:12px;color:#facc15;">Optimize</div>
+          <div style="font-size:22px;font-weight:700;">${optimize}</div>
+        </div>
+
+      </div>
+
+    </div>
+  `;
+}
+function buildAISummary(data) {
+
+  const total = data.length;
+
+  const top = data.filter(d => d.level === "INVEST");
+  const risk = data.filter(d => d.level === "STOP");
+  const optimize = data.filter(d => d.level === "OPTIMIZE");
+
+  const topName = top.sort((a,b)=>b.margin - a.margin)[0]?.name || "-";
+  const worstName = data.sort((a,b)=>a.margin - b.margin)[0]?.name || "-";
+
+  return `
+    <div class="report-page">
+
+      <h2 style="margin-bottom:20px;">🧠 AI Business Summary</h2>
+
+      <div style="font-size:14px;line-height:1.8;">
+
+        📊 Out of <b>${total}</b> performances:
+
+        <br><br>
+
+        🟢 <b>${top.length}</b> are strong performers → scalable revenue drivers  
+        🔴 <b>${risk.length}</b> are loss-making → immediate attention needed  
+        🟡 <b>${optimize.length}</b> require pricing or cost optimization  
+
+        <br><br>
+
+        🚀 Top performer: <b>${topName}</b>  
+        ⚠️ Weakest performer: <b>${worstName}</b>
+
+        <br><br>
+
+        💡 <b>Key Insight:</b>  
+        ${
+          risk.length > 0
+            ? "Some items are generating losses — pricing strategy must be adjusted."
+            : "No critical losses detected — focus on scaling high-margin items."
+        }
+
+      </div>
+
+    </div>
+  `;
+} 
+function renderCard(ai, mode = "dashboard") {
+
+  ai = validatePerformanceCardData(ai);
+  const isPDF = mode === "pdf";
+
+  // 💣 SAFE FUNCTION (أهم حاجة)
+  const safe = (v, d = 0) => finiteNumber(v, d);
+
+  const containerStyle = `
+    border-left:6px solid ${ai.levelColor || "#ccc"};
+    background:#ffffff;
+    padding:${isPDF ? "12px" : "10px"};
+    border-radius:10px;
+    font-family:Arial;
+    font-size:${isPDF ? "11px" : "12px"};
+    line-height:1.5;
+    box-shadow:${isPDF ? "none" : "0 2px 6px rgba(0,0,0,0.05)"};
+    page-break-inside: avoid;
+  `;
+
+  return `
+    <div style="${containerStyle}">
+
+      <!-- 🔴 HEADER -->
+      <div style="font-weight:700;color:#ef4444;font-size:12px;">
+        🔴 High Risk
+      </div>
+      <div style="margin-top:6px;font-size:12px;line-height:1.6;font-weight:600;">
+
+  USD ${signedMoney(ai.operationalProfit)}
+
+  <br>FX ${signedMoney(ai.fxContribution)} → Net ${signedMoney(ai.totalProfit)}
+
+  <br>USD ${(safe(ai.currencyMix?.usd) * 100).toFixed(0)}%
+  | EGP ${(safe(ai.currencyMix?.egp) * 100).toFixed(0)}%
+
+  <br>${ai.insightNote || ""}
+
+  ${ai.hasPricingData && ai.pricePerUnit < ai.breakEvenPrice
+    ? `<br><b>💡 Increase price by $${safe(ai.breakEvenPrice - ai.pricePerUnit).toFixed(2)}</b>`
+    : ""}
+
+</div>
+
+
+      <!-- NAME + PROFIT -->
+      <div style="display:flex;justify-content:space-between;margin-top:6px;">
+        <div style="font-weight:700;font-size:13px;">
+          ${ai.name || "-"}
+        </div>
+        <div style="font-weight:700;color:${safe(ai.operationalProfit) < 0 ? '#ef4444' : '#16a34a'};">
+          ${signedMoney(ai.operationalProfit)}
+        </div>
+      </div>
+
+      <!-- PEOPLE -->
+      <div style="margin-top:4px;font-size:11px;color:#555;">
+        👤 ${ai.people || ""}
+      </div>
+
+      <!-- FX WARNING -->
+      ${ai.fxStatusFinal ? `
+        <div style="margin-top:6px;color:#b91c1c;font-weight:700;">
+          💱 ${ai.fxStatusFinal}
+        </div>
+      ` : ""}
+
+      <!-- LEVEL -->
+      <div style="margin-top:6px;font-weight:700;">
+        🧠 ${ai.level || ""}
+      </div>
+
+      <!-- ACTION -->
+      <div style="color:#555;font-size:11px;">
+        💡 ${ai.action || ""}
+      </div>
+
+      <!-- PRICING -->
+      <div style="margin-top:6px;color:#1d4ed8;font-weight:600;">
+        💰 $${safe(ai.pricePerUnit).toFixed(2)} 
+        | 💸 $${safe(ai.costPerUnit).toFixed(2)} 
+        | 📊 ${(safe(ai.margin) * 100).toFixed(1)}%
+      </div>
+
+      <!-- DETAILS -->
+      <div style="margin-top:8px;border-top:1px solid #eee;padding-top:8px;">
+
+        ▶ Details
+
+        <div style="margin-top:6px;line-height:1.6;">
+
+          📦 ${safe(ai.volume)} units
+
+          <br>💰 Selling at $${safe(ai.pricePerUnit).toFixed(2)}
+          <br>💸 Cost is $${safe(ai.costPerUnit).toFixed(2)}
+
+          <br>📊 Margin: ${(safe(ai.margin) * 100).toFixed(1)}%
+
+          ${ai.hasPricingData ? `<br>🎯 Break-even: $${safe(ai.breakEvenPrice).toFixed(2)}
+          <br>🚀 Target: $${safe(ai.targetPrice).toFixed(2)}` : ""}
+
+          <hr style="margin:6px 0;border:none;border-top:1px solid #eee;">
+
+          USD<br>
+          ${signedMoney(ai.operationalProfit)}
+
+          <br>EGP<br>
+          ${signedMoney(ai.fxContribution)}
+
+          <br>NET<br>
+          ${signedMoney(ai.totalProfit)}
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+}
+function buildSections(data) {
+
+  return `
+    <div class="report-page">
+
+      <div class="report-section">
+        <h2>🚀 Top Performers</h2>
+        <div class="grid">
+          ${data
+            .filter(d => d.level === "INVEST")
+            .map(d => renderCard(d, "pdf"))
+            .join("")}
+        </div>
+      </div>
+
+      <div class="report-section">
+        <h2>🔴 High Risk</h2>
+        <div class="grid">
+          ${data
+            .filter(d => d.level === "STOP")
+            .map(d => renderCard(d, "pdf"))
+            .join("")}
+        </div>
+      </div>
+
+      <div class="report-section">
+        <h2>🟡 Needs Optimization</h2>
+        <div class="grid">
+          ${data
+            .filter(d => d.level === "OPTIMIZE")
+            .map(d => renderCard(d, "pdf"))
+            .join("")}
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
+function buildPDFReport(data) {
+
+  const container = document.getElementById("pdf-report");
+
+  container.innerHTML =
+    buildCoverPage() +
+    buildSummary(data) +
+    buildAISummary(data) +
+    buildSections(data);
+}
+function downloadPDF() {
+
+  const element = document.getElementById("pdf-report");
+
+const enriched = DATA.performance_decisions.map(d => ({
+  ...d,
+  ...analyzePerformanceClean(d)
+}));
+
+buildPDFReport(enriched);
+
+  // ✅ فعل PDF mode
+  document.body.classList.add("pdf-mode");
+
+  element.style.display = "block";
+
+html2pdf()
+  .set({
+    margin: 10,
+    filename: 'Executive_Report.pdf',
+    html2canvas: { 
+      scale: 2,   // جودة عالية
+      useCORS: true
+    },
+    jsPDF: { 
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'portrait' 
+    }
+  })
+  .from(element)
+  .save();
+}
+function createCoverPage() {
+  return `
+    <div style="
+      width: 100%;
+      height: 297mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: white;
+      color: #000;
+      page-break-after: always;
+      padding: 40px;
+      box-sizing: border-box;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    ">
+      <h1 style="
+        font-size: 42px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #000;
+        text-align: center;
+      ">
+        Art Studio Report
+      </h1>
+      <p style="
+        font-size: 18px;
+        color: #666;
+        text-align: center;
+        margin-bottom: 30px;
+      ">
+        Performance Analysis Dashboard
+      </p>
+      <hr style="
+        border: none;
+        border-top: 1px solid #ddd;
+        width: 200px;
+        margin: 20px 0;
+      " />
+      <p style="
+        font-size: 14px;
+        color: #999;
+        text-align: center;
+        margin-top: 20px;
+      ">
+        ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+      </p>
+    </div>
+  `;
+}
+
+function createSummary(cards) {
+
+  let total = 0;
+  let profits = [];
+  
+  cards.forEach(card => {
+    const matches = card.innerText.match(/\$([-\d,]+)/g);
+
+    if (matches) {
+      matches.forEach(m => {
+        const val = parseFloat(m.replace("$","").replace(/,/g,""));
+        total += val;
+        profits.push(val);
+      });
+    }
+  });
+
+  const best = Math.max(...profits, 0);
+  const worst = Math.min(...profits, 0);
+  const average = profits.length > 0 ? profits.reduce((a,b) => a+b, 0) / profits.length : 0;
+
+  return `
+    <div style="
+      width: 100%;
+      height: 297mm;
+      padding: 40px;
+      background: white;
+      color: #000;
+      page-break-after: always;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    ">
+      <div>
+        <h2 style="
+          font-size: 32px;
+          font-weight: 700;
+          margin-bottom: 30px;
+          color: #000;
+          border-bottom: 2px solid #e5e7eb;
+          padding-bottom: 15px;
+        ">Executive Summary</h2>
+        
+        <div style="margin-bottom: 24px;">
+          <p style="
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+          ">Total Performance</p>
+          <p style="
+            font-size: 28px;
+            font-weight: 700;
+            color: ${total >= 0 ? '#22c55e' : '#ef4444'};
+            margin: 0;
+          ">$${Math.abs(total).toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
+          <div>
+            <p style="
+              font-size: 12px;
+              color: #999;
+              margin-bottom: 8px;
+            ">Best Performance</p>
+            <p style="
+              font-size: 22px;
+              font-weight: 600;
+              color: #22c55e;
+              margin: 0;
+            ">$${Math.abs(best).toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
+          </div>
+          
+          <div>
+            <p style="
+              font-size: 12px;
+              color: #999;
+              margin-bottom: 8px;
+            ">Worst Performance</p>
+            <p style="
+              font-size: 22px;
+              font-weight: 600;
+              color: #ef4444;
+              margin: 0;
+            ">$${Math.abs(worst).toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 30px;">
+          <p style="
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+          ">Average Performance</p>
+          <p style="
+            font-size: 22px;
+            font-weight: 600;
+            color: ${average >= 0 ? '#3b82f6' : '#f97316'};
+            margin: 0;
+          ">$${Math.abs(average).toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
+        </div>
+
+        <div style="margin-top: 30px;">
+          <p style="
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+          ">Total Units Analyzed</p>
+          <p style="
+            font-size: 22px;
+            font-weight: 600;
+            color: #000;
+            margin: 0;
+          ">${cards.length}</p>
+        </div>
+      </div>
+
+      <div style="
+        border-top: 1px solid #e5e7eb;
+        padding-top: 20px;
+        text-align: center;
+        color: #999;
+        font-size: 12px;
+      ">
+        <p>Report generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      </div>
+    </div>
+  `;
+}
+
+function printReport() {
+
+  const source = document.getElementById("decision-engine");
+  const target = document.getElementById("report-container");
+
+  const cards = Array.from(source.children);
+
+  cards.sort((a, b) => {
+    const getValue = el => {
+      const match = el.innerText.match(/\$([-\d,]+)/);
+      return match ? parseFloat(match[1].replace(/,/g,"")) : 0;
+    };
+    return getValue(b) - getValue(a);
+  });
+
+  target.innerHTML = "";
+
+  // cover
+  target.innerHTML += createCoverPage();
+
+  // summary
+  target.innerHTML += createSummary(cards);
+
+  // grid - MATCH SCREEN LAYOUT
+  const wrapper = document.createElement("div");
+  wrapper.className = "report-grid";
+  wrapper.style.display = "grid";
+  wrapper.style.gridTemplateColumns = "repeat(auto-fit, minmax(240px, 1fr))";
+  wrapper.style.gap = "14px";
+  wrapper.style.padding = "0";
+  wrapper.style.width = "100%";
+  wrapper.style.backgroundColor = "white";
+  wrapper.style.margin = "0";
+
+  cards.forEach((card, index) => {
+
+    const clone = card.cloneNode(true);
+    
+    // MINIMAL styling - let CSS handle print layout
+    clone.style.pageBreakInside = "avoid";
+    clone.style.breakInside = "avoid";
+
+    // Remove inline background gradients
+    if (clone.getAttribute('style') && clone.getAttribute('style').includes('linear-gradient')) {
+      clone.style.background = "white";
+    }
+
+    if (index === 0) {
+      clone.style.borderWidth = "2px"; // BEST - highlight with green
+      clone.style.borderColor = "#22c55e";
+    }
+
+    if (index === cards.length - 1) {
+      clone.style.borderWidth = "2px"; // WORST - highlight with red
+      clone.style.borderColor = "#ef4444";
+    }
+
+    wrapper.appendChild(clone);
+  });
+
+  target.appendChild(wrapper);
+
+  // Use html2pdf with print-optimized settings
+  html2pdf().set({
+    margin: [10, 10, 10, 10],
+    filename: 'ArtStudio_Report.pdf',
+    html2canvas: { 
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff'
+    },
+    jsPDF: { 
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'portrait',
+      compress: true
+    }
+  }).from(target).save();
+}
 // INIT
 // ============================================================
 window.addEventListener('DOMContentLoaded', loadDashboardData);
