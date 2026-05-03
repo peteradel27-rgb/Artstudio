@@ -255,10 +255,58 @@ body {
   width: 0%;
   transition: width 1s ease;
 }
-.kpi-card {
-  min-height: 380px;
+/* ===== INSIGHTS SECTION LAYOUT ===== */
+.ins-section {
+  margin-bottom: 28px;
 }
-.loss-card {
+.ins-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.ins-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.ins-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.ins-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.ins-grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+/* override the forced min-height so small cards (health gauge) don't balloon */
+.ins-section .kpi-card {
+  min-height: 0;
+}
+@media (max-width: 1200px) {
+  .ins-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .ins-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .ins-grid-4, .ins-grid-3, .ins-grid-2 { grid-template-columns: 1fr; }
+}
+/* Loss Analysis full-width override */
+.ins-loss-wrap .loss-card {
+  grid-column: unset;
+
   grid-column: span 4;
   padding: 18px;
   border-radius: 16px;
@@ -1296,97 +1344,154 @@ body {
 
 <div id="tab-insights" class="tab-panel">
 
-  <!-- ===== FIRST ROW ===== -->
-  <div class="kpi-grid">
+  <!-- ═══════════════════════════════════════════════
+       1. 🏆 OVERVIEW
+  ═══════════════════════════════════════════════ -->
+  <div class="ins-section">
+    <div class="ins-section-label">🏆 Overview</div>
+    <div class="ins-grid-4">
 
-    <div class="kpi-card">
-      <div class="kpi-label">🏨 Top Hotel</div>
-      <div class="kpi-value" id="insight-top-hotel"></div>
+      <div class="kpi-card">
+        <div class="kpi-label">🎭 Top Performance</div>
+        <div class="kpi-value" id="insight-top-performance"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">🏨 Top Hotel</div>
+        <div class="kpi-value" id="insight-top-hotel"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">📈 Top Profit</div>
+        <div class="kpi-value" id="insight-top-profit"></div>
+      </div>
+
+      <div class="kpi-card" style="display:flex;align-items:center;justify-content:center;">
+        <div style="width:100%;">
+          <div class="kpi-label" style="margin-bottom:6px;">❤️ Health Score</div>
+          <div id="insight-health"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       2. 💰 PRICING INSIGHTS
+  ═══════════════════════════════════════════════ -->
+  <div class="ins-section">
+    <div class="ins-section-label">💰 Pricing Insights</div>
+    <div class="ins-grid-2">
+
+      <div class="kpi-card">
+        <div class="kpi-label">💰 Best Prices</div>
+        <div id="insight-best-price"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">💸 Cheapest Prices</div>
+        <div id="insight-cheapest-price"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       3. ⚠️ RISK & LOSS
+  ═══════════════════════════════════════════════ -->
+  <div class="ins-section">
+    <div class="ins-section-label">⚠️ Risk &amp; Loss</div>
+
+    <!-- Loss Analysis full-width -->
+    <div class="ins-loss-wrap" style="margin-bottom:16px;">
+      <div class="kpi-card loss-card">
+        <div class="loss-header">📉 Loss Analysis</div>
+        <div id="loss-analysis" class="loss-content"></div>
+      </div>
     </div>
 
-    <div class="kpi-card">
-      <div class="kpi-label">🎭 Top Performance</div>
-      <div class="kpi-value" id="insight-top-performance"></div>
+    <!-- Action Needed below -->
+    <div class="ins-grid-1">
+      <div class="kpi-card">
+        <div class="kpi-label">⚠️ Action Needed</div>
+        <div id="insight-action"></div>
+      </div>
     </div>
-    <div class="kpi-card">
-      <div class="kpi-label">📈 Top Profit</div>
-      <div class="kpi-value" id="insight-top-profit"></div>
-    </div>
-    <div class="kpi-card">
-  <div class="kpi-label">❤️ Health Score</div>
-  <div id="insight-health"></div>
-</div>
 
   </div>
 
-  <!-- ===== SECOND ROW ===== -->
-  <div class="kpi-grid" style="margin-top:16px">
-    <div class="kpi-card">
-      <div class="kpi-label">💰 Best Prices</div>
-      <div id="insight-best-price"></div>
+  <!-- ═══════════════════════════════════════════════
+       4. 📊 PERFORMANCE ANALYSIS
+  ═══════════════════════════════════════════════ -->
+  <div class="ins-section">
+    <div class="ins-section-label">📊 Performance Analysis</div>
+    <div class="ins-grid-2" style="margin-bottom:16px;">
+
+      <div class="kpi-card">
+        <div class="kpi-label">📊 Performance Ranking (Top 10)</div>
+        <div id="performance-ranking"></div>
+        <div id="insight-ranking"></div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">👑 Best Performer</div>
+        <div id="insight-best-performer"></div>
+      </div>
+
     </div>
-        <div class="kpi-card">
-  <div class="kpi-label">💸 Cheapest Prices</div>
-  <div id="insight-cheapest-price"></div>
-</div>
-<!-- ⚠️ Action Recommendation -->
-<div class="kpi-card">
-  <div class="kpi-label">⚠️ Action Needed</div>
-  <div id="insight-action"></div>
-</div>
-<div class="kpi-card">
-  <div class="kpi-label">🚀 Opportunity</div>
-  <div id="insight-opportunity"></div>
-</div>
+    <div class="ins-grid-3">
 
-<!-- 🧠 AI Recommendation -->
-<div class="kpi-card">
-  <div class="kpi-label">🧠 Smart Recommendation</div>
-  <div id="insight-recommendation"></div>
-</div>
+      <div class="kpi-card">
+        <div class="kpi-label">📊 Average Profit</div>
+        <div id="insight-avg-profit"></div>
+      </div>
 
-<div class="kpi-card loss-card">
-  <div class="loss-header">
-    📉 Loss Analysis
+      <div class="kpi-card" style="grid-column: span 2;">
+        <div class="kpi-label">📈 Best Profit per Department</div>
+        <div id="insight-dept-profit"></div>
+      </div>
+
+    </div>
+    <div class="ins-grid-1" style="margin-top:16px;">
+      <div class="kpi-card">
+        <div class="kpi-label">📉 Profit Margin per Department</div>
+        <div id="profit-margin"></div>
+      </div>
+    </div>
   </div>
-  <div id="loss-analysis" class="loss-content"></div>
-</div>
 
-<div class="kpi-card" style="grid-column: span 2;">
-  <div class="kpi-label">🧠 Decision Engine</div>
+  <!-- ═══════════════════════════════════════════════
+       5. 🚀 OPPORTUNITIES & AI
+  ═══════════════════════════════════════════════ -->
+  <div class="ins-section">
+    <div class="ins-section-label">🚀 Opportunities &amp; AI</div>
+    <div class="ins-grid-2">
 
-  <div id="decision-engine" class="report-grid"></div>
-</div>
+      <div class="kpi-card">
+        <div class="kpi-label">🚀 Opportunity</div>
+        <div id="insight-opportunity"></div>
+      </div>
 
+      <div class="kpi-card">
+        <div class="kpi-label">🧠 AI Summary</div>
+        <div id="insight-recommendation"></div>
+      </div>
 
-<!-- 👇 ده يتحط لوحده بره -->
-<div id="report-container"></div>
-  <!-- ===== RANKING TABLE ===== -->
-  <div class="card" style="margin-top:16px">
-    <div class="card-title">📊 Performance Ranking</div>
-    <div id="performance-ranking"></div>
-    <div id="insight-ranking"></div>
+    </div>
   </div>
-<div class="card" style="margin-top:16px">
-  <div class="card-title">📈 Best Profit per Department</div>
-  <div id="insight-dept-profit"></div>
-</div>
-<div class="card">
-  <div class="card-title">👑 Best Performer</div>
-  <div id="insight-best-performer"></div>
-</div>
 
-<div class="card">
-  <div class="card-title">📊 Average Profit</div>
-  <div id="insight-avg-profit"></div>
-</div>
+  <!-- ═══════════════════════════════════════════════
+       DECISION ENGINE (standalone — untouched)
+  ═══════════════════════════════════════════════ -->
+  <div class="ins-section">
+    <div class="ins-section-label">🧠 Decision Engine</div>
+    <div class="kpi-card" style="padding:20px;">
+      <div id="decision-engine" class="report-grid"></div>
+    </div>
+  </div>
 
-<div class="card">
-  <div class="card-title">📉 Profit Margin per Dept</div>
-  <div id="profit-margin"></div>
-</div>
-
-</div>
+  <!-- hidden utility containers -->
+  <div id="report-container"></div>
 
 </div><!-- /main -->
 
@@ -1699,145 +1804,297 @@ function valueColor(value) {
 }
 
 function validatePerformanceCardData(d = {}) {
-  const incomeUSD = readFirstNumber(d, ["Income USD", "incomeUSD", "usdRevenue", "totalRevenueUSD"]);
-  const costUSD = readFirstNumber(d, ["Exp.USD", "costUSD", "usdCost", "totalCostUSD"]);
-  const incomeEGP = readFirstNumber(d, ["Income EGP", "incomeEGP", "egpRevenue", "totalRevenueEGP"]);
-  const costEGP = readFirstNumber(d, ["Exp.EGP", "costEGP", "egpCost", "totalCostEGP"]);
+  // ── 1. RAW INPUTS ─────────────────────────────────────────────
+  const incomeUSD = readFirstNumber(d, ["Income USD","incomeUSD","usdRevenue","totalRevenueUSD"]);
+  const costUSD   = readFirstNumber(d, ["Exp.USD","costUSD","usdCost","totalCostUSD"]);
+  const incomeEGP = readFirstNumber(d, ["Income EGP","incomeEGP","egpRevenue","totalRevenueEGP"]);
+  const costEGP   = readFirstNumber(d, ["Exp.EGP","costEGP","egpCost","totalCostEGP"]);
+  const volume    = Math.max(0, readFirstNumber(d, ["volume","count","units","transactions"]));
 
-  const hasUSDBreakdown = incomeUSD !== 0 || costUSD !== 0;
-  const hasEGPBreakdown = incomeEGP !== 0 || costEGP !== 0;
-  const profitUSD = hasUSDBreakdown ? incomeUSD - costUSD : readFirstNumber(d, ["profitUSD", "usdProfit", "operationalProfit"]);
-  const profitEGP = hasEGPBreakdown ? incomeEGP - costEGP : readFirstNumber(d, ["profitEGP", "egpProfit"]);
-  const fxContribution = profitEGP / EGP_RATE;
-  const combinedProfitUSD = profitUSD + fxContribution;
-  const volume = Math.max(0, readFirstNumber(d, ["volume", "count", "units"]));
-  const hasPricingData = volume > 0 && (incomeUSD > 0 || costUSD > 0);
-  const pricePerUnit = hasPricingData ? incomeUSD / volume : 0;
-  const costPerUnit = hasPricingData ? costUSD / volume : 0;
-  const margin = incomeUSD > 0 ? profitUSD / incomeUSD : 0;
-  const breakEvenPrice = hasPricingData ? costPerUnit : 0;
-  const targetPrice = hasPricingData ? costPerUnit * 1.2 : 0;
-  const priceGap = hasPricingData ? Math.max(0, breakEvenPrice - pricePerUnit) : 0;
+  // ── 2. CORE METRICS ───────────────────────────────────────────
+  const profitUSD        = incomeUSD - costUSD;
+  const profitEGP        = incomeEGP - costEGP;
+  const fxContribution   = profitEGP / EGP_RATE;
+  const netProfit        = profitUSD + fxContribution;           // combined in USD
+  const margin           = incomeUSD > 0 ? profitUSD / incomeUSD : 0;
+  const hasPricingData   = volume > 0 && (incomeUSD > 0 || costUSD > 0);
+  const avgPrice         = hasPricingData ? incomeUSD / volume : 0;
+  const avgCost          = hasPricingData ? costUSD  / volume : 0;
+  const breakEvenPrice   = avgCost;
+  const targetPrice      = avgCost * 1.2;
+  const priceGap         = Math.max(0, breakEvenPrice - avgPrice);
 
-  const totalRevenueUSD = Math.abs(incomeUSD) + Math.abs(incomeEGP / EGP_RATE);
-  const usdShare = totalRevenueUSD > 0 ? Math.abs(incomeUSD) / totalRevenueUSD : 0;
-  const egpShare = totalRevenueUSD > 0 ? Math.abs(incomeEGP / EGP_RATE) / totalRevenueUSD : 0;
-  const fxImbalance = totalRevenueUSD > 0 ? Math.abs(usdShare - egpShare) : 0;
+  // Currency mix (share of total absolute revenue contribution)
+  const totalAbs   = Math.abs(incomeUSD) + Math.abs(incomeEGP / EGP_RATE);
+  const usdShare   = totalAbs > 0 ? Math.abs(incomeUSD) / totalAbs : 0;
+  const egpShare   = totalAbs > 0 ? Math.abs(incomeEGP / EGP_RATE) / totalAbs : 0;
+  const fxImbalance = Math.abs(usdShare - egpShare);
 
-  let fxStatusFinal = "FX neutral";
-  let fxInsight = "FX neutral";
-  let profitSource = "Operational";
+  // USD vs FX contribution ratio
+  const absUSD = Math.abs(profitUSD);
+  const absFX  = Math.abs(fxContribution);
+  const totalContrib = absUSD + absFX;
+  const usdRatio = totalContrib > 0 ? absUSD / totalContrib : 0;
+  const egpRatio = totalContrib > 0 ? absFX  / totalContrib : 0;
 
-  if (Math.abs(fxContribution) < 0.01) {
-    fxStatusFinal = "FX neutral";
-    fxInsight = "FX neutral";
-  } else if (fxContribution > 0 && profitUSD < 0) {
-    fxStatusFinal = "FX helping, USD loss";
-    fxInsight = "FX is helping but USD is losing";
-    profitSource = "FX Helping Loss";
-  } else if (fxContribution > 0) {
-    fxStatusFinal = "FX helping profit";
-    fxInsight = "FX helping profit";
-    profitSource = "Operational + FX";
-  } else {
-    fxStatusFinal = "FX hurting profit";
-    fxInsight = "FX reducing profit";
-    profitSource = "FX Drag";
-  }
+  // ── 3. AI CASE DETECTION ─────────────────────────────────────
+  //  Case 1: Both negative — fundamental loss
+  //  Case 2: USD loss but FX saves it — fragile
+  //  Case 3: Strong margin (>30%) — scale candidate
+  //  Case 4: Stable margin (10–30%)
+  //  Case 5: Thin margin (<10%) but profitable
+  //  Case 6: FX hurting an otherwise good USD operation
 
-  let level = "KEEP";
-  let levelLabel = "🟢 KEEP";
-  let levelColor = "#22c55e";
-  let action = "Stable performance";
-  let priority = "Low";
-  let explanation = "Stable operational performance.";
+  let aiCase, level, levelLabel, levelColor, priority, severity;
+  let decision, riskLevel;
 
-  if (combinedProfitUSD < 0) {
-    level = "STOP";
+  if (profitUSD <= 0 && netProfit <= 0) {
+    aiCase     = 1;
+    level      = "STOP";
     levelLabel = "🔴 STOP";
     levelColor = "#ef4444";
-    action = "Review or stop";
-    priority = "High";
-    explanation = profitUSD < 0 && fxContribution > 0
-      ? "USD loss is only partly offset by EGP/FX contribution."
-      : "Net loss after USD and EGP impact.";
-  } else if (profitUSD < 0 && fxContribution > 0) {
-    level = "OPTIMIZE";
-    levelLabel = "🟡 OPTIMIZE";
+    priority   = "High";
+    severity   = 85;
+    decision   = "🔴 STOP";
+    riskLevel  = "High";
+  } else if (profitUSD < 0 && netProfit > 0) {
+    aiCase     = 2;
+    level      = "FIX";
+    levelLabel = "🟡 FIX";
     levelColor = "#facc15";
-    action = "Fix currency/pricing";
-    priority = "Medium";
-    explanation = "EGP/FX is helping, but USD operations are losing.";
-  } else if (incomeUSD > 0 && margin < 0.2) {
-    level = "OPTIMIZE";
-    levelLabel = "🟡 OPTIMIZE";
-    levelColor = "#facc15";
-    action = "Improve margin";
-    priority = "Medium";
-    explanation = "Low margin. Review pricing or cost.";
-  } else if (combinedProfitUSD > 0) {
-    level = "INVEST";
+    priority   = "Medium";
+    severity   = 60;
+    decision   = "🟡 FIX";
+    riskLevel  = "Medium";
+  } else if (profitUSD > 0 && margin > 0.3) {
+    aiCase     = 3;
+    level      = "INVEST";
     levelLabel = "🚀 INVEST";
     levelColor = "#22c55e";
-    action = "Scale performance";
-    explanation = "Profitable after USD and EGP impact.";
+    priority   = "Low";
+    severity   = 8;
+    decision   = "🟢 INVEST";
+    riskLevel  = "Low";
+  } else if (margin >= 0.1 && margin <= 0.3) {
+    aiCase     = 4;
+    level      = "KEEP";
+    levelLabel = "🟢 KEEP";
+    levelColor = "#22c55e";
+    priority   = "Low";
+    severity   = 20;
+    decision   = "🟢 KEEP";
+    riskLevel  = "Low";
+  } else if (profitUSD > 0 && margin < 0.1) {
+    aiCase     = 5;
+    level      = "OPTIMIZE";
+    levelLabel = "🟡 OPTIMIZE";
+    levelColor = "#facc15";
+    priority   = "Medium";
+    severity   = 50;
+    decision   = "🟡 FIX";
+    riskLevel  = "Medium";
+  } else if (profitUSD > 0 && fxContribution < 0) {
+    aiCase     = 6;
+    level      = "KEEP";
+    levelLabel = "🟢 KEEP";
+    levelColor = "#22c55e";
+    priority   = "Low";
+    severity   = 25;
+    decision   = "🟢 KEEP";
+    riskLevel  = "Low";
+  } else {
+    aiCase     = 4;
+    level      = "KEEP";
+    levelLabel = "🟢 KEEP";
+    levelColor = "#22c55e";
+    priority   = "Low";
+    severity   = 15;
+    decision   = "🟢 KEEP";
+    riskLevel  = "Low";
   }
 
-  const severity = priority === "High" ? 80 : priority === "Medium" ? 45 : 10;
+  // ── 4. FX STATUS ─────────────────────────────────────────────
+  let fxStatusFinal, fxInsight, profitSource;
+  const fxAbs = Math.abs(fxContribution);
+
+  if (fxAbs < 1) {
+    fxStatusFinal = "FX neutral";
+    fxInsight     = "";
+    profitSource  = "Operational";
+  } else if (fxContribution > 0 && profitUSD < 0) {
+    fxStatusFinal = "FX masking USD loss";
+    fxInsight     = "FX is helping but USD is losing";
+    profitSource  = "FX Saving Loss";
+  } else if (fxContribution > 0 && profitUSD >= 0) {
+    fxStatusFinal = "FX boosting profit";
+    fxInsight     = "FX adds to strong USD base";
+    profitSource  = "Operational + FX";
+  } else if (fxContribution < 0 && profitUSD > 0) {
+    fxStatusFinal = "FX dragging on profits";
+    fxInsight     = "FX reducing USD gains";
+    profitSource  = "FX Drag";
+  } else {
+    fxStatusFinal = "FX hurting operations";
+    fxInsight     = "Both USD and EGP negative";
+    profitSource  = "Double Loss";
+  }
+
+  // ── 5. HUMAN-STYLE INSIGHT GENERATOR ─────────────────────────
+  const name   = d.name || "";
+  const mPct   = (margin * 100).toFixed(1);
+  const profFmt = Math.abs(Math.round(profitUSD)).toLocaleString();
+  const incomeFmt = Math.round(incomeUSD).toLocaleString();
+
+  let smartInsight = "";
+  let recommendation = "";
+  let aiComment = "";
+
+  switch (aiCase) {
+    case 1:
+      smartInsight   = `Net loss of $${profFmt} — not viable at current pricing`;
+      recommendation = hasPricingData
+        ? `Restructure: raise price to at least $${breakEvenPrice.toFixed(2)} or cut costs by ${Math.abs(Math.round(profitUSD)).toLocaleString()}`
+        : "STOP or fundamentally reprice — operations are loss-making in both currencies";
+      aiComment = fxContribution > 0
+        ? `EGP side is contributing positively (${signedMoney(fxContribution)} FX), but it isn't enough to cover the USD shortfall. The core operation is bleeding cash. Without a price increase or structural cost reduction, this continues to destroy value.`
+        : `This is a clean double loss — USD and EGP both negative. No currency tailwind to soften the blow. Immediate intervention required: either reprice, restructure costs, or discontinue.`;
+      break;
+
+    case 2:
+      smartInsight   = `USD losing $${profFmt}, but EGP is masking it — fragile position`;
+      recommendation = hasPricingData
+        ? `Fix USD side: increase price by $${priceGap.toFixed(2)} to reach break-even. Don't rely on EGP to cover structural losses.`
+        : "Fix the USD operation independently — EGP cover is unreliable long-term";
+      aiComment = `The FX tailwind is doing the heavy lifting here, turning a losing USD operation into a net-positive outcome. That's a risky dependency — EGP rates shift, and this card flips negative immediately. The priority is to fix the USD business on its own terms, not to rely on currency translation to rescue it.`;
+      break;
+
+    case 3:
+      smartInsight   = `${mPct}% margin on $${incomeFmt} revenue — strong unit economics`;
+      recommendation = `Scale volume. At this margin level, adding more bookings compounds returns. Prioritize replicate conditions.`;
+      aiComment = `Solid margins with healthy revenue confirm this isn't a one-off. The pricing discipline is working — costs are contained relative to income. This is the type of operation you want more of. Increase volume, protect the pricing floor, and consider using this as the benchmark for other offerings.`;
+      break;
+
+    case 4:
+      smartInsight   = `Stable at ${mPct}% margin — room to optimize without restructuring`;
+      recommendation = hasPricingData
+        ? (avgPrice > breakEvenPrice
+            ? `Push price from $${avgPrice.toFixed(2)} toward $${targetPrice.toFixed(2)} to reach 20%+ margin`
+            : `Increase price by $${priceGap.toFixed(2)} to cross break-even, then target $${targetPrice.toFixed(2)}`)
+        : "Sustain performance and explore incremental price improvement";
+      aiComment = `Margins are in the safe zone but not exceptional. This operation covers its costs with a modest buffer — reliable, but not compounding. A targeted price nudge of 10–15% could push this into strong territory without disrupting demand. Focus on cost efficiency before scaling.`;
+      break;
+
+    case 5:
+      smartInsight   = `Profitable but thin — ${mPct}% margin signals pricing or cost pressure`;
+      recommendation = hasPricingData
+        ? `Increase price to $${targetPrice.toFixed(2)} (20% above cost). Current $${avgPrice.toFixed(2)} leaves too little buffer.`
+        : "Revenue exists but margin is fragile — audit cost structure immediately";
+      aiComment = `The operation is profitable, but barely. A thin margin like ${mPct}% means any cost increase or pricing pressure pushes this into loss territory. The break-even point is uncomfortably close to the actual price. Pricing power needs to improve — even a modest increase per unit dramatically changes the margin profile.`;
+      break;
+
+    case 6:
+      smartInsight   = `USD profitable at ${mPct}% margin, FX acting as a headwind`;
+      recommendation = `Maintain USD pricing discipline. Consider EGP cost renegotiation to reduce FX drag.`;
+      aiComment = `The underlying USD operation is sound — the margin is real and costs are controlled. The FX drag from EGP-side costs is the only friction point. If EGP-denominated costs can be reduced or locked in, this becomes a very clean, scalable operation.`;
+      break;
+
+    default:
+      smartInsight   = `Margin ${mPct}% — stable performance`;
+      recommendation = "Continue current approach and monitor";
+      aiComment      = "Performance is within expected range. No immediate action required.";
+  }
+
+  // ── 6. QUALITY SCORE ─────────────────────────────────────────
   const qualityScore = Math.max(0, Math.min(100, 100 - severity));
 
+  // ── 7. RETURN FULL OUTPUT ─────────────────────────────────────
   return {
     ...d,
-    incomeUSD,
-    costUSD,
-    incomeEGP,
-    costEGP,
-    profitUSD,
-    profitEGP,
+    // Raw financials
+    incomeUSD, costUSD, incomeEGP, costEGP,
+    profitUSD, profitEGP,
     usdProfit: profitUSD,
     egpProfit: profitEGP,
     operationalProfit: profitUSD,
     fxContribution,
-    fxNet: combinedProfitUSD,
-    combinedProfitUSD,
-    totalProfit: combinedProfitUSD,
-    expectedTotal: combinedProfitUSD,
+    fxNet: netProfit,
+    combinedProfitUSD: netProfit,
+    totalProfit: netProfit,
+    expectedTotal: netProfit,
+
+    // Pricing
+    volume, hasPricingData,
+    pricePerUnit: avgPrice, avgPrice,
+    costPerUnit: avgCost, avgCost,
+    breakEvenPrice, targetPrice, priceGap,
+
+    // Margin
     margin,
-    volume,
-    pricePerUnit,
-    costPerUnit,
-    breakEvenPrice,
-    targetPrice,
-    priceGap,
-    hasPricingData,
+
+    // Currency mix
     currencyMix: { usd: usdShare, egp: egpShare },
     fxImbalance,
-    fxStatusFinal,
-    fxInsight,
-    profitSource,
-    level,
-    levelLabel,
-    levelColor,
-    action,
-    priority,
-    severity,
+    usdRatio, egpRatio,
+
+    // FX narrative
+    fxStatusFinal, fxInsight, profitSource,
+
+    // AI decision
+    aiCase, level, levelLabel, levelColor,
+    decision, riskLevel,
+    priority, severity,
+
+    // Quality
     qualityScore,
     qualityLabel: qualityScore >= 70 ? "Good" : qualityScore >= 40 ? "Risky" : "Weak",
     qualityColor: qualityScore >= 70 ? "#22c55e" : qualityScore >= 40 ? "#facc15" : "#ef4444",
-    explanation,
-    smartInsight: hasPricingData
-      ? (pricePerUnit < breakEvenPrice ? `+$${priceGap.toFixed(2)} → break-even` : `Margin ${(margin * 100).toFixed(1)}% → scale`)
-      : "Pricing data unavailable",
-    insightTitle: combinedProfitUSD >= 0 ? "🟢 Net profitable" : "🔴 Net loss",
-    insightColor: combinedProfitUSD >= 0 ? "#22c55e" : "#ef4444",
+
+    // Human-style text
+    smartInsight,
+    recommendation,
+    aiComment,
+    action: recommendation.split(".")[0],  // short form for badge
+
+    // Legacy aliases (keep backward-compat)
+    insightTitle: netProfit >= 0 ? "🟢 Net profitable" : "🔴 Net loss",
+    insightColor: netProfit >= 0 ? "#22c55e" : "#ef4444",
     insightNote: `${signedMoney(profitUSD)} USD / ${signedMoney(fxContribution)} FX impact`,
+    explanation: aiComment,
     cardBg: level === "STOP"
       ? "linear-gradient(145deg,#2b0a0a,#450a0a)"
-      : level === "OPTIMIZE"
+      : level === "FIX" || level === "OPTIMIZE"
         ? "linear-gradient(145deg,#2a1f05,#422006)"
         : "linear-gradient(145deg,#022c22,#065f46)",
-    cardBorder: level === "STOP" ? "#ef4444" : level === "OPTIMIZE" ? "#facc15" : "#10b981",
-    glow: level === "STOP" ? "0 0 12px #ef444433" : "0 0 12px #22c55e33"
+    cardBorder: level === "STOP" ? "#ef4444"
+      : (level === "FIX" || level === "OPTIMIZE") ? "#facc15" : "#10b981",
+    glow: level === "STOP" ? "0 0 12px #ef444433" : "0 0 12px #22c55e33",
+
+    // Output shape matching spec
+    title: level === "STOP" || level === "FIX"
+      ? (level === "STOP" ? "🔴 High Risk" : "🟡 Needs Fix")
+      : "🟢 Good",
+    usd: profitUSD,
+    egp: profitEGP,
+    fx_message: fxInsight,
+    insight: smartInsight,
+    details: {
+      units: volume,
+      avgPrice: +avgPrice.toFixed(2),
+      avgCost:  +avgCost.toFixed(2),
+      margin:   +margin.toFixed(3),
+      breakEven: +breakEvenPrice.toFixed(2),
+      target:    +targetPrice.toFixed(2)
+    },
+    breakdown: {
+      usd:  +profitUSD.toFixed(2),
+      fx:   +fxContribution.toFixed(2),
+      net:  +netProfit.toFixed(2)
+    },
+    mix: {
+      usd_percent: +(usdRatio * 100).toFixed(1),
+      egp_percent: +(egpRatio * 100).toFixed(1)
+    },
+    ai_comment: aiComment
   };
 }
 
@@ -3502,27 +3759,46 @@ console.log("PERFORMANCE PROFIT MAP:", performanceProfit);
 console.log("MIN:", performanceMinPrice);
 console.log("MAX:", performanceMaxPrice);
 
-// ===== INSIGHT TOP PERFORMANCE (BY PROFIT NOT DEPT) =====
-const perfEntriesInsight = Object.entries(performanceProfit).sort((a,b)=>b[1]-a[1]);
+
+// ===== INSIGHT TOP PERFORMANCE (BY NET PROFIT = USD + EGP/FX) =====
+// Sort by netProfit (USD + EGP/50) not just USD
+const perfNetProfit = {};
+const perfTxCount   = {};
+
+Object.keys(performanceProfit).forEach(name => {
+  const usd = performanceProfit[name]     || 0;
+  const egp = performanceProfitEGP[name]  || 0;
+  perfNetProfit[name] = usd + egp / EGP_RATE;
+  perfTxCount[name] = 0; // populated below
+});
+
+rows.forEach(r => {
+  const name = (r["A Name"] || "").trim();
+  if (name) perfTxCount[name] = (perfTxCount[name] || 0) + 1;
+});
+
+const perfEntriesInsight = Object.entries(perfNetProfit).sort((a,b)=>b[1]-a[1]);
 
 if (perfEntriesInsight.length) {
-
-  const [name, usd] = perfEntriesInsight[0];
-
-  DATA.insight_top_perf = name;
-  DATA.insight_top_perf_value = usd;
-  DATA.insight_top_perf_egp = performanceProfitEGP[name] || 0;
-
+  const [name] = perfEntriesInsight[0];
+  DATA.insight_top_perf       = name;
+  DATA.insight_top_perf_value = performanceProfit[name]    || 0;
+  DATA.insight_top_perf_egp   = performanceProfitEGP[name] || 0;
+  DATA.insight_top_perf_net   = perfNetProfit[name]        || 0;
 }
-// ===== TOP HOTEL (PROFIT) =====
-const hotelArr = Object.entries(hotelProfit).sort((a,b)=>b[1]-a[1]);
+// ===== TOP HOTEL (NET PROFIT = USD + EGP/FX) =====
+const hotelNetProfit = {};
+Object.keys(hotelProfit).forEach(h => {
+  hotelNetProfit[h] = (hotelProfit[h] || 0) + (hotelProfitEGP[h] || 0) / EGP_RATE;
+});
+const hotelArr = Object.entries(hotelNetProfit).sort((a,b)=>b[1]-a[1]);
 
 if (hotelArr.length) {
-  const [name, usd] = hotelArr[0];
-
-  DATA.insight_top_hotel = name;
-  DATA.insight_top_hotel_profit = usd;
-  DATA.insight_top_hotel_egp = hotelProfitEGP[name] || 0;
+  const [name] = hotelArr[0];
+  DATA.insight_top_hotel        = name;
+  DATA.insight_top_hotel_profit = hotelProfit[name]    || 0;
+  DATA.insight_top_hotel_egp    = hotelProfitEGP[name] || 0;
+  DATA.insight_top_hotel_net    = hotelNetProfit[name]  || 0;
 }
 
 // ===== ALERTS SYSTEM =====
@@ -3558,58 +3834,73 @@ Object.keys(performanceMinPrice).forEach(perf => {
 // حفظ في DATA
 DATA.insight_alerts = alerts.slice(0, 6);
 console.log("ALERTS:", DATA.insight_alerts);
-// ===== FORCE TOP PROFIT FIX =====
-const perfEntries = Object.entries(performanceProfit);
+// ===== TOP PROFIT (best USD profit — separate ranking) =====
+const perfEntries = Object.entries(performanceProfit).sort((a,b)=> b[1]-a[1]);
 
 if (perfEntries.length > 0) {
-
-  const top = perfEntries.sort((a,b)=> b[1] - a[1])[0];
-
-  DATA.top_profit_name = top[0];
-  DATA.top_profit_value = top[1];
-
-  // 🔥 مهم
-  DATA.insight_top_perf = top[0];
-  DATA.insight_top_perf_value = top[1];
-
+  DATA.top_profit_name  = perfEntries[0][0];
+  DATA.top_profit_value = perfEntries[0][1];
 } else {
-
-  DATA.top_profit_name = "-";
+  DATA.top_profit_name  = "-";
   DATA.top_profit_value = 0;
-
 }
-// ===== TOP PERFORMANCE =====
-DATA.top_profit_name = DATA.insight_top_perf;
-DATA.top_profit_value = DATA.insight_top_perf_value;
-
+// insight_top_perf already set above by netProfit; only fallback if missing
+if (!DATA.insight_top_perf) {
+  DATA.insight_top_perf       = DATA.top_profit_name;
+  DATA.insight_top_perf_value = DATA.top_profit_value;
+  DATA.insight_top_perf_egp   = performanceProfitEGP[DATA.top_profit_name] || 0;
+}
 
 console.log("TOP PROFIT:", DATA.top_profit_name, DATA.top_profit_value);
 
 
-// ===== TOP HOTEL (BY PROFIT) =====
-const hotelEntries = Object.entries(hotelProfit);
-
-if (hotelEntries.length > 0) {
-  const sortedHotel = hotelEntries.sort((a,b)=> b[1]-a[1]);
-
-  DATA.insight_top_hotel = sortedHotel[0][0];
-  DATA.insight_top_hotel_profit = sortedHotel[0][1];
-} else {
-  DATA.insight_top_hotel = "-";
-  DATA.insight_top_hotel_profit = 0;
+// ===== TOP HOTEL (BY PROFIT) — already set above by netProfit; legacy fallback =====
+if (!DATA.insight_top_hotel) {
+  const hotelEntries = Object.entries(hotelProfit).sort((a,b)=> b[1]-a[1]);
+  if (hotelEntries.length > 0) {
+    DATA.insight_top_hotel        = hotelEntries[0][0];
+    DATA.insight_top_hotel_profit = hotelEntries[0][1];
+    DATA.insight_top_hotel_egp    = hotelProfitEGP[hotelEntries[0][0]] || 0;
+  } else {
+    DATA.insight_top_hotel        = "-";
+    DATA.insight_top_hotel_profit = 0;
+  }
 }
 
 
-// ================= BEST / CHEAPEST =================
-DATA.insight_best_prices = Object.entries(performanceMaxPrice)
-  .map(([k,v]) => [k, v.usd, v.egp, v.hotel])
-  .sort((a,b)=> b[1]-a[1])
-  .slice(0,5);
+// ================= BEST / CHEAPEST PRICES (avg price per performer) =================
+{
+  const _priceMap = {};
+  rows.forEach(r => {
+    const perf  = (r["A Name"] || "").trim() || (r["Performance"] || "").trim();
+    const hotel = (r["Hotel"] || "").trim();
+    if (!perf) return;
+    const inc = safeNum(r["Income USD"]);
+    const incEGP = safeNum(r["Income EGP"]);
+    if (inc <= 0) return; // skip zero/invalid rows
+    if (!_priceMap[perf]) _priceMap[perf] = { totalUSD: 0, totalEGP: 0, count: 0, hotel };
+    _priceMap[perf].totalUSD += inc;
+    _priceMap[perf].totalEGP += incEGP;
+    _priceMap[perf].count    += 1;
+  });
 
-DATA.insight_cheapest_prices = Object.entries(performanceMinPrice)
-  .map(([k,v]) => [k, v.usd, v.egp, v.hotel])
-  .sort((a,b)=> a[1]-b[1])
-  .slice(0,5);
+  const _avgPrices = Object.entries(_priceMap)
+    .map(([name, v]) => {
+      const avgUSD = v.count > 0 ? v.totalUSD / v.count : 0;
+      const avgEGP = v.count > 0 ? v.totalEGP / v.count : 0;
+      return [name, avgUSD, avgEGP, v.hotel, v.count];
+    })
+    .filter(p => p[1] > 0);
+
+  DATA.insight_best_prices = [..._avgPrices]
+    .sort((a,b) => b[1] - a[1])
+    .slice(0, 5);
+
+  DATA.insight_cheapest_prices = [..._avgPrices]
+    .filter(p => p[1] > 0)
+    .sort((a,b) => a[1] - b[1])
+    .slice(0, 5);
+}
 
 
 // ================= ALERT =================
@@ -3636,25 +3927,28 @@ DATA.price_comparison = DATA.insight_best_prices.map((b,i)=>{
 }).filter(Boolean);
 
 
-// ================= OPPORTUNITY =================
-const opp = DATA.price_comparison.sort((a,b)=> b.diff-a.diff)[0];
+// ================= OPPORTUNITY (adaptive) =================
+// Compute inline median of netProfits for growth-candidate detection
+const _oppNets = Object.values(perfNetProfit).filter(v => isFinite(v)).sort((a,b) => a-b);
+const _oppMedian = _oppNets.length ? _oppNets[Math.floor(_oppNets.length * 0.5)] : 0;
+const _oppCandidates = Object.entries(perfNetProfit)
+  .filter(([, net]) => net > 0 && net < _oppMedian)
+  .sort((a,b) => b[1]-a[1]);
 
-DATA.best_opportunity = opp
-  ? `${opp.name} → فرصة زيادة ${opp.diff}$`
-  : "-";
+if (_oppCandidates.length > 0) {
+  const [oppName, oppNet] = _oppCandidates[0];
+  DATA.best_opportunity = `${oppName} is profitable (+$${Math.round(oppNet).toLocaleString()} net) but below the portfolio median — strong growth candidate with focused investment.`;
+} else if (DATA.insight_top_perf && DATA.insight_top_perf !== "-") {
+  DATA.best_opportunity = `${DATA.insight_top_perf} is the standout performer. Scaling its volume is the highest-return opportunity in the current dataset.`;
+} else {
+  DATA.best_opportunity = "No clear opportunity signal in the current filtered dataset.";
+}
 
 // 💡 Recommendation
 DATA.price_recommendation = DATA.price_comparison.map(d => {
-
-  if (d.diff > 2000) {
-    return `💡 ${d.name}: فيه فرق كبير (${d.diff}$)`;
-  }
-
-  if (d.min < 500) {
-    return `⚠️ ${d.name}: سعر قليل جدًا`;
-  }
-
-  return `✅ ${d.name}: تسعير متوازن`;
+  if (d.diff > 2000) return `💡 ${d.name}: Large price spread ($${d.diff})`;
+  if (d.min < 500)   return `⚠️ ${d.name}: Price too low — review floor pricing`;
+  return `✅ ${d.name}: Balanced pricing`;
 });
 
 
@@ -3663,44 +3957,63 @@ DATA.price_recommendation = DATA.price_comparison.map(d => {
 
 
 // ===== RECOMMENDATION =====
-DATA.recommendation = 
-  `Focus on ${DATA.insight_top_hotel} — The Highest Revenue Currently`;
+DATA.recommendation = DATA.insight_top_hotel && DATA.insight_top_hotel !== "-"
+  ? `Focus on ${DATA.insight_top_hotel} — highest net-profit hotel in current filter`
+  : "No hotel data available";
 // ===== AI SUGGESTIONS =====
 
 const rec = [];
 
-if (DATA.insight_top_perf_value > 5000) {
-  rec.push(`🔥 ركز على ${DATA.insight_top_perf} — أعلى ربح`);
+if ((DATA.insight_top_perf_net || DATA.insight_top_perf_value || 0) > 5000) {
+  rec.push(`🔥 Focus on ${DATA.insight_top_perf} — highest net profit`);
 }
 
 if (DATA.kpi_expense_ratio > 70) {
-  rec.push(`⚠️ المصاريف عالية (${DATA.kpi_expense_ratio.toFixed(1)}%)`);
+  rec.push(`⚠️ Expenses are high (${DATA.kpi_expense_ratio.toFixed(1)}%)`);
 }
 
 if (DATA.low_price_alert?.length) {
-  rec.push(`💸 في أسعار قليلة محتاجة تعديل`);
+  rec.push(`💸 Some prices need revision — check cheapest prices`);
 }
 
 if (DATA.price_comparison?.length) {
   const maxDiff = Math.max(...DATA.price_comparison.map(d=>d.diff));
   if (maxDiff > 2000) {
-    rec.push(`📊 في فرصة Upsell قوية`);
+    rec.push(`📊 Strong upsell opportunity detected (+$${Math.round(maxDiff).toLocaleString()} price gap)`);
   }
 }
 
 DATA.ai_suggestions = rec;
-// ===== RANKING TABLE =====
+// ===== ADAPTIVE BENCHMARKS (data-driven thresholds) =====
+const _allNetProfits = Object.entries(lossByPerf).map(([,d]) =>
+  (Number(d.profitUSD)||0) + (Number(d.profitEGP)||0) / EGP_RATE
+).filter(isFinite).sort((a,b) => a-b);
+
+const _n = _allNetProfits.length || 1;
+const _sum = _allNetProfits.reduce((s,v) => s+v, 0);
+const _mean = _sum / _n;
+const _variance = _allNetProfits.reduce((s,v) => s + Math.pow(v - _mean, 2), 0) / _n;
+const _stdDev = Math.sqrt(_variance) || 1;
+const _p25 = _allNetProfits[Math.floor(_n * 0.25)] || 0;
+const _p75 = _allNetProfits[Math.floor(_n * 0.75)] || 0;
+const _p10 = _allNetProfits[Math.floor(_n * 0.10)] || 0;
+const _p90 = _allNetProfits[Math.floor(_n * 0.90)] || 0;
+const _median = _allNetProfits[Math.floor(_n * 0.5)] || 0;
+
+DATA.benchmarks = {
+  mean: _mean, median: _median, stdDev: _stdDev,
+  p10: _p10, p25: _p25, p75: _p75, p90: _p90
+};
+
+// ===== RANKING TABLE — sorted by netProfit =====
 DATA.performance_ranking = Object.entries(lossByPerf)
-  .map(([name, d]) => ({
-
-    name,
-    profit: Number(d.profitUSD) || 0,
-    egp: Number(d.profitEGP) || 0,
-
-    status: d.profitUSD > 0 ? "profit" : "loss"
-
-  }))
-  .sort((a,b)=> b.profit - a.profit)
+  .map(([name, d]) => {
+    const profitUSD = Number(d.profitUSD) || 0;
+    const profitEGP = Number(d.profitEGP) || 0;
+    const netProfit = profitUSD + profitEGP / EGP_RATE;
+    return { name, profit: profitUSD, egp: profitEGP, net: netProfit, status: netProfit > 0 ? "profit" : "loss" };
+  })
+  .sort((a,b) => b.net - a.net)
   .slice(0,10);
 // ===== SMART RECOMMENDATION =====
 
@@ -3710,105 +4023,44 @@ const bestProfitValue = DATA.insight_top_perf_value || 0;
 
 // ===== SMART RECOMMENDATION =====
 
-DATA.smart_recommendation = `
-🔥 أفضل فرصة حالياً
+DATA.smart_recommendation = `🔥 Best opportunity: <b>${DATA.insight_top_perf}</b> at <b>${DATA.insight_top_hotel}</b> — Net $${Math.round(DATA.insight_top_perf_net || DATA.insight_top_perf_value || 0).toLocaleString()}`;
+// ===== BEST PROFIT PER DEPARTMENT (by netProfit = USD + EGP/FX) =====
+{
+  const _deptMap = {};
+  rows.forEach(r => {
+    const dept      = (r["Deparment"] || r["Department"] || "").trim();
+    const perf      = (r["Performance"] || "").trim();
+    const performer = (r["A Name"] || "Unknown").trim();
+    if (!dept || !perf) return;
 
-ركز على <b>${DATA.insight_top_perf}</b>
-في <b>${DATA.insight_top_hotel}</b>
+    const incUSD = safeNum(r["Income USD"]);
+    const cosUSD = safeNum(r["Exp.USD"]);
+    const incEGP = safeNum(r["Income EGP"]);
+    const cosEGP = safeNum(r["Exp.EGP"]);
 
-💰 ربح: $${Number(DATA.insight_top_perf_value || 0).toLocaleString()}
-`;
-// ===== BEST PROFIT PER DEPARTMENT =====
+    const pUSD = incUSD - cosUSD;
+    const pEGP = incEGP - cosEGP;
 
-const deptPerfProfit = {};
+    if (!_deptMap[dept]) _deptMap[dept] = {};
+    if (!_deptMap[dept][perf]) _deptMap[dept][perf] = { usd: 0, egp: 0, performer };
 
-rows.forEach(r => {
+    _deptMap[dept][perf].usd += pUSD;
+    _deptMap[dept][perf].egp += pEGP;
+  });
 
-  const dept = (r["Deparment"] || "").trim();
-  const perf = (r["Performance"] || "").trim();
+  const _bestDept = [];
+  Object.entries(_deptMap).forEach(([dept, perfs]) => {
+    // find best performance inside dept by netProfit
+    let bestNet = -Infinity, bestName = "-", bestUSD = 0, bestEGP = 0, bestPerformer = "-";
+    Object.entries(perfs).forEach(([p, v]) => {
+      const net = v.usd + v.egp / EGP_RATE;
+      if (net > bestNet) { bestNet = net; bestName = p; bestUSD = v.usd; bestEGP = v.egp; bestPerformer = v.performer; }
+    });
+    _bestDept.push({ dept, name: bestName, performer: bestPerformer, usd: bestUSD, egp: bestEGP, net: bestNet });
+  });
 
-  const income = r["Income USD"];
-  const cost = r["Exp.USD"];
-
-  const profit = income - cost;
-
-  if (!dept || !perf) return;
-
-  if (!deptPerfProfit[dept]) deptPerfProfit[dept] = {};
-
-const performer = (r["A Name"] || "Unknown").trim();
-
-if (!deptPerfProfit[dept][perf] || profit > deptPerfProfit[dept][perf].profit) {
-  deptPerfProfit[dept][perf] = {
-    profit: profit,
-    performer: performer
-  };
+  DATA.dept_best_profit = _bestDept.sort((a,b) => b.net - a.net);
 }
-
-});
-
-// ===== CUMULATIVE PROFIT PER DEPT =====
-const deptPerfProfitSum = {};
-
-rows.forEach(r => {
-
-  const dept = (r["Deparment"] || "").trim();
-  const perf = (r["Performance"] || "").trim();
-  const performer = (r["A Name"] || "").trim();
-
-  const incomeUSD = safeNum(r["Income USD"]);
-  const costUSD = safeNum(r["Exp.USD"]);
-
-  const incomeEGP = safeNum(r["Income EGP"]);
-  const costEGP = safeNum(r["Exp.EGP"]);
-
-  const profitUSD = incomeUSD - costUSD;
-  const profitEGP = incomeEGP - costEGP;
-
-  if (!dept || !perf) return;
-
-  if (!deptPerfProfitSum[dept]) deptPerfProfitSum[dept] = {};
-  if (!deptPerfProfitSum[dept][perf]) {
-    deptPerfProfitSum[dept][perf] = {
-      usd: 0,
-      egp: 0,
-      performer: performer
-    };
-  }
-
-  deptPerfProfitSum[dept][perf].usd += profitUSD;
-  deptPerfProfitSum[dept][perf].egp += profitEGP;
-
-});
-const bestDept = [];
-
-Object.entries(deptPerfProfitSum).forEach(([dept, perfs]) => {
-
-  let bestName = "-";
-  let bestUSD = 0;
-  let bestEGP = 0;
-  let bestPerformer = "-";
-
-  Object.entries(perfs).forEach(([p,v])=>{
-    if (v.usd > bestUSD) {
-      bestName = p;
-      bestUSD = v.usd;
-      bestEGP = v.egp;
-      bestPerformer = v.performer;
-    }
-  });
-
-  bestDept.push({
-    dept,
-    name: bestName,
-    performer: bestPerformer,
-    usd: bestUSD,
-    egp: bestEGP
-  });
-
-});
-
-DATA.dept_best_profit = bestDept;
 // ===== BEST PERFORMER OVERALL =====
 const performerMap = {};
 
@@ -3863,11 +4115,80 @@ Object.entries(performerMap).forEach(([name, v]) => {
 DATA.best_performer = bestPerformer;
 DATA.best_performer_usd = bestUSD;
 DATA.best_performer_egp = bestEGP;
+
+// ===== BEST PROFIT / BEST MARGIN / BEST STABILITY =====
+// Derived from performerMap: each entry has { usd, egp, count, incomeUSD }
+// We enrich performerMap with income to compute margin and stability
+const performerEnriched = {};
+rows.forEach(r => {
+  const name = (r["A Name"] || "").trim();
+  if (!name) return;
+  if (!performerEnriched[name]) {
+    performerEnriched[name] = { usd: 0, egp: 0, incomeUSD: 0, count: 0 };
+  }
+  const iUSD = safeNum(r["Income USD"]);
+  const eUSD = safeNum(r["Exp.USD"]);
+  const iEGP = safeNum(r["Income EGP"]);
+  const eEGP = safeNum(r["Exp.EGP"]);
+  performerEnriched[name].usd    += (iUSD - eUSD);
+  performerEnriched[name].egp    += (iEGP - eEGP);
+  performerEnriched[name].incomeUSD += iUSD;
+  performerEnriched[name].count  += 1;
+});
+
+let _bpName = "-", _bpUSD = 0, _bpEGP = 0, _bpScore = -Infinity;
+let _bmName = "-", _bmVal  = 0, _bmScore = -Infinity;
+let _bsName = "-", _bsVal  = 0, _bsScore = -Infinity;
+
+Object.entries(performerEnriched).forEach(([name, v]) => {
+  const profitUSD  = v.usd  || 0;
+  const profitEGP  = v.egp  || 0;
+  const incomeUSD  = v.incomeUSD || 0;
+  const count      = v.count || 1;
+
+  // Best Profit → highest combined score: USD + (EGP / FX)
+  const profitScore = profitUSD + (profitEGP / EGP_RATE);
+  if (profitScore > _bpScore) {
+    _bpScore = profitScore;
+    _bpName  = name;
+    _bpUSD   = profitUSD;
+    _bpEGP   = profitEGP;
+  }
+
+  // Best Margin → highest profit margin %
+  const margin = incomeUSD > 0 ? (profitUSD / incomeUSD) * 100 : 0;
+  if (margin > _bmScore) {
+    _bmScore = margin;
+    _bmName  = name;
+    _bmVal   = margin;
+  }
+
+  // Best Stability → highest avg profit per booking (consistency proxy)
+  const avgProfit = count > 0 ? profitUSD / count : 0;
+  if (avgProfit > _bsScore) {
+    _bsScore = avgProfit;
+    _bsName  = name;
+    _bsVal   = avgProfit;
+  }
+});
+
+DATA.best_profit_name      = _bpName  || "-";
+DATA.best_profit_usd       = _bpUSD;
+DATA.best_profit_egp       = _bpEGP;
+DATA.best_margin_name      = _bmName  || "-";
+DATA.best_margin_value     = _bmVal;
+DATA.best_stability_name   = _bsName  || "-";
+DATA.best_stability_value  = _bsVal;
+
 // ===== AVERAGE PROFIT =====
 const totalProfit =
   rows.reduce((s,r)=> s + (safeNum(r["Income USD"]||0) - safeNum(r["Exp.USD"]||0)), 0);
 
-DATA.avg_profit = rows.length ? totalProfit / rows.length : 0;
+// ===== AVERAGE PROFIT (per performer, net) =====
+const _perfCount = Object.keys(perfNetProfit).length || 1;
+const _totalNetAll = Object.values(perfNetProfit).reduce((s,v) => s+v, 0);
+DATA.avg_profit       = _totalNetAll / _perfCount;   // avg net profit per performer
+DATA.avg_profit_label = "Avg Net Profit / Performer";
 // ===== PROFIT MARGIN PER DEPT (USD + EGP) =====
 const deptMargin = {};
 
@@ -3933,36 +4254,36 @@ const avgMarginUSD =
 const totalScore =
   DATA.dept_margin.reduce((s,d)=> s + (d.score || 0), 0);
 
-DATA.health_score = Math.round(
-  (avgMarginUSD * 0.5) +
-  (totalScore > 0 ? 30 : 0) +
-  (avgMarginUSD > 20 ? 20 : 0)
-);
-DATA.health_score = Math.round(
-  (avgMarginUSD * 0.5) +
-  (totalScore > 0 ? 30 : 0) +
-  (avgMarginUSD > 20 ? 20 : 0)
-);
+// ===== ADAPTIVE HEALTH SCORE (data-driven) =====
+// Compare portfolio avg margin against dataset benchmarks
+const _totalNetScore = DATA.dept_margin.reduce((s,d) => s + (d.score || 0), 0);
+const _portNetPerTx = rows.length > 0 ? _totalNetScore / rows.length : 0;
 
-// 👇 هنا بالظبط تضيف التفسير
-// ===== AI INSIGHTS ENGINE (CLEAN) =====
+// Score = how far above the median the portfolio sits, normalised to 0–100
+const _netProfitRange = Math.max(_p90 - _p10, 1);
+const _aboveMedian = Math.max(0, _portNetPerTx - _p10) / _netProfitRange;
+const _marginComponent = Math.min(Math.max(avgMarginUSD * 0.5, 0), 50);
+const _netComponent    = Math.min(_aboveMedian * 50, 50);
 
-// 🧠 1. احسب avg margin مرة واحدة بس
-const avgMargin =
-  DATA.dept_margin.reduce((s,d)=> s + (d.marginUSD || 0), 0) 
-  / (DATA.dept_margin.length || 1);
+DATA.health_score = Math.round(_marginComponent + _netComponent);
+DATA.health_score = Math.max(0, Math.min(DATA.health_score, 100));
 
-
-// ❤️ 2. HEALTH REASON
+// ===== ADAPTIVE HEALTH REASON =====
 let healthReason = [];
 
-if (avgMargin < 10) healthReason.push("Low profitability");
-if (avgMargin > 25) healthReason.push("Strong margins");
+// Use p25/p75 as dynamic thresholds instead of fixed 10/25/50/75
+if (avgMarginUSD < 0) healthReason.push("Negative margins — restructuring needed");
+else if (avgMarginUSD < _p25 * 100) healthReason.push("Below-average profitability");
+else if (avgMarginUSD > _p75 * 100) healthReason.push("Strong margins — top quartile");
 
-if (DATA.health_score < 50) healthReason.push("High operational risk");
-if (DATA.health_score > 75) healthReason.push("Stable performance");
+if (_portNetPerTx < _p10) healthReason.push("Critical: portfolio in bottom decile");
+else if (_portNetPerTx < _median) healthReason.push("Below median performance");
+else if (_portNetPerTx > _p75) healthReason.push("Above 75th percentile");
 
-DATA.health_reason = healthReason.join(" • ");
+const _currencyCount = (DATA.performance_decisions || []).filter(d => d.profitUSD < 0 && d.profitEGP > 0).length;
+if (_currencyCount > 0) healthReason.push(`${_currencyCount} FX-dependent operation${_currencyCount > 1 ? "s" : ""}`);
+
+DATA.health_reason = healthReason.slice(0,3).join(" • ") || "Balanced performance";
 // ===== AUTO ALERTS (CONNECTED TO DECISIONS) =====
 
 // ===== AUTO ALERTS (WITH VALUES) =====
@@ -4066,449 +4387,284 @@ DATA.insight_alerts = DATA.auto_alerts.slice(0,6);
 console.log(DATA.auto_alerts)
 console.log(DATA.insight_alerts)
 
-// 🤖 3. AI SUMMARY
-// ===== AI SUMMARY (SMART) =====
+// ===== AI SUMMARY (adaptive, analyst-style, English) =====
+{
+  const _highlights = [], _risks = [], _opportunities = [];
+  const _bm = DATA.benchmarks;
 
-let summary = [];
-let highlights = [];
-let risks = [];
-let opportunities = [];
-
-// ❤️ HEALTH
-if (DATA.health_score < 50) {
-  risks.push("Overall performance is weak with high operational risk.");
-} 
-else if (DATA.health_score < 75) {
-  highlights.push("Performance is moderate but requires optimization.");
-} 
-else {
-  highlights.push("Performance is strong and stable.");
-}
-
-// 📉 WORST PERFORMANCE
-if (DATA.worst_performances?.length) {
-  const worst = DATA.worst_performances[0];
-
-  if (worst.score < 0) {
-    risks.push(`Major losses driven by ${worst.name}.`);
+  // Health narrative
+  if (DATA.health_score >= 70) {
+    _highlights.push(`Portfolio health is strong at ${DATA.health_score}/100, with margins running above the dataset median.`);
+  } else if (DATA.health_score >= 45) {
+    _highlights.push(`Portfolio health is moderate (${DATA.health_score}/100). Performance is functional but leaves room for improvement.`);
   } else {
-    highlights.push(`${worst.name} needs monitoring.`);
-  }
-}
-
-// 🏨 HOTEL INSIGHT
-if (DATA.hotel_decisions?.length) {
-
-  const worstHotel = DATA.hotel_decisions[0];
-  const bestHotel  = DATA.hotel_decisions[DATA.hotel_decisions.length - 1];
-
-  if (worstHotel.score < 0) {
-    risks.push(`Critical risk in ${worstHotel.name}.`);
+    _risks.push(`Portfolio health is weak (${DATA.health_score}/100). The overall margin is below the dataset average — structural attention required.`);
   }
 
-  if (bestHotel.score > 0) {
-    opportunities.push(`Growth opportunity in ${bestHotel.name}.`);
+  // Top performer
+  if (DATA.insight_top_perf && DATA.insight_top_perf !== "-") {
+    const _netFmt = Math.round(DATA.insight_top_perf_net || DATA.insight_top_perf_value || 0).toLocaleString();
+    _highlights.push(`${DATA.insight_top_perf} leads with a combined net profit of $${_netFmt} — the strongest contributor in the current dataset.`);
   }
+
+  // FX risk
+  const _fxExposed = (DATA.performance_decisions || []).filter(d => d.aiCase === 2);
+  if (_fxExposed.length > 0) {
+    const _names = _fxExposed.slice(0,2).map(d => d.name).join(", ");
+    _risks.push(`${_fxExposed.length} operation${_fxExposed.length > 1 ? "s are" : " is"} USD-negative but FX-rescued (${_names}). This dependency is fragile if EGP rates shift.`);
+  }
+
+  // Loss operations
+  const _lossOps = (DATA.performance_decisions || []).filter(d => d.aiCase === 1);
+  if (_lossOps.length > 0) {
+    _risks.push(`${_lossOps.length} operation${_lossOps.length > 1 ? "s are" : " is"} in net loss with no currency cover — immediate review recommended.`);
+  }
+
+  // Margin band
+  if (avgMarginUSD > _bm.p75 * 100) {
+    _opportunities.push("Margins are tracking above the 75th percentile — conditions are right to scale high-performing operations.");
+  } else if (avgMarginUSD < _bm.p25 * 100) {
+    _risks.push("Average margin sits below the 25th percentile. Cost structure or pricing needs recalibration before scaling.");
+  }
+
+  // Growth opportunity: high margin + below-median volume
+  const _highMarginLowVol = (DATA.performance_decisions || []).filter(d =>
+    d.margin > 0.3 && (d.volume || 0) < ((rows.length / (Object.keys(perfNetProfit).length || 1)) * 0.5)
+  );
+  if (_highMarginLowVol.length > 0) {
+    _opportunities.push(`${_highMarginLowVol.slice(0,2).map(d=>d.name).join(", ")} show${_highMarginLowVol.length === 1 ? "s" : ""} strong margins with low volume — high-return scale candidates.`);
+  }
+
+  DATA.ai_summary = [..._highlights, ..._risks, ..._opportunities].slice(0, 5).join(" ");
 }
+// ===== WORST PERFORMANCES & HOTELS (adaptive, netProfit-sorted) =====
+// Uses benchmarks already computed above (_mean, _stdDev, _p25)
+{
+  // --- Dataset-level avg margin for relative classification ---
+  const _allMargins = Object.entries(lossByPerf).map(([, d]) => {
+    const inc = Number(d.incomeUSD) || 0;
+    const prf = Number(d.profitUSD) || 0;
+    return inc > 0 ? prf / inc : 0;
+  }).filter(isFinite);
+  const _avgDatasetMargin = _allMargins.length
+    ? _allMargins.reduce((s, v) => s + v, 0) / _allMargins.length
+    : 0;
 
-// 💱 CURRENCY RISK
-const currencyIssues = DATA.performance_decisions?.filter(d =>
-  d.profitUSD < 0 && d.profitEGP > 0
-) || [];
+  // --- Worst Performances ---
+  DATA.worst_performances = Object.entries(lossByPerf)
+    .map(([name, d]) => {
+      const profitUSD  = Number(d.profitUSD)  || 0;
+      const profitEGP  = Number(d.profitEGP)  || 0;
+      const incomeUSD  = Number(d.incomeUSD)  || 0;
+      const costUSD    = Number(d.costUSD)    || 0;
+      const txCount    = Number(d.count || d.transactions) || 0;
 
-if (currencyIssues.length > 0) {
-  risks.push("Currency imbalance affecting profitability.");
+      const netProfit  = profitUSD + profitEGP / EGP_RATE;
+      const margin     = incomeUSD > 0 ? profitUSD / incomeUSD : 0;
+      const fxContrib  = profitEGP / EGP_RATE;
+      const avgPrice   = txCount > 0 ? incomeUSD / txCount : 0;
+      const avgCost    = txCount > 0 ? costUSD   / txCount : 0;
+      const priceGap   = Math.max(0, avgCost - avgPrice);
+
+      // Adaptive reason: pick strongest signal vs dataset
+      const signals = [];
+      if (incomeUSD === 0 && costUSD > 0)
+        signals.push({ type: "No Revenue",          icon: "❌", w: 100, color: "#f87171" });
+      if (costUSD > incomeUSD && incomeUSD > 0)
+        signals.push({ type: "Pricing below cost",  icon: "⚠️", w: 90,  color: "#f87171" });
+      if (profitUSD < 0 && fxContrib > 0)
+        signals.push({ type: "FX masking USD loss", icon: "💱", w: 85,  color: "#facc15" });
+      if (netProfit < _mean - _stdDev)
+        signals.push({ type: "Outlier loss",        icon: "💥", w: 80,  color: "#f87171" });
+      if (margin < _avgDatasetMargin * 0.5 && incomeUSD > 0)
+        signals.push({ type: "Low efficiency",      icon: "📉", w: 60,  color: "#facc15" });
+      if (signals.length === 0)
+        signals.push({ type: "Below average",       icon: "📊", w: 30,  color: "#9ca3af" });
+
+      signals.sort((a, b) => b.w - a.w);
+      const top = signals[0];
+      const allReasons = signals.map(s => `${s.icon} ${s.type}`).join(" • ");
+
+      // Adaptive recommendation
+      let recommendation = "";
+      if (top.type === "No Revenue")          recommendation = "Stop or relaunch with new pricing model";
+      else if (top.type === "Pricing below cost") recommendation = `Increase price by $${priceGap.toFixed(2)} to reach break-even ($${avgCost.toFixed(2)})`;
+      else if (top.type === "FX masking USD loss") recommendation = "Fix USD pricing independently — don't rely on EGP to cover losses";
+      else if (top.type === "Outlier loss")    recommendation = "Critical: net loss is far below portfolio average — review or stop";
+      else if (top.type === "Low efficiency")  recommendation = "Improve margin: currently running at half the portfolio average";
+      else                                     recommendation = "Monitor and compare against portfolio benchmarks";
+
+      // Human-style insight text
+      const netFmt  = Math.round(Math.abs(netProfit)).toLocaleString();
+      const sign    = netProfit >= 0 ? "+" : "-";
+      let insight_text = "";
+      if (top.type === "FX masking USD loss")
+        insight_text = `EGP is covering $${Math.round(fxContrib).toLocaleString()} of USD losses, but the core operation is cash-negative. Remove the FX cushion and this collapses.`;
+      else if (top.type === "Pricing below cost")
+        insight_text = `Selling below cost at $${avgPrice.toFixed(2)} vs a cost of $${avgCost.toFixed(2)} per unit. Every booking deepens the loss.`;
+      else if (top.type === "Outlier loss")
+        insight_text = `Net loss of ${sign}$${netFmt} is more than one standard deviation below the portfolio mean — a statistical outlier that needs urgent attention.`;
+      else if (top.type === "Low efficiency")
+        insight_text = `Margin of ${(margin * 100).toFixed(1)}% is less than half the portfolio average of ${(_avgDatasetMargin * 100).toFixed(1)}%. Significant room to improve pricing or cut costs.`;
+      else
+        insight_text = `Net profit of ${sign}$${netFmt} is below portfolio average of $${Math.round(_mean).toLocaleString()}.`;
+
+      const risk_level = netProfit < _mean - _stdDev || top.w >= 90 ? "High" : "Medium";
+      const fx_comment = Math.abs(fxContrib) > 1
+        ? (fxContrib > 0 ? `EGP contributing +$${Math.round(fxContrib).toLocaleString()} (USD is weaker)` : `EGP dragging $${Math.round(Math.abs(fxContrib)).toLocaleString()} from profits`)
+        : "FX impact minimal";
+
+      return {
+        name,
+        performer: d.performers ? [...d.performers].join(", ") : "-",
+        profitUSD, profitEGP, incomeUSD, costUSD, txCount,
+        netProfit, margin, fxContrib, avgPrice, avgCost, priceGap,
+        score: netProfit,
+        reason: `${top.icon} ${top.type}`,
+        allReasons,
+        recommendation,
+        insight_text,
+        risk_level,
+        fx_comment,
+        _topColor: top.color
+      };
+    })
+    .sort((a, b) => a.netProfit - b.netProfit)  // worst net first
+    .slice(0, 5);
+
+  // --- Worst Hotels ---
+  DATA.worst_hotels = Object.entries(lossByHotel)
+    .map(([name, d]) => {
+      const profitUSD = Number(d.profitUSD) || 0;
+      const profitEGP = Number(d.profitEGP) || 0;
+      const incomeUSD = Number(d.incomeUSD) || 0;
+      const costUSD   = Number(d.costUSD)   || 0;
+      const netProfit = profitUSD + profitEGP / EGP_RATE;
+      const margin    = incomeUSD > 0 ? profitUSD / incomeUSD : 0;
+      const fxContrib = profitEGP / EGP_RATE;
+
+      let label = "Stable";
+      if (netProfit < 0)       label = "Loss";
+      else if (margin < _avgDatasetMargin * 0.5) label = "Low Margin";
+      else if (margin > _avgDatasetMargin * 1.5) label = "Strong";
+
+      return { name, profitUSD, profitEGP, netProfit, incomeUSD, costUSD, margin, fxContrib, score: netProfit, label };
+    })
+    .sort((a, b) => a.netProfit - b.netProfit)  // worst net first
+    .slice(0, 5);
+
+  // --- Worst Performances ranking (separate alias used by some render blocks) ---
+  DATA.performance_ranking_worst = DATA.worst_performances
+    .map(d => ({ name: d.name, profit: d.profitUSD, egp: d.profitEGP, net: d.netProfit }));
 }
-
-// 📊 MARGIN ANALYSIS
-
-
-if (avgMargin < 20) {
-  risks.push("Low margins indicate pricing or cost inefficiencies.");
-} 
-else if (avgMargin > 30) {
-  opportunities.push("Strong margins across operations.");
-}
-
-// 🎯 TOP PERFORMER
-if (DATA.best_performer) {
-  highlights.push(`${DATA.best_performer} is the top contributor.`);
-}
-
-// 🔥 FINAL BUILD
-summary = [
-  ...highlights,
-  ...risks,
-  ...opportunities
-];
-
-// ✨ LIMIT + CLEAN
-DATA.ai_summary = summary.slice(0,5).join(" ");
-// ===== BUILD DATA (SAFE + CLEAN) =====
-
-
-DATA.worst_performances = Object.entries(lossByPerf)
-  .map(([name, d]) => {
-
-    const profitUSD = Number(d.profitUSD) || 0;
-    const profitEGP = Number(d.profitEGP) || 0;
-    const incomeUSD = Number(d.incomeUSD) || 0;
-    const costUSD   = Number(d.costUSD) || 0;
-
-    const score = profitUSD + (profitEGP / EGP_RATE);
-    const margin = incomeUSD > 0 ? (profitUSD / incomeUSD) : 0;
-
-    // ==========================
-    // 🎯 REASON ENGINE
-    // ==========================
-
-    let reasonScores = [];
-
-    if (profitUSD < 0 && profitEGP > 0) {
-      reasonScores.push({ type: "Currency Risk", icon: "💱", score: 90 });
-    }
-
-    if (costUSD > incomeUSD) {
-      reasonScores.push({ type: "High Cost", icon: "⚠️", score: 80 });
-    }
-
-    if (incomeUSD === 0 && costUSD > 0) {
-      reasonScores.push({ type: "No Revenue", icon: "❌", score: 100 });
-    }
-
-    if (margin < 0.2 && incomeUSD > 0) {
-      reasonScores.push({ type: "Low Margin", icon: "📉", score: 60 });
-    }
-
-    if (score < 0) {
-      reasonScores.push({ type: "Net Loss", icon: "💥", score: 95 });
-    }
-
-    reasonScores.sort((a,b)=> b.score - a.score);
-
-    const topReason = reasonScores[0];
-
-    const allReasons = reasonScores
-      .map(r => `${r.icon} ${r.type}`)
-      .join(" • ");
-
-    // ==========================
-    // 💡 RECOMMENDATIONS
-    // ==========================
-
-    let recommendation = "";
-
-    if (topReason?.type === "Currency Risk") {
-      recommendation = "Balance USD pricing or hedge currency exposure";
-    }
-    else if (topReason?.type === "High Cost") {
-      recommendation = "Reduce cost or renegotiate supplier contracts";
-    }
-    else if (topReason?.type === "No Revenue") {
-      recommendation = "Stop or relaunch with new pricing";
-    }
-    else if (topReason?.type === "Low Margin") {
-      recommendation = "Improve pricing strategy";
-    }
-    else if (topReason?.type === "Net Loss") {
-      recommendation = "Critical: review contract immediately";
-    }
-
-    return {
-      name,
-      performer: d.performers ? [...d.performers].join(", ") : "-",
-
-      profitUSD,
-      profitEGP,
-      incomeUSD,
-      costUSD,
-
-      score,
-      margin,
-
-      // 👇 الجديد
-      reason: topReason ? `${topReason.icon} ${topReason.type}` : "Normal",
-      allReasons,
-      recommendation
-    };
-  })
-  .sort((a,b)=> a.profitUSD - b.profitUSD)
-  .slice(0,5);
-
-DATA.worst_hotels = Object.entries(lossByHotel)
-  .map(([name, d]) => {
-
-    const profitUSD = Number(d.profitUSD) || 0;
-    const profitEGP = Number(d.profitEGP) || 0;
-    const incomeUSD = Number(d.incomeUSD) || 0;
-
-    const score = profitUSD + (profitEGP / EGP_RATE);
-    const margin = incomeUSD > 0 ? (profitUSD / incomeUSD) : 0;
-
-    let label = "Stable";
-
-    if (score < 0) label = "Loss";
-    else if (margin < 0.15) label = "Low Margin";
-    else if (margin > 0.3) label = "Strong";
-
-    return {
-      name,
-      profitUSD,
-      profitEGP,
-      score,
-      margin,
-      label
-    };
-  })
-  .sort((a,b)=> a.profitUSD - b.profitUSD)
-  .slice(0,5);
 
 //=======RENDER===========
 const lossEl = document.getElementById("loss-analysis");
 
 if (lossEl) {
 
-  lossEl.innerHTML = `
-    <div style="
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-    ">
+  const renderPerfCard = (d) => {
+    const usdColor = d.profitUSD >= 0 ? "#22c55e" : "#ef4444";
+    const egpColor = d.profitEGP >= 0 ? "#22c55e" : "#ef4444";
+    const netColor = d.netProfit >= 0 ? "#22c55e" : "#ef4444";
+    const riskBg   = d.risk_level === "High" ? "rgba(239,68,68,0.08)" : "rgba(250,204,21,0.08)";
+    const borderC  = d._topColor || (d.risk_level === "High" ? "#ef4444" : "#facc15");
 
-      <!-- 🎭 Performances -->
-      <div>
-
-        <div style="
-          color:#f87171;
-          font-weight:700;
-          font-size:14px;
-          margin-bottom:10px;
-        ">
-          🎭 Worst Performances
+    return `
+      <div style="
+        background:linear-gradient(145deg,#0f172a,#020617);
+        border:1px solid ${borderC}33;
+        border-radius:16px;
+        padding:16px;
+      ">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div>
+            <div style="font-weight:700;font-size:13px;">${d.name}</div>
+            <div style="font-size:11px;color:#9ca3af;margin-top:2px;">👤 ${d.performer || "-"}</div>
+          </div>
+          <div style="font-size:10px;padding:2px 7px;border-radius:999px;background:${riskBg};color:${borderC};font-weight:700;white-space:nowrap;">
+            ${d.risk_level} Risk
+          </div>
         </div>
 
-        <div style="
-          display:grid;
-          grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
-          gap:12px;
-        ">
+        <div style="margin-top:10px;">
+          <div style="font-size:16px;font-weight:800;color:${usdColor};">${signedMoney(d.profitUSD)}</div>
+          <div style="font-size:11px;color:${egpColor};margin-top:2px;">${signedMoney(d.profitEGP,"EGP ")}</div>
+          <div style="font-size:12px;font-weight:700;color:${netColor};margin-top:3px;">Net ${signedMoney(d.netProfit)}</div>
+        </div>
 
-        ${DATA.worst_performances.map((d,i) => {
+        <div style="margin-top:8px;font-size:11px;color:${borderC};font-weight:600;">${d.reason}</div>
+        <div style="font-size:10px;color:#6b7280;margin-top:2px;">${d.allReasons}</div>
 
-          const profitUSD = Number(d.profitUSD) || 0;
-          const profitEGP = Number(d.profitEGP) || 0;
+        ${d.fx_comment ? `<div style="font-size:11px;color:#facc15;margin-top:4px;">💱 ${d.fx_comment}</div>` : ""}
 
-          const income = Number(d.incomeUSD) || 0;
-          const cost   = Number(d.costUSD) || 0;
+        ${d.insight_text ? `
+        <div style="margin-top:8px;font-size:11px;color:#93c5fd;line-height:1.5;border-left:2px solid #3b82f6;padding-left:7px;">
+          ${d.insight_text}
+        </div>` : ""}
 
-          const score = profitUSD + (profitEGP / EGP_RATE);
-          const margin = income > 0 ? (profitUSD / income) : 0;
-          const usdColor = d.profitUSD >= 0 ? "#22c55e" : "#ef4444";
-          const egpColor = d.profitEGP >= 0 ? "#22c55e" : "#ef4444";
-          
+        <div style="margin-top:8px;font-size:12px;background:#1e293b;padding:8px;border-radius:8px;color:#e2e8f0;">
+          💡 ${d.recommendation}
+        </div>
+      </div>
+    `;
+  };
 
-          let reasonScores = [];
+  const renderHotelCard = (d) => {
+    const usdColor = d.profitUSD >= 0 ? "#22c55e" : "#ef4444";
+    const egpColor = d.profitEGP >= 0 ? "#22c55e" : "#ef4444";
+    const netColor = d.netProfit >= 0 ? "#22c55e" : "#ef4444";
+    const labelColor = d.label === "Loss" ? "#f87171" : d.label === "Low Margin" ? "#facc15" : "#22c55e";
 
-         if (profitUSD < 0 && profitEGP > 0) {
-  reasonScores.push({ type: "Currency Risk", icon: "💱", score: 90, color:"#facc15" });
-}
+    return `
+      <div style="
+        background:linear-gradient(145deg,#0f172a,#020617);
+        border:1px solid rgba(250,204,21,0.2);
+        border-radius:14px;
+        padding:14px;
+      ">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-size:14px;font-weight:700;">${d.name}</div>
+          <span style="font-size:11px;color:${labelColor};font-weight:600;">${d.label}</span>
+        </div>
+        <div style="font-size:18px;font-weight:800;color:${usdColor};">${signedMoney(d.profitUSD)}</div>
+        <div style="font-size:11px;color:${egpColor};margin-top:2px;">${signedMoney(d.profitEGP,"EGP ")}</div>
+        <div style="font-size:12px;font-weight:700;color:${netColor};margin-top:3px;">Net ${signedMoney(d.netProfit)}</div>
+        <div style="margin-top:6px;font-size:11px;color:${(d.margin < 0 ? "#f87171" : "#22c55e")};">
+          Margin: ${(d.margin * 100).toFixed(1)}%
+        </div>
+        ${d.fxContrib && Math.abs(d.fxContrib) > 1 ? `
+        <div style="font-size:11px;color:#facc15;margin-top:3px;">
+          💱 FX: ${signedMoney(d.fxContrib)}
+        </div>` : ""}
+      </div>
+    `;
+  };
 
-if (income === 0 && cost > 0) {
-  reasonScores.push({ type: "No Revenue", icon: "❌", score: 100, color:"#f87171" });
-}
+  lossEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
 
-if (cost > income) {
-  reasonScores.push({ type: "High Cost", icon: "⚠️", score: 80, color:"#f87171" });
-}
-
-if (income > 0 && margin < 0.2) {
-  reasonScores.push({ type: "Low Margin", icon: "📉", score: 60, color:"#facc15" });
-}
-
-if (score < 0) {
-  reasonScores.push({ type: "Net Loss", icon: "💥", score: 95, color:"#f87171" });
-}
-
-reasonScores.sort((a,b)=> b.score - a.score);
-
-const topReason = reasonScores[0];
-  // ✅ ده اللي كان ناقص
-  const allReasons = reasonScores
-    .map(r => `${r.icon} ${r.type}`)
-    .join(" • ");
-
-// ===== QUALITY SCORE =====
-let qualityScore = 70;
-let qualityLabel = "Good";
-let qualityColor = "#22c55e";
-
-if (score < 0) {
-  qualityScore = 0;
-  qualityLabel = "Weak";
-  qualityColor = "#ef4444";
-}
-else if (margin < 0.2) {
-  qualityScore = 30;
-  qualityLabel = "Risky";
-  qualityColor = "#facc15";
-}
-
-// ===== RECOMMENDATION =====
-let recommendation = "Stable";
-
-if (topReason?.type === "Currency Risk") {
-  recommendation = "Balance USD pricing";
-}
-else if (topReason?.type === "No Revenue") {
-  recommendation = "Stop or relaunch";
-}
-else if (topReason?.type === "High Cost") {
-  recommendation = "Reduce cost";
-}
-else if (topReason?.type === "Low Margin") {
-  recommendation = "Improve pricing";
-}
-else if (topReason?.type === "Net Loss") {
-  recommendation = "Review contract";
-}
-
-
-          return `
-            <div style="
-              background:linear-gradient(145deg,#0f172a,#020617);
-              border:1px solid ${(topReason?.color || "#334155")}33;
-              border-radius:16px;
-              padding:16px;
-            ">
-
-              <div style="font-weight:700">${d.name}</div>
-
-              <div style="font-size:12px;color:#9ca3af">
-                👤 ${d.performer || "-"}
-              </div>
-
-              <div style="
-  margin-top:10px;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-">
-
-  <!-- USD -->
-  <div style="
-    font-size:16px;
-    font-weight:800;
-    color:${usdColor};
-  ">
-    ${signedMoney(profitUSD)}
-  </div>
-
-  <!-- EGP -->
-  <div style="
-    font-size:12px;
-    color:${(d.profitEGP || 0) >= 0 ? "#22c55e" : "#ef4444"}
-    opacity:0.85;
-  ">
-    ${signedMoney(profitEGP, "EGP ")}
-  </div>
-
-</div>
-
-              <div style="
-                margin-top:6px;
-                font-size:11px;
-                color:${topReason?.color};
-                font-weight:600;
-              ">
-                ${topReason ? topReason.icon + " " + topReason.type : ""}
-              </div>
-
-              <div style="font-size:10px;color:#6b7280">
-                ${allReasons}
-              </div>
-
-              <div style="
-                margin-top:8px;
-                font-size:12px;
-                background:#1e293b;
-                padding:8px;
-                border-radius:8px;
-              ">
-                💡 ${recommendation}
-              </div>
-
-            </div>
-          `;
-        }).join("")}
-
+      <!-- 🎭 Worst Performances -->
+      <div>
+        <div style="color:#f87171;font-weight:700;font-size:14px;margin-bottom:10px;">
+          🎭 Worst Performances
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          ${(DATA.worst_performances || []).length
+            ? DATA.worst_performances.map(renderPerfCard).join("")
+            : `<div style="color:#6b7280;font-size:13px;">No loss data available</div>`}
         </div>
       </div>
 
-      <!-- 🏨 Hotels -->
+      <!-- 🏨 Worst Hotels -->
       <div>
-
-        <div style="
-          color:#facc15;
-          font-weight:700;
-          font-size:14px;
-          margin-bottom:10px;
-        ">
+        <div style="color:#facc15;font-weight:700;font-size:14px;margin-bottom:10px;">
           🏨 Worst Hotels
         </div>
-
-        <div style="
-          display:grid;
-          grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
-          gap:12px;
-        ">
-
-        ${DATA.worst_hotels.map((d,i) => {
-
-          const profit = Number(d.profitUSD) || 0;
-          const egp    = Number(d.profitEGP) || 0;
-          const margin = Number(d.margin) || 0;
-          const usdColor = d.profitUSD >= 0 ? "#22c55e" : "#ef4444";
-          const egpColor = d.profitEGP >= 0 ? "#22c55e" : "#ef4444";
-
-          return `
-            <div style="
-              background:linear-gradient(145deg,#0f172a,#020617);
-              border:1px solid rgba(250,204,21,0.2);
-              border-radius:14px;
-              padding:14px;
-            ">
-
-              <div style="font-size:14px;font-weight:700;margin-bottom:6px">
-                ${d.name}
-              </div>
-
-<div style="
-  font-size:18px;
-  font-weight:800;
-  color:${(d.profitUSD || 0) >= 0 ? "#22c55e" : "#ef4444"}
-">
-  ${formatCurrency(profit)}
-</div>
-
-<div style="
-  font-size:11px;
-  color:${(d.profitEGP || 0) >= 0 ? "#22c55e" : "#ef4444"}
-">
-  ${formatEGP(egp)}
-</div>
-
-              <div style="
-                margin-top:6px;
-                font-size:11px;
-                color:${margin < 0 ? "#f87171" : "#22c55e"};
-              ">
-                ${formatPercent(margin)}
-              </div>
-
-            </div>
-          `;
-        }).join("")}
-
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          ${(DATA.worst_hotels || []).length
+            ? DATA.worst_hotels.map(renderHotelCard).join("")
+            : `<div style="color:#6b7280;font-size:13px;">No hotel loss data available</div>`}
         </div>
       </div>
 
@@ -4553,149 +4709,45 @@ const good = perf.filter(d => classify(d) === "good");
   // 🎨 Card Renderer
   const renderCard = (d) => {
 
-const baseAI = {
+const ai = {
   levelLabel: "🟢 KEEP",
   levelColor: "#22c55e",
   action: "Stable",
-  smartInsight: "No detailed data",
+  smartInsight: "No data",
+  recommendation: "Monitor performance",
+  aiComment: "",
+  decision: "🟢 KEEP",
   fxStatusFinal: "FX neutral",
+  fxInsight: "",
   fxImbalance: 0,
   margin: 0,
   pricePerUnit: 0,
   breakEvenPrice: 0,
   targetPrice: 0,
-  currencyMix: { usd: 0, egp: 0 }
+  currencyMix: { usd: 0, egp: 0 },
+  ...validatePerformanceCardData({ ...d, ...(d.ai || {}) })
 };
 
-// =======================
-// 🔥 SMART FIX (IMPORTANT)
-// =======================
-if (
-  (!d.ai || Object.keys(d.ai).length === 0) &&
-  (d.operationalProfit || d.totalProfit || d.profitUSD || d.profitEGP)
-) {
-
-  const profit =
-  d.operationalProfit ??
-  d.totalProfit ??
-  d.profitUSD ??
-  0;
-
-  baseAI.levelLabel = profit > 0 ? "🚀 INVEST" : "🔴 STOP";
-  baseAI.levelColor = profit > 0 ? "#22c55e" : "#ef4444";
-
-  baseAI.action = profit > 0
-    ? "Scale performance"
-    : "Stop immediately";
-
-  baseAI.smartInsight = "Profit exists but pricing data missing";
-
-  baseAI.fxStatusFinal = "FX data available";
-}
-
-// =======================
-// 🔥 FINAL AI OBJECT
-// =======================
-const ai = {
-  ...baseAI,
-  ...validatePerformanceCardData({
-    ...d,
-    ...(d.ai || {})
-  })
-};
-    const profitUI = (() => {
-
-  if (ai.profitSource === "FX Saving Loss") {
-    return {
-      color: "#ef4444",
-      text: "⚠️ FX covering losses"
-    };
-  }
-
-  if (ai.profitSource === "FX Driven") {
-    return {
-      color: "#f97316",
-      text: "💣 FX Driven Profit"
-    };
-  }
-
-  if (ai.profitSource === "FX Drag") {
-    return {
-      color: "#eab308",
-      text: "⚠️ FX hurting performance"
-    };
-  }
-
-  if (ai.operationalProfit > 0) {
-    return {
-      color: "#22c55e",
-      text: "✅ Healthy Operations"
-    };
-  }
-
-  return {
-    color: "#ef4444",
-    text: "❌ Operational Loss"
-  };
-
-})();
-    const safe = (v, d = 0) => finiteNumber(v).toFixed(d);
-    const money = (v) => finiteNumber(v).toLocaleString();
-    const usd = ai.profitUSD;
-    const egp = ai.profitEGP;
+    const safe  = (v, dec = 0) => finiteNumber(v).toFixed(dec);
+    const money = (v) => Math.abs(Math.round(finiteNumber(v))).toLocaleString();
+    const usd   = ai.profitUSD;
+    const egp   = ai.profitEGP;
+    const net   = ai.fxNet;
 
     const usdColor = usd >= 0 ? "#22c55e" : "#ef4444";
     const egpColor = egp >= 0 ? "#22c55e" : "#ef4444";
+    const netColor = net >= 0 ? "#22c55e" : "#ef4444";
 
-    const currencyRisk = usd < 0 && egp > 0;
+    const glow = usd < 0 && egp < 0
+      ? "0 0 12px rgba(239,68,68,0.25)"
+      : "0 0 12px rgba(34,197,94,0.15)";
 
-    const glow =
-      usd < 0 && egp < 0
-        ? "0 0 12px rgba(239,68,68,0.25)"
-        : "0 0 12px rgba(34,197,94,0.15)";
+    const barWidth   = Math.min(Math.abs(finiteNumber(ai.qualityScore)), 100);
+    const marginPct  = (finiteNumber(ai.margin) * 100).toFixed(1);
+    const marginColor = ai.margin < 0 ? "#ef4444" : ai.margin < 0.1 ? "#ef4444" : ai.margin < 0.3 ? "#facc15" : "#22c55e";
 
-    const barWidth = Math.min(Math.abs(finiteNumber(ai.qualityScore)), 100);
-    
-let label = d.reason || "";
-
-if (currencyRisk) {
-  label = "Currency dependent performance";
-}
-let explain = [];
-
-if (usd < 0 && egp > 0) {
-  explain.push("USD loss vs EGP profit (currency imbalance)");
-}
-
-if (ai.margin < 0.2) {
-  explain.push("Low margin");
-}
-
-if (ai.combinedProfitUSD < 0) {
-  explain.push("Net loss");
-}
-
-if (ai.costUSD > ai.incomeUSD) {
-  explain.push("Cost higher than revenue");
-}
-
-const explainText = explain.join(" • ");
-let confidence = "Low";
-let confidenceColor = "#94a3b8";
-
-if (ai.combinedProfitUSD > 0 && ai.margin > 0.3) {
-  confidence = "High";
-  confidenceColor = "#22c55e";
-}
-else if (ai.combinedProfitUSD > 0) {
-  confidence = "Medium";
-  confidenceColor = "#facc15";
-}
-function toggleSection(el) {
-  const content = el.nextElementSibling;
-  content.style.display =
-    content.style.display === "none" ? "block" : "none";
-}
+    const decisionBadgeColor = ai.decision?.includes("STOP") ? "#ef4444"
+      : ai.decision?.includes("FIX") ? "#facc15" : "#22c55e";
 
     return `
 <div onclick="filterPerformance('${d.name}')"
@@ -4708,369 +4760,171 @@ function toggleSection(el) {
     margin-bottom:12px;
     transition:0.25s;
     box-shadow:${glow};
-
-    width:100%;
-    max-width:100%;
-    min-width:0;
+    width:100%; max-width:100%; min-width:0;
     overflow-x:hidden;
-
-    display:flex;
-    flex-direction:column;
+    display:flex; flex-direction:column;
   "
-        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.4)'"
-        onmouseout="this.style.transform='none';this.style.boxShadow='${glow}'"
-      >
+  onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.4)'"
+  onmouseout="this.style.transform='none';this.style.boxShadow='${glow}'"
+>
 
-        <!-- TITLE -->
-        <div style="font-weight:600;font-size:13px">
-          ${d.name}
-        </div>
+  <!-- HEADER: Name + Decision badge -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;">
+    <div>
+      <div style="font-weight:700;font-size:13px;color:#e5e7eb;">${d.name}</div>
+      <div style="font-size:11px;color:#64748b;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px;">
+        👤 ${d.performer || "-"}
+      </div>
+    </div>
+    <div style="
+      font-size:11px;font-weight:700;
+      padding:3px 8px;border-radius:999px;white-space:nowrap;
+      background:${decisionBadgeColor}22;
+      color:${decisionBadgeColor};
+      border:1px solid ${decisionBadgeColor}44;
+    ">
+      ${ai.decision || ai.levelLabel}
+    </div>
+  </div>
 
-        <!-- PERFORMER -->
-<div style="
-  font-size:11px;
-  color:#64748b;
-  margin-top:2px;
+  <!-- NUMBERS -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+    <div>
+      <div style="font-size:16px;font-weight:800;color:${usdColor};">${signedMoney(usd)}</div>
+      <div style="font-size:11px;color:${egpColor};opacity:0.8;">${signedMoney(egp,"EGP ")}</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:10px;color:#6b7280;">Margin</div>
+      <div style="font-size:13px;font-weight:700;color:${marginColor};">${marginPct}%</div>
+    </div>
+  </div>
 
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow-x:hidden;
-  word-break:break-word;
-">
-  👤 ${d.performer || "-"}
-</div>
+  <!-- QUALITY BAR -->
+  <div style="margin-top:8px;height:3px;background:#1f2937;border-radius:6px;width:100%;overflow:hidden;">
+    <div style="width:${barWidth}%;height:100%;background:${ai.qualityColor};border-radius:6px;"></div>
+  </div>
 
-        <!-- NUMBERS -->
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          margin-top:10px;
-        ">
-
-          <div>
-            <div style="
-              font-size:15px;
-              font-weight:800;
-              color:${usdColor};
-            ">
-              ${signedMoney(usd)}
-            </div>
-
-            <div style="
-              font-size:11px;
-              color:${egpColor};
-              opacity:0.7;
-            ">
-              ${signedMoney(egp, "EGP ")}
-            </div>
-          </div>
-
-          <!-- DOT -->
-          <div style="
-            width:10px;
-            height:10px;
-            border-radius:50%;
-            background:${ai.qualityColor};
-          "></div>
-
-        </div>
-
-<!-- BAR -->
-<div style="
-  margin-top:8px;
-  height:4px;
-  background:#1f2937;
-  border-radius:6px;
-
-  width:100%;
-  overflow-x:hidden;
-">
-  <div style="
-    width:${Math.min(barWidth, 100)}%;
-    height:100%;
-    background:${ai.qualityColor};
-    border-radius:6px;
-  "></div>
-</div>
-
-<!-- TAGS -->
-<div style="
-  margin-top:6px;
-  font-size:10px;
-  color:#60a5fa;
-
-  max-width:100%;
-  overflow-x:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-">
+  <!-- FX STATUS -->
   ${ai.fxInsight ? `
-  <div style="color:#b91c1c;font-weight:700;margin-top:6px;">
+  <div style="margin-top:6px;font-size:11px;color:#facc15;font-weight:600;">
     💱 ${ai.fxInsight}
-  </div>
-` : ""}
-</div>
+  </div>` : ""}
 
-<!-- AI DECISION CLEAN -->
-<div style="
-  margin-top:10px;
-  padding:10px;
-  border-radius:12px;
-background:${ai.cardBg};
-border:1px solid ${ai.cardBorder};
-box-shadow:${ai.glow};
-transition: all 0.25s ease;
-onmouseover="this.style.transform='translateY(-3px)'"
-onmouseout="this.style.transform='translateY(0)'"
-">
-
-  <!-- 🧠 HEADER -->
-<div style="
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:6px;
-">
-
+  <!-- AI INSIGHT PANEL -->
   <div style="
-    font-size:13px;
-    font-weight:700;
-    color:${ai.levelColor};
+    margin-top:10px;
+    padding:10px;
+    border-radius:12px;
+    background:${ai.cardBg};
+    border:1px solid ${ai.cardBorder};
+    box-shadow:${ai.glow};
   ">
-    🧠 ${ai.levelLabel}
-  </div>
-  <!-- 💡 INSIGHT -->
-<div style="
-  font-size:12px;
-  font-weight:600;
-  color:#93c5fd;
-  margin-bottom:6px;
-">
-  💡 ${ai.smartInsight}
-</div>
-
-  <div style="
-    font-size:10px;
-    padding:3px 6px;
-    border-radius:6px;
-    background:${ai.cardBorder}22;
-    color:${ai.cardBorder};
-    font-weight:600;
-  ">
-    ${ai.action}
-  </div>
-
-</div>
-
-    <div style="
-      font-size:10px;
-      padding:3px 6px;
-      border-radius:6px;
-      background:
-        ${ai.priority === "High" ? "#ef444422" :
-          ai.priority === "Medium" ? "#facc1522" : "#22c55e22"};
-      color:
-        ${ai.priority === "High" ? "#ef4444" :
-          ai.priority === "Medium" ? "#facc15" : "#22c55e"};
-      font-weight:600;
-    ">
-      ${ai.priority}
+    <!-- Label + priority -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <div style="font-size:13px;font-weight:700;color:${ai.levelColor};">
+        🧠 ${ai.levelLabel}
+      </div>
+      <div style="font-size:10px;padding:2px 6px;border-radius:6px;
+        background:${ai.priority==="High"?"#ef444422":ai.priority==="Medium"?"#facc1522":"#22c55e22"};
+        color:${ai.priority==="High"?"#ef4444":ai.priority==="Medium"?"#facc15":"#22c55e"};
+        font-weight:600;">
+        ${ai.riskLevel || ai.priority} Risk
+      </div>
     </div>
 
-  </div>
-
-  <!-- 💡 MAIN INSIGHT -->
-  <div style="
-    margin-top:6px;
-    font-size:12px;
-    font-weight:600;
-    color:#93c5fd;
-  ">
-💡 ${
-  ai.hasPricingData && ai.pricePerUnit < ai.breakEvenPrice
-    ? `Break-even +$${finiteNumber(ai.breakEvenPrice - ai.pricePerUnit).toFixed(2)} | Profit target $${finiteNumber(ai.targetPrice).toFixed(2)}`
-    : ai.hasPricingData ? `Profitable → scale` : `Pricing data unavailable`
-}
-  </div>
-
-  <!-- 💱 FX STATUS -->
-  <div style="
-    margin-top:4px;
-    font-size:11px;
-    color:#facc15;
-  ">
-    💱 ${ai.fxStatusFinal} (${(ai.fxImbalance * 100).toFixed(1)}%)
-  </div>
-
-  <!-- ▶ DETAILS TOGGLE -->
-<div onclick="event.stopPropagation();
-this.nextElementSibling.style.display =
-this.nextElementSibling.style.display === 'none' ? 'block' : 'none'"
-style="
-  margin-top:8px;
-  cursor:pointer;
-  font-size:12px;
-  font-weight:600;
-  color:#38bdf8;
-">
-  ▶ Details
-</div>
-
-  <!-- 🔽 DETAILS CONTENT -->
-  <div style="display:none; margin-top:8px; font-size:12px; line-height:1.6;">
-
-    <!-- 📊 PRICING -->
-<div style="margin-bottom:6px;">
-  📦 ${finiteNumber(ai.volume)} units  
-</div>
-
-<div>
-  💰 Selling at $${finiteNumber(ai.pricePerUnit).toFixed(2)}  
-</div>
-
-<div>
-  💸 Cost is $${finiteNumber(ai.costPerUnit).toFixed(2)}
-</div>
-    </div>
-<div style="
-  margin-top:4px;
-  font-size:11px;
-  color:${ai.margin < 0 ? '#ef4444' : ai.margin < 0.2 ? '#facc15' : '#22c55e'};
-">
-  📊 Margin: ${(finiteNumber(ai.margin) * 100).toFixed(1)}%
-</div>
-
-${ai.hasPricingData ? `
-  <div style="margin-top:4px;color:#facc15;">
-    🎯 Break-even: $${finiteNumber(ai.breakEvenPrice).toFixed(2)}
-  </div>
-
-  <div style="color:#22c55e;">
-    🚀 Target: $${finiteNumber(ai.targetPrice).toFixed(2)}
-  </div>
-` : ""}
-
-</div>
-
-    <!-- 📉 PROFIT -->
-<div style="
-  margin-top:6px;
-  padding:8px;
-  border-radius:8px;
-  background:rgba(255,255,255,0.03);
-">
-
-  <div style="display:flex;justify-content:space-between;color:${valueColor(ai.operationalProfit)};">
-    <span>USD</span>
-    <span>${signedMoney(ai.operationalProfit)}</span>
-  </div>
-
-  <div style="display:flex;justify-content:space-between;color:${valueColor(ai.fxContribution)};">
-    <span>FX</span>
-    <span>${signedMoney(ai.fxContribution)}</span>
-  </div>
-
-  <div style="
-    height:1px;
-    background:rgba(255,255,255,0.08);
-    margin:6px 0;
-  "></div>
-
-  <div style="
-    display:flex;
-    justify-content:space-between;
-    font-weight:700;
-    color:${valueColor(ai.fxNet)};
-  ">
-    <span>NET</span>
-    <span>${signedMoney(ai.fxNet)}</span>
-  </div>
-
-</div>
-    <div style="
-  margin-top:6px;
-  font-size:12px;
-  font-weight:700;
-  color:${ai.insightColor};
-">
-  ${ai.insightTitle}
-</div>
-
-${ai.insightNote ? `
-<div style="
-  font-size:11px;
-  color:#94a3b8;
-  margin-top:2px;
-">
-  ${ai.insightNote}
-</div>
-` : ""}
-
-    <!-- 💱 MIX -->
- <!-- 📊 TEXT -->
-  <div style="display:flex;justify-content:space-between;font-size:12px;color:#94a3b8;">
-    <span>USD: ${(ai.currencyMix?.usd * 100 || 0).toFixed(0)}%</span>
-    <span>EGP: ${(ai.currencyMix?.egp * 100 || 0).toFixed(0)}%</span>
-  </div>
-
-  <!-- 📊 BAR -->
-  <div style="
-    width:100%;
-    height:8px;
-    background:#1e293b;
-    border-radius:999px;
-    overflow:hidden;
-    margin-top:4px;
-  ">
-    <div style="
-      width:${(ai.currencyMix?.usd * 100 || 0)}%;
-      height:100%;
-      background:#3b82f6;
-      float:left;
-    "></div>
-
-    <div style="
-      width:${(ai.currencyMix?.egp * 100 || 0)}%;
-      height:100%;
-      background:#22c55e;
-      float:left;
-    "></div>
-  </div>
-
-    <!-- 🧠 EXPLANATION -->
-    <div style="
-      margin-top:6px;
-      font-size:11px;
-      color:#cbd5f5;
-    ">
-      ${ai.explanation && `
-  <div style="color:#facc15;font-size:11px;">
-    ${ai.explanation}
-  </div>
-`}
+    <!-- Smart insight — short -->
+    <div style="font-size:12px;font-weight:600;color:#93c5fd;margin-bottom:6px;">
+      💡 ${ai.smartInsight}
     </div>
 
+    <!-- FX status line -->
+    <div style="font-size:11px;color:#facc15;margin-bottom:4px;">
+      💱 ${ai.fxStatusFinal}${ai.fxImbalance > 0.1 ? ` (${(ai.fxImbalance*100).toFixed(0)}% imbalance)` : ""}
+    </div>
+
+    <!-- Recommendation -->
+    <div style="font-size:11px;color:#e2e8f0;margin-bottom:8px;line-height:1.5;">
+      🎯 ${ai.recommendation}
+    </div>
+
+    <!-- Details toggle -->
+    <div onclick="event.stopPropagation();var n=this.nextElementSibling;n.style.display=n.style.display==='none'?'block':'none'"
+      style="cursor:pointer;font-size:12px;font-weight:600;color:#38bdf8;user-select:none;">
+      ▶ Details & Analysis
+    </div>
+
+    <!-- EXPANDABLE DETAILS -->
+    <div style="display:none;margin-top:10px;font-size:12px;line-height:1.7;">
+
+      <!-- P&L Breakdown -->
+      <div style="padding:8px;border-radius:8px;background:rgba(255,255,255,0.03);margin-bottom:8px;">
+        <div style="font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">P&L Breakdown</div>
+        <div style="display:flex;justify-content:space-between;color:${usdColor};">
+          <span>USD Profit</span><span>${signedMoney(usd)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;color:${ai.fxContribution>=0?"#22c55e":"#ef4444"};">
+          <span>FX Impact</span><span>${signedMoney(ai.fxContribution)}</span>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:5px 0;"></div>
+        <div style="display:flex;justify-content:space-between;font-weight:700;color:${netColor};">
+          <span>Net Total</span><span>${signedMoney(net)}</span>
+        </div>
+      </div>
+
+      <!-- Pricing details -->
+      ${ai.hasPricingData ? `
+      <div style="padding:8px;border-radius:8px;background:rgba(255,255,255,0.03);margin-bottom:8px;">
+        <div style="font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Unit Economics</div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#9ca3af;">Bookings</span><span>${Math.round(ai.volume)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#9ca3af;">Avg Price</span><span style="color:#e5e7eb;">$${safe(ai.pricePerUnit,2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#9ca3af;">Avg Cost</span><span style="color:#e5e7eb;">$${safe(ai.costPerUnit,2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#9ca3af;">Break-even</span>
+          <span style="color:#facc15;">$${safe(ai.breakEvenPrice,2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#9ca3af;">Target (20%)</span>
+          <span style="color:#22c55e;">$${safe(ai.targetPrice,2)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#9ca3af;">Margin</span>
+          <span style="color:${marginColor};">${marginPct}%</span>
+        </div>
+      </div>` : ""}
+
+      <!-- Currency Mix bar -->
+      <div style="margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;margin-bottom:4px;">
+          <span>USD ${(ai.mix?.usd_percent||0).toFixed(0)}%</span>
+          <span>EGP ${(ai.mix?.egp_percent||0).toFixed(0)}%</span>
+        </div>
+        <div style="height:6px;background:#1e293b;border-radius:999px;overflow:hidden;">
+          <div style="width:${ai.mix?.usd_percent||0}%;height:100%;background:#3b82f6;float:left;"></div>
+          <div style="width:${ai.mix?.egp_percent||0}%;height:100%;background:#22c55e;float:left;"></div>
+        </div>
+      </div>
+
+      <!-- AI Analyst Comment -->
+      ${ai.aiComment ? `
+      <div style="
+        padding:8px;border-radius:8px;
+        background:rgba(147,197,253,0.06);
+        border-left:2px solid #93c5fd;
+        font-size:11px;color:#cbd5e1;line-height:1.65;
+      ">
+        🤖 <em>${ai.aiComment}</em>
+      </div>` : ""}
+
+    </div>
   </div>
 
-</div>
-
-  <!-- Recommendation -->
-  <div style="
-    margin-top:6px;
-    font-size:11px;
-    color:#e2e8f0;
-  ">
-    💡 ${
-  ai.hasPricingData && ai.pricePerUnit < ai.breakEvenPrice
-    ? `Increase price by $${(ai.breakEvenPrice - ai.pricePerUnit).toFixed(2)}`
-    : ai.hasPricingData ? `Profitable → scale` : `Pricing data unavailable`
-}
-  </div>
-
-</div>
-    `;
+</div>`;
   };
 
 decisionEl.innerHTML = `
@@ -5553,7 +5407,8 @@ cheapEl.innerHTML = DATA.insight_cheapest_prices.map(d => `
 `).join("");
 
 }
-const alertEl = document.getElementById("insight-alerts");
+// ===== ALERTS RENDER — uses insight-action element =====
+const alertEl = document.getElementById("insight-action");
 
 if (alertEl) {
 
@@ -5840,24 +5695,21 @@ if (aiEl) {
   `;
 }
 const rankEl = document.getElementById("performance-ranking");
+const rankEl2 = document.getElementById("insight-ranking");
+
+// Clear both first to prevent stale/duplicate content
+if (rankEl)  rankEl.innerHTML  = "";
+if (rankEl2) rankEl2.innerHTML = "";   // insight-ranking lives in the same card — keep empty
 
 if (rankEl && DATA.performance_ranking) {
 
-  const max = Math.max(...DATA.performance_ranking.map(d => d.profit || 0));
+  const max = Math.max(...DATA.performance_ranking.map(d => d.net ?? d.profit ?? 0));
 
   rankEl.innerHTML = DATA.performance_ranking.map((d,i) => {
-    
-    const width = max ? (d.profit / max) * 100 : 0;
-
-    // 🎯 Top 3 highlight
-    const isTop = i < 3;
-
-    // 🎨 لون حسب القيمة
-    const color = d.profit < 0
-      ? "#f87171"
-      : i === 0
-      ? "#22c55e"
-      : "#3fb950";
+    const netVal = d.net ?? d.profit ?? 0;
+    const width  = max ? Math.max((netVal / max) * 100, 0) : 0;
+    const isTop  = i < 3;
+    const color  = netVal < 0 ? "#f87171" : i === 0 ? "#22c55e" : "#3fb950";
 
     return `
       <div style="
@@ -5867,97 +5719,23 @@ if (rankEl && DATA.performance_ranking) {
         border-radius:10px;
         background:${isTop ? "rgba(34,197,94,0.05)" : "transparent"};
       ">
-
-        <!-- Top Row -->
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          font-size:${isTop ? "14px" : "12px"};
-          font-weight:${isTop ? "600" : "400"};
-        ">
-          <span>
-            ${i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : (i+1)}
-            ${d.name}
-          </span>
-
+        <div style="display:flex;justify-content:space-between;font-size:${isTop?"14px":"12px"};font-weight:${isTop?"600":"400"};">
+          <span>${i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1)} ${d.name}</span>
           <div style="text-align:right">
-            <div style="color:${profitColor(d.profit)}">
-              $${Number(d.profit || 0).toLocaleString()}
-            </div>
-
-            <div style="font-size:11px;color:#8b949e">
-              EGP ${Number(d.egp || 0).toLocaleString()}
-            </div>
+            <div style="color:${profitColor(d.profit)}">$${Number(d.profit||0).toLocaleString()}</div>
+            <div style="font-size:10px;color:#6b7280">Net $${Math.round(netVal).toLocaleString()}</div>
           </div>
         </div>
-
-        <!-- Bar -->
-        <div style="
-          height:${isTop ? "8px" : "5px"};
-          background:#1f2937;
-          border-radius:6px;
-          margin-top:6px;
-        ">
-          <div style="
-            width:${width}%;
-            height:100%;
-            background:linear-gradient(90deg, ${color}, #58a6ff);
-            border-radius:6px;
-            transition:0.4s;
-          "></div>
+        <div style="height:${isTop?"8px":"5px"};background:#1f2937;border-radius:6px;margin-top:6px;">
+          <div style="width:${width}%;height:100%;background:linear-gradient(90deg,${color},#58a6ff);border-radius:6px;transition:0.4s;"></div>
         </div>
-
       </div>
     `;
   }).join("");
 
 }
-// ===== ACTION RECOMMENDATION =====
-
+// ===== ACTION RECOMMENDATION (deduped — alerts already rendered above) =====
 DATA.action_recommendation = DATA.insight_alerts?.slice(0,4) || [];
-const actionEl = document.getElementById("insight-action");
-
-if (actionEl && DATA.action_recommendation.length) {
-
-  actionEl.innerHTML = DATA.action_recommendation.map(a => {
-
-    const color =
-      a.type === "low" ? "#f87171" :
-      a.type === "gap" ? "#facc15" :
-      "#60a5fa";
-
-    const icon =
-      a.type === "low" ? "🔻" :
-      a.type === "gap" ? "⚠️" :
-      "ℹ️";
-
-    return `
-      <div style="
-        margin-bottom:8px;
-        padding:8px;
-        border-radius:8px;
-        background:rgba(255,255,255,0.03);
-        border-left:3px solid ${color};
-      ">
-
-        <span style="margin-right:6px">${icon}</span>
-
-        <span style="font-size:13px">
-          ${a.text}
-        </span>
-
-      </div>
-    `;
-
-  }).join("");
-
-} else {
-  actionEl.innerHTML = `
-    <div style="color:#9ca3af;font-size:13px">
-      ✅ لا توجد مشاكل حالياً
-    </div>
-  `;
-}
 
 
 // ===== BEST PER DEPARTMENT =====
@@ -6072,86 +5850,23 @@ function updateDeptKPIs() {
 // ===== NEW INSIGHTS =====
 
 // 👑 Best Performer
-const bpEl = document.getElementById("insight-best-performer");
+renderBestPerformer();
 
-if (bpEl) {
-
-  bpEl.innerHTML = `
-    <div style="
-      background:linear-gradient(135deg,#111827,#0f172a);
-      border:1px solid rgba(63,185,80,0.3);
-      border-radius:14px;
-      padding:16px;
-    ">
-
-      <div style="font-size:12px;color:#9ca3af">
-        👑 Best Performer
-      </div>
-
-      <div style="font-size:18px;font-weight:600;margin-top:6px">
-        ${DATA.best_performer || "-"}
-      </div>
-
-      <!-- USD -->
-      <div style="
-        margin-top:8px;
-        font-size:16px;
-        color:#3fb950;
-        font-weight:700;
-      ">
-        $${Number(DATA.best_performer_usd || 0).toLocaleString()}
-      </div>
-
-      <!-- EGP -->
-      <div style="
-        font-size:13px;
-        color:#9ca3af;
-        margin-top:2px;
-      ">
-        EGP ${Number(DATA.best_performer_egp || 0).toLocaleString()}
-      </div>
-
-      <div style="
-        font-size:11px;
-        color:#6b7280;
-        margin-top:6px;
-      ">
-        Combined Performance Score
-      </div>
-
-    </div>
-  `;
-}
-
-// 📊 Average Profit
 const avgEl = document.getElementById("insight-avg-profit");
 
 if (avgEl) {
+  const avgNet = DATA.avg_profit || 0;
+  const avgColor = avgNet >= 0 ? "#3fb950" : "#f87171";
   avgEl.innerHTML = `
-    <div style="
-      background:#111827;
-      border:1px solid rgba(255,255,255,0.05);
-      border-radius:12px;
-      padding:14px;
-    ">
-
-      <div style="font-size:12px;color:#9ca3af">
-        📊 Average Profit
+    <div style="background:#111827;border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px;">
+      <div style="font-size:12px;color:#9ca3af">📊 ${DATA.avg_profit_label || "Avg Net Profit / Performer"}</div>
+      <div style="margin-top:6px;font-size:18px;font-weight:600;color:${avgColor};">
+        ${avgNet >= 0 ? "+" : ""}$${Math.round(Math.abs(avgNet)).toLocaleString()}
       </div>
-
-      <div style="
-        margin-top:6px;
-        font-size:18px;
-        font-weight:600;
-        color:#3fb950;
-      ">
-        $${Number(DATA.avg_profit || 0).toLocaleString()}
+      <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+        ${(DATA.benchmarks && avgNet > DATA.benchmarks.median) ? "↑ Above median" : "↓ Below median"}
+        · Median $${Math.round(DATA.benchmarks?.median || 0).toLocaleString()}
       </div>
-
-      <div style="font-size:12px;color:#9ca3af;margin-top:4px">
-        Per Transaction
-      </div>
-
     </div>
   `;
 }
@@ -6165,53 +5880,44 @@ if (marginEl && DATA.dept_margin) {
   .sort((a,b)=> b.marginUSD - a.marginUSD)
   .slice(0, 12);
 
-const max = Math.max(...sorted.map(d => d.marginUSD || 0));
+const max = Math.max(...sorted.map(d => Math.abs(d.marginUSD || 0)), 1);
+// Use dataset avg as threshold for colour bands
+const _deptAvgMargin = sorted.reduce((s,d) => s + (d.marginUSD||0), 0) / (sorted.length || 1);
 
 marginEl.innerHTML = sorted.map((d,i) => {
 
   const marginUSD = d.marginUSD || 0;
   const marginEGP = d.marginEGP || 0;
 
-  const width = max ? (marginUSD / max) * 100 : 0;
+  const width = max ? (Math.abs(marginUSD) / max) * 100 : 0;
 
   const color =
-    marginUSD < 0 ? "#f87171" :
-    marginUSD < 10 ? "#facc15" :
-    "#22c55e";
+    marginUSD < 0                     ? "#f87171" :
+    marginUSD < _deptAvgMargin * 0.5  ? "#facc15" :
+                                        "#22c55e";
 
   const gradient =
-    marginUSD < 0 ? "linear-gradient(90deg,#f87171,#ef4444)" :
-    marginUSD < 10 ? "linear-gradient(90deg,#facc15,#f59e0b)" :
-    "linear-gradient(90deg,#22c55e,#16a34a)";
+    marginUSD < 0                     ? "linear-gradient(90deg,#f87171,#ef4444)" :
+    marginUSD < _deptAvgMargin * 0.5  ? "linear-gradient(90deg,#facc15,#f59e0b)" :
+                                        "linear-gradient(90deg,#22c55e,#16a34a)";
 
   return `
     <div class="margin-card">
-
       <div style="display:flex;justify-content:space-between">
-
         <div style="font-weight:600">
-          ${i < 3 ? ["🥇","🥈","🥉"][i] : i+1}
-          ${d.dept}
+          ${i < 3 ? ["🥇","🥈","🥉"][i] : i+1} ${d.dept}
         </div>
-
         <div style="color:${color};font-weight:700">
-          ${marginUSD.toFixed(1)}% • ${marginEGP.toFixed(1)}%
+          ${marginUSD.toFixed(1)}% USD · ${marginEGP.toFixed(1)}% EGP
         </div>
-
       </div>
-
       <div class="margin-bar">
-        <div class="margin-fill" 
-             style="background:${gradient}" 
-             data-width="${width}">
-        </div>
+        <div class="margin-fill" style="background:${gradient}" data-width="${width}"></div>
       </div>
-
     </div>
   `;
 }).join("");
 
-  // 🎬 Animation بعد الرندر
   setTimeout(() => {
     document.querySelectorAll(".margin-fill").forEach(el => {
       el.style.width = el.dataset.width + "%";
@@ -6898,11 +6604,94 @@ function buildHotelTable() {
     
   }).join('');
 }
+// ============================================================
+// RENDER BEST PERFORMER CARD
+// ============================================================
+function renderBestPerformer() {
+  const bpEl = document.getElementById("insight-best-performer");
+  if (!bpEl) return;
+
+  // Debug log to confirm values before rendering
+  console.log("[BestPerformer] best_profit_name   :", DATA.best_profit_name);
+  console.log("[BestPerformer] best_profit_usd    :", DATA.best_profit_usd);
+  console.log("[BestPerformer] best_profit_egp    :", DATA.best_profit_egp);
+  console.log("[BestPerformer] best_margin_name   :", DATA.best_margin_name);
+  console.log("[BestPerformer] best_margin_value  :", DATA.best_margin_value);
+  console.log("[BestPerformer] best_stability_name:", DATA.best_stability_name);
+  console.log("[BestPerformer] best_stability_value:", DATA.best_stability_value);
+
+  const profitName     = DATA.best_profit_name     || "-";
+  const profitUSD      = Math.round(DATA.best_profit_usd  || 0).toLocaleString();
+  const profitEGP      = Math.round(DATA.best_profit_egp  || 0).toLocaleString();
+  const marginName     = DATA.best_margin_name     || "-";
+  const marginValue    = (DATA.best_margin_value   || 0).toFixed(1) + "%";
+  const stabilityName  = DATA.best_stability_name  || "-";
+  const stabilityValue = Math.round(DATA.best_stability_value || 0).toLocaleString();
+
+  bpEl.innerHTML = `
+    <div style="
+      background:linear-gradient(135deg,#111827,#0f172a);
+      border:1px solid rgba(63,185,80,0.3);
+      border-radius:14px;
+      padding:16px;
+    ">
+
+      <!-- Best Profit -->
+      <div style="margin-bottom:14px;">
+        <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.6px;">
+          💰 Best Profit
+        </div>
+        <div style="font-size:17px;font-weight:700;margin-top:4px;color:#e5e7eb;">
+          ${profitName}
+        </div>
+        <div style="font-size:15px;color:#3fb950;font-weight:700;margin-top:4px;">
+          $${profitUSD}
+        </div>
+        <div style="font-size:12px;color:#9ca3af;margin-top:2px;">
+          EGP ${profitEGP}
+        </div>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;"></div>
+
+      <!-- Best Margin -->
+      <div style="margin-bottom:14px;">
+        <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.6px;">
+          📊 Best Margin
+        </div>
+        <div style="font-size:17px;font-weight:700;margin-top:4px;color:#e5e7eb;">
+          ${marginName}
+        </div>
+        <div style="font-size:15px;color:#58a6ff;font-weight:700;margin-top:4px;">
+          ${marginValue}
+        </div>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;"></div>
+
+      <!-- Best Stability -->
+      <div>
+        <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.6px;">
+          🏅 Most Stable
+        </div>
+        <div style="font-size:17px;font-weight:700;margin-top:4px;color:#e5e7eb;">
+          ${stabilityName}
+        </div>
+        <div style="font-size:15px;color:#d2a8ff;font-weight:700;margin-top:4px;">
+          $${stabilityValue} avg/booking
+        </div>
+      </div>
+
+    </div>
+  `;
+}
+
 function refreshDashboard() {
 
   const filtered = getFilteredData();
 
   buildData(filtered);
+  renderBestPerformer();
   updateKPIs();
   updateDeptKPIs();
   updateExpenseKPIs();
@@ -7729,269 +7518,265 @@ html2pdf()
   .from(element)
   .save();
 }
-function createCoverPage() {
-  return `
-    <div style="
-      width: 100%;
-      height: 297mm;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: white;
-      color: #000;
-      page-break-after: always;
-      padding: 40px;
-      box-sizing: border-box;
-      page-break-inside: avoid;
-      break-inside: avoid;
-    ">
-      <h1 style="
-        font-size: 42px;
-        font-weight: 700;
-        margin-bottom: 20px;
-        color: #000;
-        text-align: center;
-      ">
-        Art Studio Report
-      </h1>
-      <p style="
-        font-size: 18px;
-        color: #666;
-        text-align: center;
-        margin-bottom: 30px;
-      ">
-        Performance Analysis Dashboard
-      </p>
-      <hr style="
-        border: none;
-        border-top: 1px solid #ddd;
-        width: 200px;
-        margin: 20px 0;
-      " />
-      <p style="
-        font-size: 14px;
-        color: #999;
-        text-align: center;
-        margin-top: 20px;
-      ">
-        ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-      </p>
-    </div>
-  `;
-}
-
-function createSummary(cards) {
-
-  let total = 0;
-  let profits = [];
-  
-  cards.forEach(card => {
-    const matches = card.innerText.match(/\$([-\d,]+)/g);
-
-    if (matches) {
-      matches.forEach(m => {
-        const val = parseFloat(m.replace("$","").replace(/,/g,""));
-        total += val;
-        profits.push(val);
-      });
-    }
-  });
-
-  const best = Math.max(...profits, 0);
-  const worst = Math.min(...profits, 0);
-  const average = profits.length > 0 ? profits.reduce((a,b) => a+b, 0) / profits.length : 0;
-
-  return `
-    <div style="
-      width: 100%;
-      height: 297mm;
-      padding: 40px;
-      background: white;
-      color: #000;
-      page-break-after: always;
-      page-break-inside: avoid;
-      break-inside: avoid;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-    ">
-      <div>
-        <h2 style="
-          font-size: 32px;
-          font-weight: 700;
-          margin-bottom: 30px;
-          color: #000;
-          border-bottom: 2px solid #e5e7eb;
-          padding-bottom: 15px;
-        ">Executive Summary</h2>
-        
-        <div style="margin-bottom: 24px;">
-          <p style="
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 8px;
-          ">Total Performance</p>
-          <p style="
-            font-size: 28px;
-            font-weight: 700;
-            color: ${total >= 0 ? '#22c55e' : '#ef4444'};
-            margin: 0;
-          ">$${Math.abs(total).toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
-          <div>
-            <p style="
-              font-size: 12px;
-              color: #999;
-              margin-bottom: 8px;
-            ">Best Performance</p>
-            <p style="
-              font-size: 22px;
-              font-weight: 600;
-              color: #22c55e;
-              margin: 0;
-            ">$${Math.abs(best).toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
-          </div>
-          
-          <div>
-            <p style="
-              font-size: 12px;
-              color: #999;
-              margin-bottom: 8px;
-            ">Worst Performance</p>
-            <p style="
-              font-size: 22px;
-              font-weight: 600;
-              color: #ef4444;
-              margin: 0;
-            ">$${Math.abs(worst).toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
-          </div>
-        </div>
-
-        <div style="margin-top: 30px;">
-          <p style="
-            font-size: 12px;
-            color: #999;
-            margin-bottom: 8px;
-          ">Average Performance</p>
-          <p style="
-            font-size: 22px;
-            font-weight: 600;
-            color: ${average >= 0 ? '#3b82f6' : '#f97316'};
-            margin: 0;
-          ">$${Math.abs(average).toLocaleString('en-US', {maximumFractionDigits: 0})}</p>
-        </div>
-
-        <div style="margin-top: 30px;">
-          <p style="
-            font-size: 12px;
-            color: #999;
-            margin-bottom: 8px;
-          ">Total Units Analyzed</p>
-          <p style="
-            font-size: 22px;
-            font-weight: 600;
-            color: #000;
-            margin: 0;
-          ">${cards.length}</p>
-        </div>
-      </div>
-
-      <div style="
-        border-top: 1px solid #e5e7eb;
-        padding-top: 20px;
-        text-align: center;
-        color: #999;
-        font-size: 12px;
-      ">
-        <p>Report generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-      </div>
-    </div>
-  `;
-}
+// ============================================================
+// PRINT / PDF — opens a new window and calls window.print()
+// No html2canvas dependency — works on every browser
+// ============================================================
 
 function printReport() {
+  const perf = DATA.performance_decisions || [];
+  if (!perf.length) {
+    alert("No performance data found. Please ensure data is loaded.");
+    return;
+  }
 
-  const source = document.getElementById("decision-engine");
-  const target = document.getElementById("report-container");
+  // Sort best → worst by combined net profit
+  const sorted = [...perf].sort((a, b) =>
+    (finiteNumber(b.profitUSD) + finiteNumber(b.profitEGP) / EGP_RATE) -
+    (finiteNumber(a.profitUSD) + finiteNumber(a.profitEGP) / EGP_RATE)
+  );
 
-  const cards = Array.from(source.children);
+  // ── helpers ────────────────────────────────────────────────
+  const esc  = s => String(s || "").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const fm   = n => Math.round(finiteNumber(n)).toLocaleString("en-US");
+  const col  = n => finiteNumber(n) >= 0 ? "#22c55e" : "#ef4444";
+  const pct  = n => (finiteNumber(n) * 100).toFixed(1) + "%";
+  const smoney = (n, prefix="$") => {
+    const v = finiteNumber(n);
+    return (v >= 0 ? prefix : "-" + prefix) + fm(Math.abs(v));
+  };
 
-  cards.sort((a, b) => {
-    const getValue = el => {
-      const match = el.innerText.match(/\$([-\d,]+)/);
-      return match ? parseFloat(match[1].replace(/,/g,"")) : 0;
-    };
-    return getValue(b) - getValue(a);
+  // ── classify card ──────────────────────────────────────────
+  const classify = d => {
+    const net = finiteNumber(d.profitUSD) + finiteNumber(d.profitEGP) / EGP_RATE;
+    const m   = finiteNumber(d.margin || (d.ai && d.ai.margin) || 0);
+    if (net < 0)   return { label: "🔴 High Risk",  bg: "#1a0505", border: "#ef4444" };
+    if (m  < 0.2)  return { label: "🟡 Needs Fix",  bg: "#1a1205", border: "#facc15" };
+    return             { label: "🟢 Profitable",  bg: "#031a0d", border: "#22c55e" };
+  };
+
+  // ── build one card's HTML ──────────────────────────────────
+  const cardHTML = (d, i) => {
+    const ai     = d.ai || {};
+    const usd    = finiteNumber(d.profitUSD  || 0);
+    const egp    = finiteNumber(d.profitEGP  || 0);
+    const net    = usd + egp / EGP_RATE;
+    const margin = finiteNumber(d.margin || ai.margin || 0);
+    const cls    = classify(d);
+    const decision = d.decision || d.levelLabel || ai.levelLabel || (net >= 0 ? "🟢 KEEP" : "🔴 STOP");
+    const insight  = d.smartInsight || ai.smartInsight || "";
+    const rec      = d.recommendation || ai.recommendation || "";
+    const fx       = d.fxStatusFinal  || ai.fxStatusFinal  || "";
+
+    return `
+      <div class="card" style="border-color:${cls.border};background:${cls.bg};">
+        <div class="card-header">
+          <div>
+            <div class="card-name">${esc(d.name || "-")}</div>
+            <div class="card-sub">👤 ${esc(d.performer || "-")}</div>
+          </div>
+          <div class="badge" style="color:${cls.border};border-color:${cls.border};">
+            ${esc(cls.label)}
+          </div>
+        </div>
+        <div class="card-nums">
+          <div>
+            <div class="num-usd" style="color:${col(usd)};">${smoney(usd)}</div>
+            <div class="num-egp" style="color:${col(egp)};">${smoney(egp,"EGP ")}</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="lbl">Margin</div>
+            <div class="num-margin" style="color:${margin<0?"#ef4444":margin<0.2?"#facc15":"#22c55e"};">${pct(margin)}</div>
+          </div>
+        </div>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${Math.min(Math.abs(margin)*100,100)}%;background:${cls.border};"></div></div>
+        <div class="decision-row" style="color:${cls.border};">${esc(decision)}</div>
+        ${insight ? `<div class="insight-txt">💡 ${esc(insight)}</div>` : ""}
+        ${fx      ? `<div class="fx-txt">💱 ${esc(fx)}</div>`           : ""}
+        ${rec     ? `<div class="rec-txt">🎯 ${esc(rec)}</div>`         : ""}
+
+        <div class="details-block">
+          <div class="details-title">▶ Details &amp; Analysis</div>
+
+          <div class="detail-section">
+            <div class="detail-lbl">P&amp;L Breakdown</div>
+            <div class="detail-row"><span>USD Profit</span><span style="color:${col(usd)};">${smoney(usd)}</span></div>
+            <div class="detail-row"><span>FX Impact</span><span style="color:${col(finiteNumber(ai.fxContribution||0))};">${smoney(finiteNumber(ai.fxContribution||0))}</span></div>
+            <div class="detail-row detail-row-total"><span>Net Total</span><span style="color:${col(net)};">${smoney(net)}</span></div>
+          </div>
+
+          ${finiteNumber(ai.volume||d.volume||0) > 0 ? `
+          <div class="detail-section">
+            <div class="detail-lbl">Unit Economics</div>
+            <div class="detail-row"><span>Bookings</span><span>${Math.round(finiteNumber(ai.volume||d.volume||0))}</span></div>
+            <div class="detail-row"><span>Avg Price</span><span>$${finiteNumber(ai.pricePerUnit||ai.avgPrice||0).toFixed(2)}</span></div>
+            <div class="detail-row"><span>Avg Cost</span><span>$${finiteNumber(ai.costPerUnit||ai.avgCost||0).toFixed(2)}</span></div>
+            <div class="detail-row"><span>Break-even</span><span style="color:#facc15;">$${finiteNumber(ai.breakEvenPrice||0).toFixed(2)}</span></div>
+            <div class="detail-row"><span>Target (20%)</span><span style="color:#22c55e;">$${finiteNumber(ai.targetPrice||0).toFixed(2)}</span></div>
+            <div class="detail-row"><span>Margin</span><span style="color:${margin<0?"#ef4444":margin<0.2?"#facc15":"#22c55e"};">${pct(margin)}</span></div>
+          </div>` : ""}
+
+          ${ai.mix && ((ai.mix.usd_percent||0)+(ai.mix.egp_percent||0)) > 0 ? `
+          <div class="detail-section">
+            <div class="detail-lbl">Currency Mix</div>
+            <div class="mix-labels"><span>USD ${(ai.mix.usd_percent||0).toFixed(0)}%</span><span>EGP ${(ai.mix.egp_percent||0).toFixed(0)}%</span></div>
+            <div class="mix-bar">
+              <div style="width:${ai.mix.usd_percent||0}%;background:#3b82f6;height:100%;float:left;border-radius:3px 0 0 3px;"></div>
+              <div style="width:${ai.mix.egp_percent||0}%;background:#22c55e;height:100%;float:left;border-radius:0 3px 3px 0;"></div>
+            </div>
+          </div>` : ""}
+
+          ${(ai.aiComment||d.aiComment) ? `
+          <div class="ai-comment">🤖 <em>${esc(ai.aiComment||d.aiComment)}</em></div>` : ""}
+        </div>
+      </div>`;
+  };
+
+  // ── cover page ────────────────────────────────────────────
+  const now     = new Date().toLocaleDateString("en-US", {year:"numeric",month:"long",day:"numeric"});
+  const topPerf = sorted[0];
+  const topNet  = topPerf ? fm(finiteNumber(topPerf.profitUSD) + finiteNumber(topPerf.profitEGP)/EGP_RATE) : "—";
+
+  const coverHTML = `
+    <div class="page cover-page">
+      <div class="cover-icon">🎭</div>
+      <h1>Art Studio Performance Report</h1>
+      <p class="cover-sub">Financial P&amp;L Analysis · Decision Engine Export</p>
+      <div class="cover-divider"></div>
+      <div class="cover-meta">${now}</div>
+      <div class="cover-meta">${sorted.length} performances analysed</div>
+      ${topPerf ? `<div class="cover-meta">Top performer: <b>${esc(topPerf.name)}</b> &nbsp;·&nbsp; Net $${topNet}</div>` : ""}
+    </div>`;
+
+  // ── section pages ─────────────────────────────────────────
+  const sections = [
+    { label: "🔴 High Risk",  border: "#ef4444", items: sorted.filter(d => classify(d).label.includes("High")) },
+    { label: "🟡 Needs Fix",  border: "#facc15", items: sorted.filter(d => classify(d).label.includes("Needs")) },
+    { label: "🟢 Profitable", border: "#22c55e", items: sorted.filter(d => classify(d).label.includes("Profitable")) },
+  ];
+
+  let sectionsHTML = "";
+  sections.forEach(sec => {
+    if (!sec.items.length) return;
+    // chunk into rows of 3
+    let rows = "";
+    for (let i = 0; i < sec.items.length; i += 3) {
+      const chunk = sec.items.slice(i, i + 3);
+      rows += `<div class="card-row">${chunk.map((d, j) => cardHTML(d, i + j)).join("")}</div>`;
+    }
+    sectionsHTML += `
+      <div class="section-block">
+        <div class="section-hdr" style="border-color:${sec.border};color:${sec.border};">
+          ${sec.label} <span class="section-count">${sec.items.length} performances</span>
+        </div>
+        ${rows}
+      </div>`;
   });
 
-  target.innerHTML = "";
+  // ── full HTML document ────────────────────────────────────
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Art Studio Report</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0b1220;
+    color: #e5e7eb;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page { padding: 32px 40px; }
+  .cover-page {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center; gap: 14px;
+    page-break-after: always;
+  }
+  .cover-icon  { font-size: 56px; }
+  h1           { font-size: 36px; font-weight: 800; color: #e5e7eb; }
+  .cover-sub   { font-size: 16px; color: #9ca3af; }
+  .cover-divider { width: 160px; height: 3px; background: linear-gradient(90deg,#3b82f6,#22c55e); border-radius: 2px; }
+  .cover-meta  { font-size: 14px; color: #6b7280; }
+  .section-block { margin-bottom: 28px; }
+  .section-hdr {
+    font-size: 16px; font-weight: 800;
+    padding: 10px 14px;
+    border-left: 5px solid;
+    background: #111827;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-count { font-size: 12px; color: #6b7280; font-weight: 400; }
+  .card-row {
+    display: flex; flex-direction: row; flex-wrap: nowrap;
+    gap: 12px; margin-bottom: 12px;
+    page-break-inside: avoid; break-inside: avoid;
+  }
+  .card {
+    flex: 1; min-width: 0;
+    border: 1px solid; border-radius: 12px; padding: 14px;
+    page-break-inside: avoid; break-inside: avoid;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .card-header  { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .card-name    { font-weight: 700; font-size: 13px; color: #e5e7eb; }
+  .card-sub     { font-size: 11px; color: #6b7280; margin-top: 2px; }
+  .badge        { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+  .card-nums    { display: flex; justify-content: space-between; align-items: center; }
+  .num-usd      { font-size: 16px; font-weight: 800; }
+  .num-egp      { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  .lbl          { font-size: 10px; color: #6b7280; }
+  .num-margin   { font-size: 13px; font-weight: 700; }
+  .bar-wrap     { height: 3px; background: #1f2937; border-radius: 3px; overflow: hidden; }
+  .bar-fill     { height: 100%; border-radius: 3px; }
+  .decision-row { font-size: 12px; font-weight: 700; }
+  .insight-txt  { font-size: 11px; color: #93c5fd; }
+  .fx-txt       { font-size: 11px; color: #facc15; }
+  .rec-txt      { font-size: 11px; color: #e2e8f0; background: #1e293b; padding: 6px 8px; border-radius: 6px; }
+  .details-block { margin-top: 10px; border-top: 1px solid #1f2937; padding-top: 8px; }
+  .details-title { font-size: 11px; font-weight: 700; color: #38bdf8; margin-bottom: 8px; }
+  .detail-section { background: rgba(255,255,255,0.03); border-radius: 6px; padding: 7px 9px; margin-bottom: 7px; }
+  .detail-lbl   { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+  .detail-row   { display: flex; justify-content: space-between; font-size: 11px; color: #cbd5e1; margin-bottom: 3px; }
+  .detail-row-total { border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px; padding-top: 4px; font-weight: 700; }
+  .mix-labels   { display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8; margin-bottom: 3px; }
+  .mix-bar      { height: 6px; background: #1e293b; border-radius: 3px; overflow: hidden; }
+  .ai-comment   { font-size: 11px; color: #cbd5e1; line-height: 1.55; border-left: 2px solid #3b82f6; padding-left: 7px; margin-top: 4px; }
+  @media print {
+    body { background: #0b1220 !important; }
+    .cover-page { page-break-after: always; }
+    .section-block { page-break-inside: avoid; }
+    .card-row { page-break-inside: avoid; break-inside: avoid; }
+    .card { page-break-inside: avoid; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+  ${coverHTML}
+  <div class="page">
+    ${sectionsHTML || "<p style='color:#6b7280;'>No performance data available.</p>"}
+  </div>
+</body>
+</html>`;
 
-  // cover
-  target.innerHTML += createCoverPage();
-
-  // summary
-  target.innerHTML += createSummary(cards);
-
-  // grid - MATCH SCREEN LAYOUT
-  const wrapper = document.createElement("div");
-  wrapper.className = "report-grid";
-  wrapper.style.display = "grid";
-  wrapper.style.gridTemplateColumns = "repeat(auto-fit, minmax(240px, 1fr))";
-  wrapper.style.gap = "14px";
-  wrapper.style.padding = "0";
-  wrapper.style.width = "100%";
-  wrapper.style.backgroundColor = "white";
-  wrapper.style.margin = "0";
-
-  cards.forEach((card, index) => {
-
-    const clone = card.cloneNode(true);
-    
-    // MINIMAL styling - let CSS handle print layout
-    clone.style.pageBreakInside = "avoid";
-    clone.style.breakInside = "avoid";
-
-    // Remove inline background gradients
-    if (clone.getAttribute('style') && clone.getAttribute('style').includes('linear-gradient')) {
-      clone.style.background = "white";
-    }
-
-    if (index === 0) {
-      clone.style.borderWidth = "2px"; // BEST - highlight with green
-      clone.style.borderColor = "#22c55e";
-    }
-
-    if (index === cards.length - 1) {
-      clone.style.borderWidth = "2px"; // WORST - highlight with red
-      clone.style.borderColor = "#ef4444";
-    }
-
-    wrapper.appendChild(clone);
-  });
-
-  target.appendChild(wrapper);
-
-  // Use html2pdf with print-optimized settings
-  html2pdf().set({
-    margin: [10, 10, 10, 10],
-    filename: 'ArtStudio_Report.pdf',
-    html2canvas: { 
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      backgroundColor: '#ffffff'
-    },
-    jsPDF: { 
-      unit: 'mm', 
-      format: 'a4', 
-      orientation: 'portrait',
-      compress: true
-    }
-  }).from(target).save();
+  // ── open new window and print ─────────────────────────────
+  const win = window.open("", "_blank", "width=1280,height=900");
+  if (!win) {
+    alert("Please allow popups for this site to export the PDF.");
+    return;
+  }
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  // Small delay lets the new window finish rendering before print dialog opens
+  setTimeout(() => win.print(), 600);
 }
 // INIT
 // ============================================================
