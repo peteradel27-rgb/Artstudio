@@ -3868,38 +3868,126 @@ if (!DATA.insight_top_hotel) {
 }
 
 
-// ================= BEST / CHEAPEST PRICES (avg price per performer) =================
+// ================= BEST / CHEAPEST PRICES (REAL MIN/MAX WITH IQR OUTLIER REMOVAL) =================
 {
-  const _priceMap = {};
+  // ===== 1. COLLECT ALL PRICES PER PERFORMER =====
+  const _priceCollector = {}; // { perfName: [ { usd, egp, hotel }, ... ] }
+  
   rows.forEach(r => {
-    const perf  = (r["A Name"] || "").trim() || (r["Performance"] || "").trim();
+    const perf = (r["A Name"] || "").trim() || (r["Performance"] || "").trim();
     const hotel = (r["Hotel"] || "").trim();
     if (!perf) return;
-    const inc = safeNum(r["Income USD"]);
-    const incEGP = safeNum(r["Income EGP"]);
-    if (inc <= 0) return; // skip zero/invalid rows
-    if (!_priceMap[perf]) _priceMap[perf] = { totalUSD: 0, totalEGP: 0, count: 0, hotel };
-    _priceMap[perf].totalUSD += inc;
-    _priceMap[perf].totalEGP += incEGP;
-    _priceMap[perf].count    += 1;
+    
+    const usd = safeNum(r["Income USD"]);
+    const egp = safeNum(r["Income EGP"]);
+    
+    // Skip invalid rows
+    if (usd <= 0 && egp <= 0) return;
+    
+    if (!_priceCollector[perf]) {
+      _priceCollector[perf] = [];
+    }
+    
+    _priceCollector[perf].push({
+      usd: usd > 0 ? usd : 0,
+      egp: egp > 0 ? egp : 0,
+      hotel: hotel
+    });
   });
-
-  const _avgPrices = Object.entries(_priceMap)
-    .map(([name, v]) => {
-      const avgUSD = v.count > 0 ? v.totalUSD / v.count : 0;
-      const avgEGP = v.count > 0 ? v.totalEGP / v.count : 0;
-      return [name, avgUSD, avgEGP, v.hotel, v.count];
-    })
-    .filter(p => p[1] > 0);
-
-  DATA.insight_best_prices = [..._avgPrices]
-    .sort((a,b) => b[1] - a[1])
-    .slice(0, 5);
-
-  DATA.insight_cheapest_prices = [..._avgPrices]
-    .filter(p => p[1] > 0)
-    .sort((a,b) => a[1] - b[1])
-    .slice(0, 5);
+  
+  // ===== 2. APPLY IQR OUTLIER REMOVAL & FIND MIN/MAX =====
+  const _performerStats = {};
+  
+  Object.entries(_priceCollector).forEach(([perfName, entries]) => {
+    if (entries.length === 0) return;
+    
+    // Extract USD prices for IQR calculation
+    const usdPrices = entries.map(e => e.usd).filter(p => p > 0).sort((a, b) => a - b);
+    
+    if (usdPrices.length === 0) return;
+    
+    let cleanedPrices = usdPrices;
+    
+    // Apply IQR method only if we have >= 3 values
+    if (usdPrices.length >= 3) {
+      const q1Index = Math.floor(usdPrices.length * 0.25);
+      const q3Index = Math.floor(usdPrices.length * 0.75);
+      
+      const q1 = usdPrices[q1Index];
+      const q3 = usdPrices[q3Index];
+      const iqr = q3 - q1;
+      
+      const lowerBound = q1 - 7 * iqr;
+      const upperBound = q3 + 7 * iqr;
+      
+      // Filter outliers
+      cleanedPrices = usdPrices.filter(p => p >= lowerBound && p <= upperBound);
+    }
+    
+    // If all values were outliers, use original prices
+    if (cleanedPrices.length === 0) {
+      cleanedPrices = usdPrices;
+    }
+    
+    // Find max and min USD values
+    const maxUSD = Math.max(...cleanedPrices);
+    const minUSD = Math.min(...cleanedPrices);
+    
+    // Find the corresponding EGP values for max and min USD
+    let maxEGP = 0;
+    let minEGP = 0;
+    let maxHotel = entries[0].hotel;
+    let minHotel = entries[0].hotel;
+    
+    entries.forEach(entry => {
+      if (entry.usd === maxUSD) {
+        maxEGP = entry.egp;
+        maxHotel = entry.hotel;
+      }
+      if (entry.usd === minUSD) {
+        minEGP = entry.egp;
+        minHotel = entry.hotel;
+      }
+    });
+    
+    // Calculate score: USD + (EGP / FX_RATE)
+    const maxScore = maxUSD + (maxEGP / EGP_RATE);
+    const minScore = minUSD + (minEGP / EGP_RATE);
+    
+    _performerStats[perfName] = {
+      maxUSD,
+      maxEGP,
+      maxHotel,
+      maxScore,
+      minUSD,
+      minEGP,
+      minHotel,
+      minScore,
+      priceCount: entries.length
+    };
+  });
+  
+  // ===== 3. BUILD RESULTS: TOP 5 BY MAX PRICE DESC =====
+  const _bestPricesList = Object.entries(_performerStats)
+    .map(([name, stats]) => [name, stats.maxUSD, stats.maxEGP, stats.maxHotel, stats.maxScore])
+    .sort((a, b) => b[4] - a[4]) // Sort by maxScore DESC
+    .slice(0, 5)
+    .map(entry => [entry[0], entry[1], entry[2], entry[3]]); // Remove score from output
+  
+  // ===== 4. BUILD RESULTS: TOP 5 BY MIN PRICE ASC =====
+  const _cheapestPricesList = Object.entries(_performerStats)
+    .map(([name, stats]) => [name, stats.minUSD, stats.minEGP, stats.minHotel, stats.minScore])
+    .sort((a, b) => a[4] - b[4]) // Sort by minScore ASC
+    .slice(0, 5)
+    .map(entry => [entry[0], entry[1], entry[2], entry[3]]); // Remove score from output
+  
+  // ===== 5. ENSURE ARRAYS ARE ALWAYS SAFE =====
+  DATA.insight_best_prices = Array.isArray(_bestPricesList) ? _bestPricesList : [];
+  DATA.insight_cheapest_prices = Array.isArray(_cheapestPricesList) ? _cheapestPricesList : [];
+  
+  console.log("💰 BEST PRICES (Real Max):", DATA.insight_best_prices);
+  console.log("💸 CHEAPEST PRICES (Real Min):", DATA.insight_cheapest_prices);
+  console.log("📊 Performer Stats:", _performerStats);
 }
 
 
