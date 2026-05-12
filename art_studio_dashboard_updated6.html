@@ -833,6 +833,187 @@ body {
   .table-scroll::-webkit-scrollbar-track { background: var(--card); }
   .table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
+  /* Hotel Performance Prices */
+  .price-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 0 0 18px;
+  }
+  .price-control {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .price-control label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+  }
+  .price-control select,
+  .price-control input {
+    width: 100%;
+    background: #111827;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 9px 10px;
+    outline: none;
+  }
+  .price-control select:focus,
+  .price-control input:focus {
+    border-color: rgba(88,166,255,.7);
+    box-shadow: 0 0 0 3px rgba(88,166,255,.12);
+  }
+  .price-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .price-action-btn {
+    background: linear-gradient(145deg, #182235, #111827);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 700;
+    padding: 9px 12px;
+    transition: transform .2s, border-color .2s, background .2s;
+  }
+  .price-action-btn:hover {
+    border-color: rgba(88,166,255,.55);
+    transform: translateY(-1px);
+  }
+  .price-insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .price-insight-card {
+    background: linear-gradient(145deg, rgba(22,27,34,.98), rgba(13,17,23,.98));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    min-height: 112px;
+  }
+  .price-insight-title {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .7px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .price-insight-value {
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .price-table-scroll {
+    max-height: 560px;
+    overflow: auto;
+  }
+  .price-table-scroll .data-table th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+  }
+  .price-table-scroll .data-table td {
+    vertical-align: top;
+    white-space: nowrap;
+  }
+  .price-table-scroll .data-table td:nth-child(15) {
+    min-width: 240px;
+    white-space: normal;
+  }
+  .price-soft-green { color: #7ee787; }
+  .price-soft-red { color: #ff9b8a; }
+  .price-soft-yellow { color: #e3b341; }
+  .price-soft-cyan { color: #79c0ff; }
+  .price-soft-orange { color: #ffa657; }
+  .price-row-premium td { background: linear-gradient(90deg, rgba(63,185,80,.075), transparent); }
+  .price-row-low td { background: linear-gradient(90deg, rgba(247,129,102,.075), transparent); }
+  .price-row-gap td { background: linear-gradient(90deg, rgba(227,179,65,.08), transparent); }
+  .price-row-fx td { background: linear-gradient(90deg, rgba(86,211,251,.07), transparent); }
+  .price-status {
+    display: inline-flex;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 8px;
+  }
+  .price-status.premium { background: rgba(63,185,80,.14); color: #7ee787; }
+  .price-status.reprice { background: rgba(247,129,102,.14); color: #ff9b8a; }
+  .price-status.gap { background: rgba(227,179,65,.14); color: #e3b341; }
+  .price-status.fx { background: rgba(86,211,251,.12); color: #79c0ff; }
+  .price-status.stable { background: rgba(139,148,158,.14); color: #c9d1d9; }
+  .price-mini-list {
+    display: grid;
+    gap: 10px;
+  }
+  .price-mini-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid rgba(48,54,61,.45);
+    padding-bottom: 10px;
+  }
+  .price-mini-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .price-mini-name {
+    color: var(--text);
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .price-mini-sub {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 3px;
+  }
+  .price-mini-val {
+    color: var(--accent1);
+    font-weight: 800;
+    text-align: right;
+  }
+  @media(max-width: 768px) {
+    .price-actions { align-items: stretch; }
+    .price-action-btn { width: 100%; }
+  }
+  @media print {
+    body.print-prices .tabs,
+    body.print-prices .header,
+    body.print-prices .footer,
+    body.print-prices .advanced-filters,
+    body.print-prices .price-controls,
+    body.print-prices .currency-switch,
+    body.print-prices .filter-box { display: none !important; }
+    body.print-prices .tab-panel { display: none !important; }
+    body.print-prices #tab-prices { display: block !important; }
+    body.print-prices .main {
+      display: block !important;
+      visibility: visible !important;
+      max-width: none;
+      padding: 0;
+    }
+    body.print-prices #tab-prices,
+    body.print-prices #tab-prices * {
+      visibility: visible !important;
+    }
+    body.print-prices .chart-card,
+    body.print-prices .kpi-card,
+    body.print-prices .price-insight-card { break-inside: avoid; }
+    body.print-prices .price-table-scroll { max-height: none; overflow: visible; }
+  }
+
   /* Tooltip overrides */
   .chartjs-tooltip { background: rgba(22,27,34,0.95) !important; border: 1px solid var(--border) !important; border-radius: 8px !important; }
 
@@ -939,7 +1120,8 @@ body {
   <button class="tab-btn" onclick="showTab('expenses',this)">📉 Expenses</button>
   <button class="tab-btn" onclick="showTab('departments',this)">🎪 Departments</button>
   <button class="tab-btn" onclick="showTab('hotels',this)">🏨 Hotels</button>
-  <button class="tab-btn" onclick="showTab('insights')">📊 Insights</button>
+  <button class="tab-btn" onclick="showTab('prices',this)">Hotel Performance Prices</button>
+  <button class="tab-btn" onclick="showTab('insights',this)">📊 Insights</button>
 </div>
 
 <!-- MAIN CONTENT -->
@@ -1341,6 +1523,142 @@ body {
       </div>
     </div>
   </div>
+
+<div id="tab-prices" class="tab-panel">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Hotel Performance Prices</div>
+      <div class="section-subtitle">Dynamic pricing intelligence by Hotel and Performance from the filtered Entry dataset</div>
+    </div>
+    <div class="price-actions">
+      <button class="price-action-btn" onclick="exportPricesToExcel()">Export Excel</button>
+      <button class="price-action-btn" onclick="exportPricesToPDF()">Export PDF</button>
+    </div>
+  </div>
+
+  <div class="price-controls">
+    <div class="price-control">
+      <label for="priceSearch">Search</label>
+      <input id="priceSearch" type="search" placeholder="Hotel, performance, performer..." oninput="renderHotelPerformancePrices()" />
+    </div>
+    <div class="price-control">
+      <label for="priceHotelFilter">Hotel</label>
+      <select id="priceHotelFilter" onchange="renderHotelPerformancePrices()"></select>
+    </div>
+    <div class="price-control">
+      <label for="pricePerformanceFilter">Performance</label>
+      <select id="pricePerformanceFilter" onchange="renderHotelPerformancePrices()"></select>
+    </div>
+    <div class="price-control">
+      <label for="pricePerformerFilter">Performer</label>
+      <select id="pricePerformerFilter" onchange="renderHotelPerformancePrices()"></select>
+    </div>
+    <div class="price-control">
+      <label for="priceRiskFilter">Risk Level</label>
+      <select id="priceRiskFilter" onchange="renderHotelPerformancePrices()">
+        <option value="ALL">ALL</option>
+        <option value="Premium">Premium</option>
+        <option value="Needs Repricing">Needs Repricing</option>
+        <option value="Unstable">Unstable</option>
+        <option value="FX Supported">FX Supported</option>
+        <option value="Stable">Stable</option>
+      </select>
+    </div>
+    <div class="price-control">
+      <label for="priceCurrencyFilter">Currency Type</label>
+      <select id="priceCurrencyFilter" onchange="renderHotelPerformancePrices()">
+        <option value="ALL">ALL</option>
+        <option value="USD">USD</option>
+        <option value="EGP">EGP</option>
+        <option value="MIXED">Mixed</option>
+      </select>
+    </div>
+    <div class="price-control">
+      <label for="priceRangeFilter">Price Range</label>
+      <select id="priceRangeFilter" onchange="renderHotelPerformancePrices()">
+        <option value="ALL">ALL</option>
+        <option value="LOW">Low</option>
+        <option value="MID">Mid</option>
+        <option value="HIGH">High</option>
+      </select>
+    </div>
+    <div class="price-control">
+      <label for="priceMarginFilter">Margin Range</label>
+      <select id="priceMarginFilter" onchange="renderHotelPerformancePrices()">
+        <option value="ALL">ALL</option>
+        <option value="NEGATIVE">Negative</option>
+        <option value="THIN">Thin</option>
+        <option value="HEALTHY">Healthy</option>
+        <option value="PREMIUM">Premium</option>
+      </select>
+    </div>
+    <div class="price-control">
+      <label for="priceSortFilter">Sort</label>
+      <select id="priceSortFilter" onchange="renderHotelPerformancePrices()">
+        <option value="highestUSD">Highest USD</option>
+        <option value="highestEGP">Highest EGP</option>
+        <option value="lowestPrice">Lowest Price</option>
+        <option value="biggestGap">Biggest Gap</option>
+        <option value="mostProfitable">Most Profitable Hotels</option>
+        <option value="mostUnderpriced">Most Underpriced Hotels</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+    <div class="kpi-card" style="--accent-color:#3fb950"><div class="kpi-label">Highest USD Price</div><div class="kpi-value" id="price-kpi-high-usd"></div><div class="kpi-sub" id="price-kpi-high-usd-sub"></div></div>
+    <div class="kpi-card" style="--accent-color:#56d3fb"><div class="kpi-label">Highest EGP Price</div><div class="kpi-value" id="price-kpi-high-egp"></div><div class="kpi-sub" id="price-kpi-high-egp-sub"></div></div>
+    <div class="kpi-card" style="--accent-color:#f78166"><div class="kpi-label">Lowest USD Price</div><div class="kpi-value" id="price-kpi-low-usd"></div><div class="kpi-sub" id="price-kpi-low-usd-sub"></div></div>
+    <div class="kpi-card" style="--accent-color:#f78166"><div class="kpi-label">Lowest EGP Price</div><div class="kpi-value" id="price-kpi-low-egp"></div><div class="kpi-sub" id="price-kpi-low-egp-sub"></div></div>
+    <div class="kpi-card" style="--accent-color:#58a6ff"><div class="kpi-label">Average USD</div><div class="kpi-value" id="price-kpi-avg-usd"></div><div class="kpi-sub">Selected records</div></div>
+    <div class="kpi-card" style="--accent-color:#58a6ff"><div class="kpi-label">Average EGP</div><div class="kpi-value" id="price-kpi-avg-egp"></div><div class="kpi-sub">Selected records</div></div>
+    <div class="kpi-card" style="--accent-color:#d2a8ff"><div class="kpi-label">Total Hotels</div><div class="kpi-value" id="price-kpi-hotels"></div><div class="kpi-sub">Normalized names</div></div>
+    <div class="kpi-card" style="--accent-color:#d2a8ff"><div class="kpi-label">Total Performances</div><div class="kpi-value" id="price-kpi-performances"></div><div class="kpi-sub">Normalized names</div></div>
+    <div class="kpi-card" style="--accent-color:#ffa657"><div class="kpi-label">Total Performers</div><div class="kpi-value" id="price-kpi-performers"></div><div class="kpi-sub">Unique A Name</div></div>
+    <div class="kpi-card" style="--accent-color:#ffa657"><div class="kpi-label">Total Transactions</div><div class="kpi-value" id="price-kpi-transactions"></div><div class="kpi-sub">Valid price rows</div></div>
+  </div>
+
+  <div class="price-insight-grid">
+    <div class="price-insight-card"><div class="price-insight-title">Market Signal</div><div class="price-insight-value" id="price-market-signal"></div></div>
+    <div class="price-insight-card"><div class="price-insight-title">Repricing Need</div><div class="price-insight-value" id="price-reprice-signal"></div></div>
+    <div class="price-insight-card"><div class="price-insight-title">Performer Pricing</div><div class="price-insight-value" id="price-performer-signal"></div></div>
+    <div class="price-insight-card"><div class="price-insight-title">FX Signal</div><div class="price-insight-value" id="price-fx-signal"></div></div>
+  </div>
+
+  <div class="chart-card chart-grid-full">
+    <div class="chart-title">Pricing Analysis Table</div>
+    <div class="chart-subtitle">Min, max, averages, performers, gaps and AI-style status by Hotel + Performance</div>
+    <div class="table-scroll price-table-scroll">
+      <table class="data-table" id="price-analysis-table">
+        <thead>
+          <tr>
+            <th>Hotel</th><th>Performance</th><th>Min USD</th><th>Max USD</th><th>Avg USD</th><th>Min EGP</th><th>Max EGP</th><th>Avg EGP</th><th>Lowest Performer</th><th>Highest Performer</th><th>Transactions</th><th>Gap USD</th><th>Gap %</th><th>Status</th><th>AI Insight</th>
+          </tr>
+        </thead>
+        <tbody id="price-analysis-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Hotel Comparison Section</div>
+      <div class="chart-subtitle">Hotels ranked by average realized USD price</div>
+      <div class="price-mini-list" id="price-hotel-comparison"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">FX Impact Section</div>
+      <div class="chart-subtitle">EGP converted at dashboard FX rate versus USD average</div>
+      <div class="price-mini-list" id="price-fx-impact"></div>
+    </div>
+  </div>
+
+  <div class="chart-card chart-grid-full">
+    <div class="chart-title">Smart AI Insights Section</div>
+    <div class="chart-subtitle">Automatic pricing intelligence from the current filter scope</div>
+    <div class="price-insight-grid" id="price-ai-insights"></div>
+  </div>
+</div>
 
 <div id="tab-insights" class="tab-panel">
 
@@ -6786,6 +7104,7 @@ function refreshDashboard() {
   rebuildDashboard();
   buildExpenseTable();
   populateAdvancedFilters();
+  renderHotelPerformancePrices();
 }
 
 // ============================================================
@@ -6811,6 +7130,7 @@ function showTab(tabName, btn) {
 
   // 🔥 السطر ده هو الحل
   updateKPIs();
+  if (tabName === "prices") renderHotelPerformancePrices();
 }
 
 // ============================================================
@@ -7178,6 +7498,478 @@ function fillSelect(id, options, selected) {
   el.value = safeSelected;
   return safeSelected;
 }
+
+function escapePriceHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function cleanPriceText(value) {
+  return String(value ?? "")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function normalizePriceKey(value) {
+  return cleanPriceText(value)
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function priceNumber(value) {
+  if (value === null || value === undefined) return 0;
+  const raw = String(value).trim();
+  if (!raw || raw === "-" || raw === "0") return 0;
+  const parsed = parseFloat(raw.replace(/,/g, "").replace(/\s/g, ""));
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+}
+
+function priceAverage(values) {
+  const valid = values.filter(v => Number.isFinite(v) && v > 0);
+  return valid.length ? valid.reduce((a,b) => a + b, 0) / valid.length : 0;
+}
+
+function priceMin(values) {
+  const valid = values.filter(v => Number.isFinite(v) && v > 0);
+  return valid.length ? Math.min(...valid) : 0;
+}
+
+function priceMax(values) {
+  const valid = values.filter(v => Number.isFinite(v) && v > 0);
+  return valid.length ? Math.max(...valid) : 0;
+}
+
+function priceFilterRows(rows, predicate) {
+  return rows.filter(predicate);
+}
+
+function priceMinifs(rows, valueKey, predicate) {
+  return priceMin(priceFilterRows(rows, predicate).map(r => r[valueKey]));
+}
+
+function priceMaxifs(rows, valueKey, predicate) {
+  return priceMax(priceFilterRows(rows, predicate).map(r => r[valueKey]));
+}
+
+function priceAverageifs(rows, valueKey, predicate) {
+  return priceAverage(priceFilterRows(rows, predicate).map(r => r[valueKey]));
+}
+
+function priceXlookup(rows, lookupKey, lookupValue, returnKey, fallback = "-") {
+  const found = rows.find(r => r[lookupKey] === lookupValue);
+  return found ? found[returnKey] : fallback;
+}
+
+function formatPriceUSD(value) {
+  return value > 0 ? `$${value.toLocaleString(undefined, { maximumFractionDigits: 2 })}` : "-";
+}
+
+function formatSignedPriceUSD(value) {
+  if (!Number.isFinite(value) || value === 0) return "$0";
+  const sign = value > 0 ? "+" : "-";
+  return `${sign}$${Math.abs(value).toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+}
+
+function formatPriceEGP(value) {
+  return value > 0 ? `EGP ${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : "-";
+}
+
+function formatPricePct(value) {
+  return Number.isFinite(value) ? `${value.toFixed(1)}%` : "0.0%";
+}
+
+function getPriceBaseRows() {
+  if (!RAW_DATA || !RAW_DATA.length) return [];
+
+  return getFilteredData().map(row => {
+    const hotel = cleanPriceText(row["Hotel"]);
+    const performance = cleanPriceText(row["Performance"]);
+    const performer = cleanPriceText(row["A Name"]);
+    const usd = priceNumber(row["Income USD"]);
+    const egp = priceNumber(row["Income EGP"]);
+
+    return {
+      source: row,
+      hotel,
+      performance,
+      performer,
+      hotelKey: normalizePriceKey(hotel),
+      performanceKey: normalizePriceKey(performance),
+      performerKey: normalizePriceKey(performer),
+      usd,
+      egp,
+      costUSD: priceNumber(row["Exp.USD"]),
+      costEGP: priceNumber(row["Exp.EGP"])
+    };
+  }).filter(r =>
+    r.hotelKey &&
+    r.performanceKey &&
+    (r.usd > 0 || r.egp > 0)
+  );
+}
+
+function getPriceDisplayName(rows, keyName, displayName) {
+  const counts = {};
+  rows.forEach(r => {
+    const key = r[keyName];
+    const display = r[displayName] || "-";
+    if (!key) return;
+    if (!counts[key]) counts[key] = {};
+    counts[key][display] = (counts[key][display] || 0) + 1;
+  });
+
+  const cache = {};
+  Object.entries(counts).forEach(([key, names]) => {
+    cache[key] = Object.entries(names)
+      .sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0][0];
+  });
+  return cache;
+}
+
+function buildPriceRecords() {
+  const rows = getPriceBaseRows();
+  const hotelNames = getPriceDisplayName(rows, "hotelKey", "hotel");
+  const performanceNames = getPriceDisplayName(rows, "performanceKey", "performance");
+  const performerNames = getPriceDisplayName(rows, "performerKey", "performer");
+  const marketAvgUSD = priceAverage(rows.map(r => r.usd));
+  const marketAvgEGP = priceAverage(rows.map(r => r.egp));
+  const groups = {};
+
+  rows.forEach(row => {
+    const key = `${row.hotelKey}||${row.performanceKey}`;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(row);
+  });
+
+  const records = Object.entries(groups).map(([key, groupRows]) => {
+    const [hotelKey, performanceKey] = key.split("||");
+    const minUSD = priceMinifs(groupRows, "usd", r => r.usd > 0);
+    const maxUSD = priceMaxifs(groupRows, "usd", r => r.usd > 0);
+    const avgUSD = priceAverageifs(groupRows, "usd", r => r.usd > 0);
+    const minEGP = priceMinifs(groupRows, "egp", r => r.egp > 0);
+    const maxEGP = priceMaxifs(groupRows, "egp", r => r.egp > 0);
+    const avgEGP = priceAverageifs(groupRows, "egp", r => r.egp > 0);
+    const effectiveRows = groupRows.map(r => ({
+      ...r,
+      effectiveUSD: r.usd || (r.egp / EGP_RATE)
+    })).filter(r => r.effectiveUSD > 0);
+    const lowRow = effectiveRows.slice().sort((a,b) => a.effectiveUSD - b.effectiveUSD)[0] || {};
+    const highRow = effectiveRows.slice().sort((a,b) => b.effectiveUSD - a.effectiveUSD)[0] || {};
+    const gapUSD = maxUSD && minUSD ? maxUSD - minUSD : 0;
+    const basisAvg = avgUSD || (avgEGP ? avgEGP / EGP_RATE : 0);
+    const gapPct = basisAvg ? (gapUSD / basisAvg) * 100 : 0;
+    const fxDifference = avgEGP && avgUSD ? (avgEGP / EGP_RATE) - avgUSD : 0;
+    const totalIncomeUSD = groupRows.reduce((sum, r) => sum + r.usd + (r.egp / EGP_RATE), 0);
+    const totalCostUSD = groupRows.reduce((sum, r) => sum + r.costUSD + (r.costEGP / EGP_RATE), 0);
+    const marginPct = totalIncomeUSD ? ((totalIncomeUSD - totalCostUSD) / totalIncomeUSD) * 100 : 0;
+    const priceIndex = marketAvgUSD && avgUSD ? (avgUSD / marketAvgUSD) * 100 : 100;
+    const currencyType = avgUSD && avgEGP ? "MIXED" : (avgUSD ? "USD" : "EGP");
+    const priceRange = priceIndex >= 115 ? "HIGH" : priceIndex <= 85 ? "LOW" : "MID";
+    const marginRange = marginPct < 0 ? "NEGATIVE" : marginPct < 15 ? "THIN" : marginPct < 35 ? "HEALTHY" : "PREMIUM";
+
+    let status = "Stable";
+    if (priceIndex >= 120 && marginPct >= 20) status = "Premium";
+    else if (priceIndex <= 85 || marginPct < 0) status = "Needs Repricing";
+    else if (gapPct >= 35) status = "Unstable";
+    else if (fxDifference > 10) status = "FX Supported";
+
+    let insight = "Stable operational pricing.";
+    if (status === "Needs Repricing") insight = `Hotel pricing is ${Math.max(0, 100 - priceIndex).toFixed(0)}% below market average.`;
+    else if (status === "Unstable") insight = "Large internal pricing inconsistency detected.";
+    else if (status === "FX Supported") insight = "EGP revenue compensates weak USD pricing.";
+    else if (status === "Premium") insight = "Premium pricing achieved successfully.";
+    else if (fxDifference < -10) insight = "EGP is masking USD pricing pressure.";
+
+    return {
+      hotel: hotelNames[hotelKey] || groupRows[0].hotel,
+      performance: performanceNames[performanceKey] || groupRows[0].performance,
+      hotelKey,
+      performanceKey,
+      performers: [...new Set(groupRows.map(r => r.performerKey).filter(Boolean))],
+      minUSD,
+      maxUSD,
+      avgUSD,
+      minEGP,
+      maxEGP,
+      avgEGP,
+      lowestPerformer: priceXlookup([{ key: lowRow.performerKey, value: performerNames[lowRow.performerKey] || lowRow.performer }], "key", lowRow.performerKey, "value"),
+      highestPerformer: priceXlookup([{ key: highRow.performerKey, value: performerNames[highRow.performerKey] || highRow.performer }], "key", highRow.performerKey, "value"),
+      transactions: groupRows.length,
+      gapUSD,
+      gapPct,
+      fxDifference,
+      marginPct,
+      priceIndex,
+      currencyType,
+      priceRange,
+      marginRange,
+      profitabilitySignal: status,
+      insight,
+      sourceRows: groupRows
+    };
+  });
+
+  return { rows, records, marketAvgUSD, marketAvgEGP };
+}
+
+function populatePriceSelect(id, values, selected) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const normalizedSelected = selected || "ALL";
+  el.innerHTML = ["ALL", ...values].map(value => {
+    const safeValue = escapePriceHtml(value);
+    return `<option value="${safeValue}" ${value === normalizedSelected ? "selected" : ""}>${safeValue}</option>`;
+  }).join("");
+}
+
+function syncPriceFilterOptions(rows) {
+  const keep = id => document.getElementById(id)?.value || "ALL";
+  const current = {
+    hotel: keep("priceHotelFilter"),
+    performance: keep("pricePerformanceFilter"),
+    performer: keep("pricePerformerFilter")
+  };
+
+  const uniqueDisplays = (keyName, displayName) => {
+    const nameMap = getPriceDisplayName(rows, keyName, displayName);
+    return Object.values(nameMap).sort((a,b) => a.localeCompare(b));
+  };
+
+  populatePriceSelect("priceHotelFilter", uniqueDisplays("hotelKey", "hotel"), current.hotel);
+  populatePriceSelect("pricePerformanceFilter", uniqueDisplays("performanceKey", "performance"), current.performance);
+  populatePriceSelect("pricePerformerFilter", uniqueDisplays("performerKey", "performer"), current.performer);
+}
+
+function statusClass(status) {
+  if (status === "Premium") return "premium";
+  if (status === "Needs Repricing") return "reprice";
+  if (status === "Unstable") return "gap";
+  if (status === "FX Supported") return "fx";
+  return "stable";
+}
+
+function rowClass(record) {
+  if (record.profitabilitySignal === "Premium") return "price-row-premium";
+  if (record.profitabilitySignal === "Needs Repricing") return "price-row-low";
+  if (record.profitabilitySignal === "Unstable") return "price-row-gap";
+  if (record.profitabilitySignal === "FX Supported") return "price-row-fx";
+  return "";
+}
+
+function filteredPriceRecords() {
+  const built = buildPriceRecords();
+  syncPriceFilterOptions(built.rows);
+
+  const hotel = document.getElementById("priceHotelFilter")?.value || "ALL";
+  const performance = document.getElementById("pricePerformanceFilter")?.value || "ALL";
+  const performer = document.getElementById("pricePerformerFilter")?.value || "ALL";
+  const risk = document.getElementById("priceRiskFilter")?.value || "ALL";
+  const currencyType = document.getElementById("priceCurrencyFilter")?.value || "ALL";
+  const priceRange = document.getElementById("priceRangeFilter")?.value || "ALL";
+  const marginRange = document.getElementById("priceMarginFilter")?.value || "ALL";
+  const search = normalizePriceKey(document.getElementById("priceSearch")?.value || "");
+  const performerKey = normalizePriceKey(performer);
+
+  let records = built.records.filter(record => {
+    const matchesSearch = !search || normalizePriceKey(`${record.hotel} ${record.performance} ${record.lowestPerformer} ${record.highestPerformer}`).includes(search);
+    return matchesSearch &&
+      (hotel === "ALL" || record.hotel === hotel) &&
+      (performance === "ALL" || record.performance === performance) &&
+      (performer === "ALL" || record.performers.includes(performerKey)) &&
+      (risk === "ALL" || record.profitabilitySignal === risk) &&
+      (currencyType === "ALL" || record.currencyType === currencyType) &&
+      (priceRange === "ALL" || record.priceRange === priceRange) &&
+      (marginRange === "ALL" || record.marginRange === marginRange);
+  });
+
+  const sort = document.getElementById("priceSortFilter")?.value || "highestUSD";
+  const sorters = {
+    highestUSD: (a,b) => b.maxUSD - a.maxUSD,
+    highestEGP: (a,b) => b.maxEGP - a.maxEGP,
+    lowestPrice: (a,b) => (a.minUSD || a.minEGP / EGP_RATE) - (b.minUSD || b.minEGP / EGP_RATE),
+    biggestGap: (a,b) => b.gapPct - a.gapPct,
+    mostProfitable: (a,b) => b.marginPct - a.marginPct || b.avgUSD - a.avgUSD,
+    mostUnderpriced: (a,b) => a.priceIndex - b.priceIndex || a.marginPct - b.marginPct
+  };
+  records = records.sort(sorters[sort] || sorters.highestUSD);
+
+  return { ...built, records };
+}
+
+function setPriceText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function renderPriceKPIs(records, baseRows) {
+  const usdValues = baseRows.map(r => r.usd).filter(Boolean);
+  const egpValues = baseRows.map(r => r.egp).filter(Boolean);
+  const highUSD = priceMax(usdValues);
+  const highEGP = priceMax(egpValues);
+  const lowUSD = priceMin(usdValues);
+  const lowEGP = priceMin(egpValues);
+  const highUSDRow = baseRows.find(r => r.usd === highUSD) || {};
+  const highEGPRow = baseRows.find(r => r.egp === highEGP) || {};
+  const lowUSDRow = baseRows.find(r => r.usd === lowUSD) || {};
+  const lowEGPRow = baseRows.find(r => r.egp === lowEGP) || {};
+
+  setPriceText("price-kpi-high-usd", formatPriceUSD(highUSD));
+  setPriceText("price-kpi-high-usd-sub", `${highUSDRow.hotel || "-"} / ${highUSDRow.performance || "-"}`);
+  setPriceText("price-kpi-high-egp", formatPriceEGP(highEGP));
+  setPriceText("price-kpi-high-egp-sub", `${highEGPRow.hotel || "-"} / ${highEGPRow.performance || "-"}`);
+  setPriceText("price-kpi-low-usd", formatPriceUSD(lowUSD));
+  setPriceText("price-kpi-low-usd-sub", `${lowUSDRow.hotel || "-"} / ${lowUSDRow.performance || "-"}`);
+  setPriceText("price-kpi-low-egp", formatPriceEGP(lowEGP));
+  setPriceText("price-kpi-low-egp-sub", `${lowEGPRow.hotel || "-"} / ${lowEGPRow.performance || "-"}`);
+  setPriceText("price-kpi-avg-usd", formatPriceUSD(priceAverage(usdValues)));
+  setPriceText("price-kpi-avg-egp", formatPriceEGP(priceAverage(egpValues)));
+  setPriceText("price-kpi-hotels", new Set(baseRows.map(r => r.hotelKey)).size.toLocaleString());
+  setPriceText("price-kpi-performances", new Set(baseRows.map(r => r.performanceKey)).size.toLocaleString());
+  setPriceText("price-kpi-performers", new Set(baseRows.map(r => r.performerKey).filter(Boolean)).size.toLocaleString());
+  setPriceText("price-kpi-transactions", baseRows.length.toLocaleString());
+}
+
+function renderPriceTable(records) {
+  const body = document.getElementById("price-analysis-body");
+  if (!body) return;
+
+  body.innerHTML = records.map(record => `
+    <tr class="${rowClass(record)}">
+      <td>${escapePriceHtml(record.hotel)}</td>
+      <td>${escapePriceHtml(record.performance)}</td>
+      <td class="price-soft-red">${formatPriceUSD(record.minUSD)}</td>
+      <td class="price-soft-green">${formatPriceUSD(record.maxUSD)}</td>
+      <td>${formatPriceUSD(record.avgUSD)}</td>
+      <td class="price-soft-red">${formatPriceEGP(record.minEGP)}</td>
+      <td class="price-soft-cyan">${formatPriceEGP(record.maxEGP)}</td>
+      <td>${formatPriceEGP(record.avgEGP)}</td>
+      <td>${escapePriceHtml(record.lowestPerformer || "-")}</td>
+      <td>${escapePriceHtml(record.highestPerformer || "-")}</td>
+      <td>${record.transactions.toLocaleString()}</td>
+      <td class="${record.gapUSD > 0 ? "price-soft-yellow" : ""}">${formatPriceUSD(record.gapUSD)}</td>
+      <td class="${record.gapPct >= 35 ? "price-soft-yellow" : ""}">${formatPricePct(record.gapPct)}</td>
+      <td><span class="price-status ${statusClass(record.profitabilitySignal)}">${escapePriceHtml(record.profitabilitySignal)}</span></td>
+      <td>${escapePriceHtml(record.insight)}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="15">No pricing records match the current filters.</td></tr>`;
+}
+
+function renderPriceMiniLists(records) {
+  const hotelBox = document.getElementById("price-hotel-comparison");
+  const fxBox = document.getElementById("price-fx-impact");
+  if (!hotelBox || !fxBox) return;
+
+  const hotels = {};
+  records.forEach(r => {
+    if (!hotels[r.hotel]) hotels[r.hotel] = { usd: [], egp: [], tx: 0 };
+    if (r.avgUSD) hotels[r.hotel].usd.push(r.avgUSD);
+    if (r.avgEGP) hotels[r.hotel].egp.push(r.avgEGP);
+    hotels[r.hotel].tx += r.transactions;
+  });
+
+  const hotelItems = Object.entries(hotels)
+    .map(([name, d]) => ({ name, avgUSD: priceAverage(d.usd), avgEGP: priceAverage(d.egp), tx: d.tx }))
+    .sort((a,b) => b.avgUSD - a.avgUSD)
+    .slice(0, 8);
+
+  hotelBox.innerHTML = hotelItems.map(item => `
+    <div class="price-mini-item">
+      <div><div class="price-mini-name">${escapePriceHtml(item.name)}</div><div class="price-mini-sub">${item.tx.toLocaleString()} transactions</div></div>
+      <div class="price-mini-val">${formatPriceUSD(item.avgUSD)}</div>
+    </div>
+  `).join("") || "<div class='price-mini-sub'>No hotel data.</div>";
+
+  const fxItems = records
+    .filter(r => r.fxDifference)
+    .sort((a,b) => Math.abs(b.fxDifference) - Math.abs(a.fxDifference))
+    .slice(0, 8);
+
+  fxBox.innerHTML = fxItems.map(item => `
+    <div class="price-mini-item">
+      <div><div class="price-mini-name">${escapePriceHtml(item.hotel)}</div><div class="price-mini-sub">${escapePriceHtml(item.performance)}</div></div>
+      <div class="price-mini-val ${item.fxDifference >= 0 ? "price-soft-cyan" : "price-soft-orange"}">${formatSignedPriceUSD(item.fxDifference)}</div>
+    </div>
+  `).join("") || "<div class='price-mini-sub'>No FX variance in this selection.</div>";
+}
+
+function renderPriceInsights(records, marketAvgUSD, marketAvgEGP) {
+  const below = records.filter(r => r.avgUSD && marketAvgUSD && r.avgUSD < marketAvgUSD * .85);
+  const premium = records.filter(r => r.profitabilitySignal === "Premium");
+  const gap = records.filter(r => r.gapPct >= 35);
+  const fx = records.filter(r => r.fxDifference > 10);
+  const top = records.slice().sort((a,b) => b.maxUSD - a.maxUSD)[0];
+
+  setPriceText("price-market-signal", below[0]
+    ? `${below[0].hotel} pricing is ${((1 - below[0].avgUSD / marketAvgUSD) * 100).toFixed(0)}% below market average.`
+    : "No major below-market pricing detected in the current filter scope.");
+  setPriceText("price-reprice-signal", gap[0]
+    ? `${gap[0].hotel} / ${gap[0].performance}: large internal pricing inconsistency detected.`
+    : "Internal price gaps are controlled for the visible selection.");
+  setPriceText("price-performer-signal", top
+    ? `Highest priced performer: ${top.highestPerformer || "-"} at ${top.hotel} / ${top.performance}.`
+    : "No performer pricing signal available.");
+  setPriceText("price-fx-signal", fx[0]
+    ? `${fx[0].hotel}: EGP revenue is helping profitability versus USD pricing.`
+    : marketAvgEGP ? "FX impact is present but not dominating pricing outcomes." : "No EGP pricing available in this selection.");
+
+  const insightBox = document.getElementById("price-ai-insights");
+  if (!insightBox) return;
+
+  const cards = [
+    below[0] ? `Hotels selling below market average: ${below.slice(0,3).map(r => r.hotel).join(", ")}.` : "No hotel is materially below the current USD market average.",
+    premium[0] ? `Strong premium positioning: ${premium[0].hotel} / ${premium[0].performance}.` : "Premium positioning is limited in this filter scope.",
+    gap[0] ? `Hotels needing repricing: ${gap.slice(0,3).map(r => r.hotel).join(", ")}.` : "No large performer price inconsistency detected.",
+    fx[0] ? `FX helping profitability: ${fx[0].hotel} / ${fx[0].performance}.` : "EGP is not materially masking USD losses in this view.",
+    top ? `Best priced performance per hotel: ${top.performance} at ${top.hotel}.` : "No best-priced performance available."
+  ];
+
+  insightBox.innerHTML = cards.map((text, index) => `
+    <div class="price-insight-card">
+      <div class="price-insight-title">Insight ${index + 1}</div>
+      <div class="price-insight-value">${escapePriceHtml(text)}</div>
+    </div>
+  `).join("");
+}
+
+function renderHotelPerformancePrices() {
+  if (!document.getElementById("tab-prices")) return;
+  const { records, marketAvgUSD, marketAvgEGP } = filteredPriceRecords();
+  const visibleRows = records.flatMap(record => record.sourceRows || []);
+  renderPriceKPIs(records, visibleRows);
+  renderPriceTable(records);
+  renderPriceMiniLists(records);
+  renderPriceInsights(records, marketAvgUSD, marketAvgEGP);
+  window.PRICE_ANALYSIS_ROWS = records;
+}
+
+function exportPricesToExcel() {
+  const rows = window.PRICE_ANALYSIS_ROWS || filteredPriceRecords().records;
+  const headers = ["Hotel","Performance","Min USD","Max USD","Avg USD","Min EGP","Max EGP","Avg EGP","Lowest Performer","Highest Performer","Transactions","Gap USD","Gap %","Status","AI Insight"];
+  const body = rows.map(r => [
+    r.hotel, r.performance, r.minUSD, r.maxUSD, r.avgUSD, r.minEGP, r.maxEGP, r.avgEGP,
+    r.lowestPerformer, r.highestPerformer, r.transactions, r.gapUSD, r.gapPct, r.profitabilitySignal, r.insight
+  ]);
+  const table = [headers, ...body].map(row => `<tr>${row.map(cell => `<td>${escapePriceHtml(cell)}</td>`).join("")}</tr>`).join("");
+  const blob = new Blob([`<html><body><table>${table}</table></body></html>`], { type: "application/vnd.ms-excel" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "hotel-performance-prices.xls";
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function exportPricesToPDF() {
+  document.body.classList.add("print-prices");
+  window.print();
+  setTimeout(() => document.body.classList.remove("print-prices"), 500);
+}
 function applyAdvancedFilter() {
 
   filters.dept = (document.getElementById("filterDept")?.value || "ALL").trim();
@@ -7284,6 +8076,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateExpenseKPIs();
       rebuildDashboard();
       buildExpenseTable();
+      renderHotelPerformancePrices();
     };
 
   }
